@@ -71,6 +71,33 @@ class Agency_Block {
     }
     
     /**
+     * Blocs de navigation (hors séparateurs et barres de progression) de
+     * plusieurs projets en une requête, groupés par project_id.
+     *
+     * @param int[] $project_ids
+     * @return array<int, object[]>
+     */
+    public static function get_nav_by_projects(array $project_ids) {
+        global $wpdb;
+        $project_ids = array_values(array_filter(array_map('intval', $project_ids)));
+        if (empty($project_ids)) {
+            return array();
+        }
+        $table        = $wpdb->prefix . 'agency_blocks';
+        $placeholders = implode(',', array_fill(0, count($project_ids), '%d'));
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $placeholders ne contient que des %d.
+        $rows = $wpdb->get_results($wpdb->prepare(
+            "SELECT id, project_id, type, title FROM $table WHERE project_id IN ($placeholders) AND status = 'active' AND type NOT IN ('separator', 'progress_bar') ORDER BY order_position ASC, created_at DESC",
+            $project_ids
+        ));
+        $grouped = array();
+        foreach ($rows as $row) {
+            $grouped[intval($row->project_id)][] = $row;
+        }
+        return $grouped;
+    }
+
+    /**
      * Obtenir un bloc par ID
      */
     public static function get_by_id($id) {

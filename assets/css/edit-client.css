@@ -1,301 +1,153 @@
-/* =========================================================
-   Edit Client – Page d'édition frontend
-   Utilise les variables CSS injectées par Agency_Frontend::load_global_branding()
-   ========================================================= */
+/* ============================================================
+   ÉDITION D'UN CLIENT (planche « 03 Modifier client »)
+   Deux colonnes de panneaux, zone de danger, barre d'enregistrement.
+   ============================================================ */
 
-*, *::before, *::after { box-sizing: border-box; }
+.agec-layout { padding-bottom: 120px; }
 
-body.agency-edit-client-page {
-    background: var(--agency-light-bg, #f8f9fa);
-    color: var(--agency-text-color, #1a1a2e);
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-}
-
-/* La topbar dédiée (.agec-topbar) a été retirée : la page utilise désormais
- * le header partagé templates/partials/header.php en mode 'edit'.
- * Voir aussi : .agency-header-edit-title et .agency-header-actions dans frontend.css.
- */
-
-/* ---- Buttons ---- */
-.agec-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 18px;
-    border-radius: var(--agency-radius-small);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: opacity .15s;
-    text-decoration: none;
-}
-.agec-btn:hover { opacity: .85; }
-.agec-btn:disabled { opacity: .5; cursor: default; }
-
-.agec-btn-primary {
-    background: var(--agency-primary-color, #1a1a2e);
-    color: var(--agency-secondary-color, #fff);
-}
-.agec-btn-secondary {
-    background: var(--agency-header-bg, #f0f0f4);
-    color: var(--agency-text-color, #333);
-    border: var(--agency-card-border-width, 1px) solid var(--agency-card-border-color, var(--agency-border-color, #d8d8e0));
-}
-.agec-btn-danger {
-    background: transparent;
-    color: var(--agency-danger);
-    border: 1px solid var(--agency-danger);
-}
-
-/* ---- Layout ---- */
-.agec-layout {
-    max-width: 780px;
-    margin: 32px auto 80px;
-    padding: 0 16px;
-    display: flex;
-    flex-direction: column;
+.agec-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    align-items: start;
     gap: 20px;
 }
 
-/* ---- Cards ---- */
-.agec-card {
-    background: var(--agency-panel-bg, #fff);
-    border-radius: var(--agency-radius);
-    border: var(--agency-card-border-width, 1px) solid var(--agency-card-border-color, var(--agency-border-color, #e0e0e6));
-    box-shadow: var(--agency-shadow, 0 1px 4px rgba(0,0,0,.05));
-    padding: 24px;
-}
+.agec-col { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
 
-.agec-card-title {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--agency-text-muted, #888);
-    margin: 0 0 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--agency-border-color, #f0f0f4);
-    text-transform: uppercase;
-    letter-spacing: .06em;
-}
+.agec-card .agency-form-group { margin-bottom: 16px; }
+.agec-card .agency-form-group:last-child { margin-bottom: 0; }
 
-/* ---- Form fields ---- */
-.agec-field {
-    margin-bottom: 16px;
-}
-.agec-field:last-child { margin-bottom: 0; }
+.agec-divided { padding-bottom: 16px; border-bottom: 1px solid var(--ag-border); }
 
-.agec-label {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--agency-text-muted, #555);
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    letter-spacing: .04em;
-}
-
-.agec-input,
-.agec-select {
-    display: block;
-    width: 100%;
-    padding: 9px 12px;
-    border: var(--agency-card-border-width, 1px) solid var(--agency-card-border-color, var(--agency-border-color, #d8d8e0));
-    border-radius: var(--agency-radius-small);
-    font-size: 14px;
-    color: var(--agency-text-color, #1a1a2e);
-    background: var(--agency-light-bg, #fff);
-    transition: border-color .15s;
-    appearance: none;
-}
-.agec-input:focus,
-.agec-select:focus {
-    outline: none;
-    border-color: var(--agency-primary-color, #1a1a2e);
-}
-.agec-input[readonly],
-.agec-input[disabled] {
-    opacity: .6;
-    cursor: default;
-}
-
-.agec-hint {
-    font-size: 11px;
-    color: var(--agency-text-muted, #888);
-    margin-top: 4px;
-}
-
-/* ---- Copy row ---- */
-.agec-copy-row {
-    display: flex;
-    gap: 8px;
-}
-.agec-copy-row .agec-input { flex: 1; }
-.agec-copy-btn {
-    flex-shrink: 0;
-    padding: 9px 14px;
-    border: var(--agency-card-border-width, 1px) solid var(--agency-card-border-color, var(--agency-border-color, #d8d8e0));
-    border-radius: var(--agency-radius-small);
-    background: var(--agency-header-bg, #f6f6f8);
-    color: var(--agency-text-color, #333);
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: opacity .15s;
-}
-.agec-copy-btn:hover { opacity: .8; }
-
-/* ---- Color fields ---- */
-.agec-color-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-}
-
-.agec-color-field {
+.agec-switch {
     display: flex;
     align-items: center;
     gap: 10px;
-}
-.agec-color-field input[type="color"] {
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--agency-border-color, #d8d8e0);
-    border-radius: var(--agency-radius-small);
-    padding: 2px;
+    margin-top: 4px;
+    color: var(--ag-text-1);
+    font: 500 13px/18px var(--ag-font);
     cursor: pointer;
-    flex-shrink: 0;
-}
-.agec-color-field .agec-input {
-    font-family: monospace;
-    font-size: 13px;
 }
 
-/* ---- Media / Image fields ---- */
-.agec-media-field { display: flex; align-items: center; gap: 10px; }
-.agec-media-field .agec-input { flex: 1; }
-.agec-media-btn {
-    flex-shrink: 0;
-    padding: 9px 14px;
-    border: var(--agency-card-border-width, 1px) solid var(--agency-card-border-color, var(--agency-border-color, #d8d8e0));
-    border-radius: var(--agency-radius-small);
-    background: var(--agency-header-bg, #f6f6f8);
-    color: var(--agency-text-color, #333);
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: opacity .15s;
-}
-.agec-media-btn:hover { opacity: .8; }
+.agec-mono { font-family: var(--ag-mono) !important; font-size: 11px !important; }
 
-.agec-preview-img {
-    display: block;
-    max-width: 200px;
-    max-height: 100px;
-    object-fit: contain;
-    border-radius: var(--agency-radius-small);
-    border: 1px solid var(--agency-border-color, #e0e0e6);
+.agec-token-status { margin-bottom: 10px; }
+.agec-token-date { margin-left: auto; font: 400 11px/16px var(--ag-mono); opacity: .9; }
+
+.agec-token-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.agec-token-actions .agency-btn { width: 100%; }
+.agec-token-actions #agec-generate-token { grid-column: 1 / -1; }
+
+.agec-warning { margin-top: 10px; align-items: flex-start; }
+.agec-warning strong { font-weight: 600; }
+
+/* Image de fond */
+.agec-bg-frame {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 96px;
     margin-top: 10px;
+    overflow: hidden;
+    border: 1px solid var(--ag-border);
+    border-radius: var(--ag-r-md);
+    background: var(--ag-field);
+    color: var(--ag-text-3);
 }
 
-.agec-bg-preview {
-    width: 100%;
-    height: 80px;
-    object-fit: cover;
-    border-radius: var(--agency-radius-small);
-    border: 1px solid var(--agency-border-color, #e0e0e6);
-    margin-top: 10px;
-    display: block;
+.agec-bg-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.agec-bg-frame.has-image .agec-bg-empty { display: none; }
+
+/* Statistiques */
+.agec-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+
+.agec-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 12px;
+    border: 1px solid var(--ag-border);
+    border-radius: var(--ag-r-md);
+    background: var(--ag-bg);
 }
 
-/* ---- Token section ---- */
-.agec-token-status {
+.agec-stat strong { color: var(--ag-text-1); font: 600 20px/24px var(--ag-font); }
+.agec-stat span { color: var(--ag-text-3); font: 500 9px/12px var(--ag-mono); letter-spacing: .06em; text-transform: uppercase; }
+
+.agec-created {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--ag-border);
+    color: var(--ag-text-3);
+    font: 400 12px/16px var(--ag-font);
+}
+
+.agec-created span:last-child { color: var(--ag-text-2); }
+
+/* Zone de danger */
+.agec-danger {
+    margin-top: 20px;
+    padding: 18px;
+    border: 1px solid var(--ag-danger-line);
+    border-radius: var(--ag-r-lg);
+    background: var(--ag-panel);
+}
+
+.agec-danger .agency-field-label-mono { color: var(--ag-danger); }
+.agec-danger p { max-width: 620px; margin: 6px 0 12px; color: var(--ag-text-2); font: 400 13px/19px var(--ag-font); }
+
+/* Barre d'enregistrement collante */
+.agec-savebar {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 90;
+    border-top: 1px solid var(--ag-border);
+    background: rgba(14, 14, 16, .92);
+    backdrop-filter: blur(8px);
+}
+
+body.agency-has-sidebar .agec-savebar { left: calc(var(--ag-sidebar-open) + var(--ag-gutter) * 2); }
+body.agency-has-sidebar.agency-sidebar-closed .agec-savebar { left: calc(var(--ag-sidebar-closed) + var(--ag-gutter) * 2); }
+
+.agec-savebar__inner {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 14px;
-    border-radius: var(--agency-radius-small);
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 12px;
-}
-.agec-token-status.active {
-    background: #d1eddd;
-    color: #00a32a;
-    border-left: 3px solid #00a32a;
-}
-.agec-token-status.inactive {
-    background: #f8d7da;
-    color: var(--agency-danger);
-    border-left: 3px solid var(--agency-danger);
+    max-width: calc(var(--ag-content-max) + 64px);
+    margin: 0 auto;
+    padding: 12px 32px;
 }
 
-.agec-token-actions {
+.agec-savebar__state {
     display: flex;
+    align-items: center;
     gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
+    margin-right: auto;
+    color: var(--ag-text-2);
+    font: 400 13px/18px var(--ag-font);
+    visibility: hidden;
 }
 
-/* ---- Stats table ---- */
-.agec-stats-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    margin-top: 12px;
-}
-.agec-stats-table td {
-    padding: 8px 12px;
-    border-bottom: 1px solid var(--agency-border-color, #f0f0f4);
-}
-.agec-stats-table td:first-child {
-    color: var(--agency-text-muted, #555);
-    font-weight: 600;
-}
-.agec-stats-table tr:last-child td { border-bottom: none; }
+.agec-savebar.is-dirty .agec-savebar__state { visibility: visible; }
+.agec-savebar__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ag-warn); }
 
-/* ---- Danger zone ---- */
-.agec-danger-card {
-    border-color: #f8d7da;
-}
-.agec-danger-card .agec-card-title {
-    color: var(--agency-danger);
-    border-bottom-color: #f8d7da;
+@media (max-width: 1020px) {
+    .agec-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
-/* ---- Toast : composant unifié .agency-toast (assets/css/ui.css) ---- */
-
-/* ---- Dark theme overrides ---- */
-.agency-theme-dark.agency-edit-client-page {
-    background: var(--agency-light-bg);
-    color: var(--agency-text-color);
-}
-.agency-theme-dark .agec-card {
-    background: var(--agency-panel-bg);
-    border-color: var(--agency-border-color);
-}
-.agency-theme-dark .agec-input,
-.agency-theme-dark .agec-select {
-    background: var(--agency-light-bg);
-    color: var(--agency-text-color);
-    border-color: var(--agency-border-color);
-}
-.agency-theme-dark .agec-copy-btn,
-.agency-theme-dark .agec-media-btn {
-    background: var(--agency-header-bg);
-    color: var(--agency-text-color);
-    border-color: var(--agency-border-color);
-}
-
-/* ---- Sidebar offset ---- */
-/* Le contenu est dans .agency-main : l'offset est géré par la règle générique
- * .agency-has-sidebar .agency-main { margin-left } dans frontend.css */
-
-/* ---- Responsive ---- */
-@media (max-width: 600px) {
-    .agec-layout { padding: 0 8px; margin-top: 16px; }
-    .agec-color-row { grid-template-columns: 1fr; }
+@media (max-width: 900px) {
+    body.agency-has-sidebar .agec-savebar,
+    body.agency-has-sidebar.agency-sidebar-closed .agec-savebar { left: 0; }
+    .agec-savebar__inner { padding: 12px 16px; }
 }

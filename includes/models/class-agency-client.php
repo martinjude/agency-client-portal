@@ -22,6 +22,16 @@ class Agency_Client {
     }
     
     /**
+     * Obtenir tous les clients non supprimés (actifs et inactifs)
+     */
+    public static function get_all_listable() {
+        global $wpdb;
+        $table = $wpdb->prefix . 'agency_clients';
+
+        return $wpdb->get_results("SELECT * FROM $table WHERE status <> 'deleted' ORDER BY name ASC");
+    }
+
+    /**
      * Obtenir un client par ID
      */
     public static function get_by_id($id) {

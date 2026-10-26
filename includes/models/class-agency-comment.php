@@ -196,6 +196,32 @@ class Agency_Comment {
     }
     
     /**
+     * Nombre de commentaires approuvés de plusieurs blocs, indexé par block_id.
+     *
+     * @param int[] $block_ids
+     * @return array<int, int>
+     */
+    public static function count_by_blocks(array $block_ids) {
+        global $wpdb;
+        $block_ids = array_values(array_filter(array_map('intval', $block_ids)));
+        if (empty($block_ids)) {
+            return array();
+        }
+        $table        = $wpdb->prefix . 'agency_comments';
+        $placeholders = implode(',', array_fill(0, count($block_ids), '%d'));
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $placeholders ne contient que des %d.
+        $rows = $wpdb->get_results($wpdb->prepare(
+            "SELECT block_id, COUNT(*) AS cnt FROM $table WHERE block_id IN ($placeholders) AND status = 'approved' GROUP BY block_id",
+            $block_ids
+        ));
+        $counts = array();
+        foreach ($rows as $row) {
+            $counts[intval($row->block_id)] = intval($row->cnt);
+        }
+        return $counts;
+    }
+
+    /**
      * Envoyer une notification pour un nouveau commentaire
      */
     private static function send_notification($comment_id) {

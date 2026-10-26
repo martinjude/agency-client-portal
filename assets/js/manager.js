@@ -15,7 +15,6 @@
             this.initSortable();
             this.bindManagerEvents();
             this.initSidebar();
-            this.initSidebarProjects();
         },
         
         initSortable: function() {
@@ -26,6 +25,7 @@
                     animation: 150,
                     delay: 100,
                     delayOnTouchOnly: true,
+                    draggable: '.agency-block',
                     onEnd: this.handleBlockReorder.bind(this)
                 });
             }
@@ -37,6 +37,7 @@
                     animation: 150,
                     delay: 100,
                     delayOnTouchOnly: true,
+                    draggable: '.agency-project-card',
                     onEnd: this.handleProjectReorder.bind(this)
                 });
             }
@@ -80,63 +81,227 @@
             $(document).on('click', '#import-preset-btn', this.openImportPresetModal.bind(this));
             $(document).on('click', '#import-preset-cancel, #import-preset-modal-close', this.closeImportPresetModal.bind(this));
 
+            // Copier le lien d'accès d'un client (dashboard, portail)
+            $(document).on('click', '.agency-copy-access', this.copyAccessLink.bind(this));
+
             // Note: Upload asset is handled in frontend.js to avoid duplicate event binding
         },
 
-        initSidebar: function() {
-            var $body   = $('body');
-            var $toggle = $('#agency-sidebar-toggle');
+        /**
+         * Récupère le lien d'accès (token) d'un client et le copie.
+         */
+        copyAccessLink: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const $btn = $(e.currentTarget);
+            const clientId = $btn.data('client-id');
+            if ($btn.prop('disabled')) return;
+            $btn.prop('disabled', true);
 
-            if (!$toggle.length) return;
+            const copy = function(url) {
+                const done = function() { AgencyUI.toast(__('Link copied to clipboard!', 'agency-client-portal')); };
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(url).then(done).catch(function() { fallback(url); });
+                } else {
+                    fallback(url);
+                }
+                function fallback(text) {
+                    const $tmp = $('<input>').val(text).appendTo('body');
+                    $tmp[0].select();
+                    try { document.execCommand('copy'); done(); } catch (err) { window.prompt(__('Copy the link:', 'agency-client-portal'), text); }
+                    $tmp.remove();
+                }
+            };
 
-            // Restaurer l'état depuis localStorage (défaut : ouvert)
-            var isOpen = localStorage.getItem('agency_sidebar_state') !== 'closed';
-            $body.addClass(isOpen ? 'agency-sidebar-open' : 'agency-sidebar-closed');
-
-            $toggle.on('click', function() {
-                var open = $body.hasClass('agency-sidebar-open');
-                $body
-                    .toggleClass('agency-sidebar-open', !open)
-                    .toggleClass('agency-sidebar-closed', open);
-                localStorage.setItem('agency_sidebar_state', open ? 'closed' : 'open');
-                $toggle.attr('aria-label', open ? __('Expand menu', 'agency-client-portal') : __('Collapse menu', 'agency-client-portal'));
+            $.post(agencyData.ajax_url, {
+                action: 'agency_get_access_url',
+                client_id: clientId,
+                nonce: agencyData.admin_nonce
+            }, function(resp) {
+                if (resp.success && resp.data && resp.data.access_url) {
+                    copy(resp.data.access_url);
+                } else if (resp.data && resp.data.code === 'token_plaintext_expired') {
+                    AgencyUI.toast(__('Legacy token — go to Edit client to regenerate it.', 'agency-client-portal'), { type: 'error' });
+                } else {
+                    AgencyUI.toast(__('Unable to retrieve the access link.', 'agency-client-portal'), { type: 'error' });
+                }
+            }).fail(function() {
+                AgencyUI.toast(__('Server error while retrieving the link.', 'agency-client-portal'), { type: 'error' });
+            }).always(function() {
+                $btn.prop('disabled', false);
             });
         },
 
-        initSidebarProjects: function() {
-            var STORAGE_KEY = 'agency_sidebar_projects_open';
+        /**
+         * Sidebar agence : repli en rail, groupes ouverts, recherche (⌘K),
+         * infobulles du rail et tiroir mobile. Les états sont mémorisés dans
+         * localStorage (confort uniquement : le chemin courant est toujours
+         * ouvert côté serveur).
+         */
+        initSidebar: function() {
+            var sidebar = document.getElementById('agency-sidebar');
+            if (!sidebar) return;
 
-            function getOpenIds() {
-                try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { return []; }
+            var body    = document.body;
+            var toggle  = document.getElementById('agency-sidebar-toggle');
+            var OPEN_KEY = 'agency_sidebar_open';
+
+            function store(key, value) {
+                try { localStorage.setItem(key, value); } catch (e) {}
+            }
+            function read(key) {
+                try { return localStorage.getItem(key); } catch (e) { return null; }
             }
 
-            function saveOpenIds(ids) {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+            // --- Repli / dépli ---
+            function setFolded(folded) {
+                body.classList.toggle('agency-sidebar-closed', folded);
+                body.classList.toggle('agency-sidebar-open', !folded);
+                store('agency_sidebar_state', folded ? 'closed' : 'open');
+                if (toggle) {
+                    toggle.setAttribute('aria-label', folded ? toggle.dataset.labelClosed : toggle.dataset.labelOpen);
+                }
+                hideTip();
             }
 
-            // Restaurer l'état des projets ouverts depuis localStorage
-            var openIds = getOpenIds();
-            openIds.forEach(function(id) {
-                var $group = $('.agency-sidebar-project-group[data-project-id="' + id + '"]');
-                if ($group.length) $group.addClass('is-open');
+            if (toggle) {
+                toggle.addEventListener('click', function() { setFolded(true); });
+                // Bouton « déplier » affiché en bas du rail
+                var unfold = toggle.cloneNode(true);
+                unfold.removeAttribute('id');
+                unfold.className = 'agency-btn-icon agency-sidebar__unfold';
+                unfold.setAttribute('aria-label', toggle.dataset.labelClosed);
+                unfold.dataset.tip = toggle.dataset.labelClosed;
+                unfold.addEventListener('click', function() { setFolded(false); });
+                sidebar.querySelector('.agency-sidebar__foot').prepend(unfold);
+            }
+
+            // --- Groupes clients / projets ouverts ---
+            function openKeys() {
+                try { return JSON.parse(read(OPEN_KEY) || '[]'); } catch (e) { return []; }
+            }
+            openKeys().forEach(function(key) {
+                var g = sidebar.querySelector('[data-sb-key="' + key + '"]');
+                if (g) g.classList.add('is-open');
+            });
+            sidebar.querySelectorAll('.agency-sidebar__group.is-open, .agency-sidebar__pgroup.is-open').forEach(syncChevron);
+
+            function syncChevron(group) {
+                var chev = group.querySelector(':scope > div > .agency-sidebar__chev');
+                if (chev && chev.tagName === 'BUTTON') {
+                    chev.setAttribute('aria-expanded', group.classList.contains('is-open') ? 'true' : 'false');
+                }
+            }
+
+            sidebar.addEventListener('click', function(e) {
+                var chev = e.target.closest('button.agency-sidebar__chev');
+                if (!chev) return;
+                e.preventDefault();
+                var group = chev.closest('.agency-sidebar__pgroup, .agency-sidebar__group');
+                group.classList.toggle('is-open');
+                syncChevron(group);
+                var keys = openKeys().filter(function(k) { return k !== group.dataset.sbKey; });
+                if (group.classList.contains('is-open')) keys.push(group.dataset.sbKey);
+                store(OPEN_KEY, JSON.stringify(keys));
             });
 
-            // Gérer le clic sur les boutons toggle
-            $(document).on('click', '.agency-sidebar-project-toggle', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var id = $(this).data('project-id');
-                var $group = $('.agency-sidebar-project-group[data-project-id="' + id + '"]');
-                $group.toggleClass('is-open');
+            // --- Recherche (clients, projets, blocs) ---
+            var search = document.getElementById('agency-sidebar-search');
+            var empty  = document.getElementById('agency-sidebar-empty');
 
-                var currentOpen = getOpenIds();
-                var idx = currentOpen.indexOf(id);
-                if ($group.hasClass('is-open')) {
-                    if (idx === -1) currentOpen.push(id);
-                } else {
-                    if (idx !== -1) currentOpen.splice(idx, 1);
+            function filter(term) {
+                term = (term || '').trim().toLowerCase();
+                sidebar.classList.toggle('is-searching', term !== '');
+                var anyVisible = false;
+                sidebar.querySelectorAll('.agency-sidebar__group').forEach(function(group) {
+                    var groupMatch = term === '' || group.dataset.sbSearch.toLowerCase().indexOf(term) !== -1;
+                    var groupHasChild = false;
+                    group.querySelectorAll('.agency-sidebar__pgroup').forEach(function(pg) {
+                        var projMatch = groupMatch || pg.dataset.sbSearch.toLowerCase().indexOf(term) !== -1;
+                        var projHasChild = false;
+                        pg.querySelectorAll('.agency-sidebar__row--block').forEach(function(row) {
+                            var match = projMatch || row.dataset.sbSearch.toLowerCase().indexOf(term) !== -1;
+                            row.toggleAttribute('data-sb-hidden', !match);
+                            projHasChild = projHasChild || match;
+                        });
+                        var showProj = projMatch || projHasChild;
+                        pg.toggleAttribute('data-sb-hidden', !showProj);
+                        groupHasChild = groupHasChild || showProj;
+                    });
+                    var show = groupMatch || groupHasChild;
+                    group.toggleAttribute('data-sb-hidden', !show);
+                    anyVisible = anyVisible || show;
+                });
+                if (empty) empty.hidden = anyVisible;
+            }
+
+            if (search) {
+                search.addEventListener('input', function() { filter(search.value); });
+                search.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        search.value = '';
+                        filter('');
+                        search.blur();
+                    }
+                });
+            }
+
+            function focusSearch() {
+                if (window.matchMedia('(max-width: 900px)').matches) {
+                    body.classList.add('agency-sidebar-mobile-open');
+                } else if (body.classList.contains('agency-sidebar-closed')) {
+                    setFolded(false);
                 }
-                saveOpenIds(currentOpen);
+                if (search) { search.focus(); search.select(); }
+            }
+
+            var searchBtn = document.getElementById('agency-sidebar-search-btn');
+            if (searchBtn) searchBtn.addEventListener('click', focusSearch);
+
+            document.addEventListener('keydown', function(e) {
+                if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+                    e.preventDefault();
+                    focusSearch();
+                }
+            });
+
+            // Raccourci affiché selon la plateforme
+            var kbd = sidebar.querySelector('.agency-sidebar__kbd');
+            if (kbd && !/Mac|iPhone|iPad/.test(navigator.platform || '')) kbd.textContent = 'Ctrl K';
+
+            // --- Infobulles du rail ---
+            var tip = null;
+            function hideTip() { if (tip) { tip.remove(); tip = null; } }
+            sidebar.addEventListener('mouseover', function(e) {
+                if (!body.classList.contains('agency-sidebar-closed')) return;
+                var el = e.target.closest('[data-tip]');
+                if (!el || !sidebar.contains(el)) return;
+                hideTip();
+                var r = el.getBoundingClientRect();
+                tip = document.createElement('div');
+                tip.className = 'agency-sidebar-tip';
+                tip.textContent = el.dataset.tip;
+                tip.style.left = (sidebar.getBoundingClientRect().right + 8) + 'px';
+                tip.style.top = (r.top + r.height / 2) + 'px';
+                body.appendChild(tip);
+            });
+            sidebar.addEventListener('mouseout', function(e) {
+                var el = e.target.closest('[data-tip]');
+                if (el && !el.contains(e.relatedTarget)) hideTip();
+            });
+
+            // --- Tiroir mobile ---
+            var burger = document.getElementById('agency-sidebar-burger');
+            var scrim  = document.getElementById('agency-sidebar-scrim');
+            function setMobile(open) {
+                body.classList.toggle('agency-sidebar-mobile-open', open);
+                if (burger) burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+                if (scrim) scrim.hidden = !open;
+            }
+            if (burger) burger.addEventListener('click', function() { setMobile(true); });
+            if (scrim) scrim.addEventListener('click', function() { setMobile(false); });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && body.classList.contains('agency-sidebar-mobile-open')) setMobile(false);
             });
         },
 

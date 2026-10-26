@@ -21,8 +21,8 @@ The plugin is free and open source. All features are included, and nothing requi
 **Features**
 
 * Token-based client access. Clients do not need to log in.
-* A branded portal for each client, with logo, accent color and background image.
-* Global themes and branding: fonts, card style, border radius, light and dark backgrounds.
+* A portal for each client, with its logo and a single accent color.
+* One focused dark interface (Inter and JetBrains Mono, bundled), with a sidebar that lists every client, project and block for agency staff.
 * Projects built from more than 10 block types: script, storyboard, versioned media, video, link, file deposit, code, separator, progress bar and more.
 * Drag-and-drop block ordering, plus resizable grid cards.
 * Comments on blocks, with optional email notifications.
@@ -69,7 +69,7 @@ The plugin accepts files up to 512 MB by default. Your server's PHP limits (`upl
 
 = Can I customize the portal appearance per client? =
 
-Yes. Each client portal has its own logo, accent color and background image. Global themes control fonts, cards and backgrounds.
+Each client portal shows the client's logo and accent color, and the agency logo is set in Agency > Settings > Branding. The rest of the interface is a single, fixed design: there are no themes, fonts or colors to configure.
 
 = Is the plugin translated? =
 
@@ -82,10 +82,6 @@ Yes. Deleting the plugin from the Plugins screen removes its database tables, op
 == External services ==
 
 The plugin works without any external account. Some optional features load content from third-party services:
-
-= Google Fonts =
-Used only when you choose a custom interface font in Agency > Settings > Branding. The font stylesheet is then loaded from fonts.googleapis.com on client portal pages. The visitor's IP address and user agent are sent to Google.
-Terms: https://developers.google.com/terms — Privacy policy: https://policies.google.com/privacy
 
 = Twemoji (jsDelivr CDN) =
 Project and link emojis are shown as Twemoji SVG images, loaded from cdn.jsdelivr.net. If an image fails to load, the native emoji is shown instead. The visitor's IP address and user agent are sent to jsDelivr. Twemoji graphics are licensed under CC-BY 4.0.
@@ -100,6 +96,8 @@ YouTube / Google: https://policies.google.com/privacy — Vimeo: https://vimeo.c
 * SortableJS 1.15.0 — MIT License — https://github.com/SortableJS/Sortable (bundled as `assets/js/sortable.min.js`, the official minified build)
 * Prism 1.x — MIT License — https://github.com/PrismJS/prism (bundled as `assets/js/prism.js`)
 * Twemoji graphics — CC-BY 4.0 — https://github.com/jdecked/twemoji
+* Inter — SIL Open Font License 1.1 — https://github.com/rsms/inter (bundled in `assets/fonts/`)
+* JetBrains Mono — SIL Open Font License 1.1 — https://github.com/JetBrains/JetBrainsMono (bundled in `assets/fonts/`)
 
 == Screenshots ==
 
@@ -119,6 +117,10 @@ YouTube / Google: https://policies.google.com/privacy — Vimeo: https://vimeo.c
 * Hardened output escaping, and switched to the WordPress APIs for inline scripts, uploads and file operations.
 * The 512 MB upload limit now applies only to Agency uploads instead of the whole site.
 * Database migration 2.8.0 removes the leftover license options and scheduled events.
+* New interface based on a single design system: dark UI, bundled Inter and JetBrains Mono fonts (no more Google Fonts requests), redesigned dashboard, portal, project, client and block pages.
+* New agency sidebar on every staff page: search (Cmd/Ctrl+K), all clients with their projects and blocks, and a folded rail mode.
+* Removed appearance settings: theme presets, light/dark mode, interface font, corner radius, card border and background/sidebar colors. Clients keep a single accent color; the secondary color is gone.
+* Database migration 2.9.0 deletes the removed appearance options and adapts block widths to the new 4-column grid.
 
 = 1.6.6 =
 * Visual fixes.

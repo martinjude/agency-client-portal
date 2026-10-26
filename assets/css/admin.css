@@ -1,3 +1,304 @@
+/* ============================================================
+   PRIMITIVES ADMIN WP
+   L'admin garde le style WordPress (clair) : ui.css est réservé au
+   portail. Tokens hérités --agency-* et primitives limités à l'admin.
+   ============================================================ */
+
+body.wp-admin {
+    /* --- Marque (surchargés par le branding client) --- */
+    --agency-primary-color: #000000;
+    --agency-secondary-color: #ffffff;
+
+    /* Accent "agence" : chrome interne (admin WP, dashboard manager).
+       Indépendant de la couleur de marque du client. */
+    --agency-accent: #3b82f6;
+    --agency-accent-hover: #2563eb;
+
+    /* --- Texte & surfaces --- */
+    --agency-text-color: #333333;
+    --agency-text-muted: #6b7280;
+    --agency-light-bg: #f8f9fa;
+    --agency-surface-1: #ffffff;
+    --agency-border-color: #e0e0e0;
+
+    /* --- Couleurs sémantiques (états) --- */
+    --agency-success: #16a34a;
+    --agency-success-bg: #dcfce7;
+    --agency-danger: #dc2626;
+    --agency-danger-hover: #b91c1c;
+    --agency-danger-bg: #fee2e2;
+    --agency-warning: #d97706;
+    --agency-warning-bg: #fef3c7;
+    --agency-info: #2563eb;
+    --agency-info-bg: #dbeafe;
+
+    /* --- Ombres --- */
+    --agency-shadow:        0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.05);
+    --agency-shadow-hover:  0 4px 12px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.07);
+    --agency-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.14);
+
+    /* --- Rayons (échelle à 4 crans) --- */
+    --agency-radius: 25px;        /* cartes, conteneurs */
+    --agency-radius-small: 12px;  /* éléments intermédiaires */
+    --agency-radius-button: 14px; /* boutons (surchargé par le branding client) */
+    --agency-radius-xs: 6px;      /* petits éléments : badges, inputs compacts */
+
+    /* --- Espacement (adoption progressive) --- */
+    --agency-space-1: 4px;
+    --agency-space-2: 8px;
+    --agency-space-3: 12px;
+    --agency-space-4: 16px;
+    --agency-space-5: 24px;
+    --agency-space-6: 32px;
+
+    /* --- Divers --- */
+    --agency-transition: all 0.3s ease;
+    --agency-header-bg: rgba(255, 255, 255, 0.85);
+    --agency-header-height: 70px;
+
+    /* --- Sidebar manager (surchargés par le branding) --- */
+    --agency-sidebar-width-open:   240px;
+    --agency-sidebar-width-closed:  52px;
+    --agency-sidebar-bg:           #1a1a2e;
+    --agency-sidebar-text:         rgba(255, 255, 255, 0.75);
+    --agency-sidebar-text-hover:   #ffffff;
+    --agency-sidebar-accent:       rgba(255, 255, 255, 0.12);
+    --agency-sidebar-active-bg:    rgba(255, 255, 255, 0.18);
+    --agency-sidebar-border:       rgba(255, 255, 255, 0.08);
+    --agency-sidebar-muted:        rgba(255, 255, 255, 0.35);
+}
+
+body.wp-admin {
+    --agency-primary-color: var(--agency-accent);
+    --agency-radius-button: 8px;
+    --agency-radius-small: 8px;
+}
+
+/* ============ BOUTONS ============ */
+
+.agency-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--agency-radius-button);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--agency-transition);
+    text-decoration: none;
+    text-align: center;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.agency-btn-primary {
+    background: var(--agency-primary-color);
+    color: #ffffff;
+}
+
+.agency-btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: var(--agency-shadow);
+    color: #ffffff;
+}
+
+.agency-btn-secondary {
+    background: var(--agency-light-bg);
+    color: var(--agency-text-color);
+    border: 1px solid var(--agency-border-color);
+}
+
+.agency-btn-secondary:hover {
+    background: #e9ecef;
+}
+
+.agency-btn-outline {
+    background: transparent;
+    border: 1px solid var(--agency-border-color);
+    color: var(--agency-text-color);
+}
+
+.agency-btn-outline:hover {
+    background: var(--agency-light-bg);
+    border-color: var(--agency-primary-color);
+    color: var(--agency-primary-color);
+    transform: translateY(-1px);
+}
+
+.agency-btn-danger {
+    background: transparent;
+    color: var(--agency-danger);
+    border: 1px solid var(--agency-danger);
+}
+
+.agency-btn-danger:hover {
+    background: var(--agency-danger);
+    color: #ffffff;
+}
+
+/* Variante danger pleine (actions destructives fortes) */
+.agency-btn-danger-solid {
+    background: var(--agency-danger);
+    color: #ffffff;
+}
+
+.agency-btn-danger-solid:hover {
+    background: var(--agency-danger-hover);
+    color: #ffffff;
+}
+
+/* Variante fantôme : discrète, hérite du contexte */
+.agency-btn-ghost {
+    background: transparent;
+    color: var(--agency-text-muted);
+}
+
+.agency-btn-ghost:hover {
+    background: var(--agency-light-bg);
+    color: var(--agency-text-color);
+}
+
+.agency-btn-text {
+    background: none;
+    border: none;
+    color: var(--agency-danger);
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 13px;
+    transition: var(--agency-transition);
+}
+
+.agency-btn-text:hover {
+    text-decoration: underline;
+}
+
+/* Tailles (modificateurs purs : couleur via les variantes ci-dessus) */
+.agency-btn-sm {
+    padding: 6px 14px;
+    font-size: 13px;
+    gap: 5px;
+}
+
+.agency-btn-lg {
+    padding: 14px 32px;
+    font-size: 15px;
+}
+
+/* Bouton-icône nu (actions inline : télécharger, supprimer…) */
+.agency-btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: inherit;
+    line-height: 1;
+    padding: 5px;
+    transition: var(--agency-transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.agency-btn-icon:hover {
+    transform: scale(1.2);
+}
+
+/* ============ ICÔNES SVG (Agency_Icons) ============ */
+
+.agency-icon {
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.agency-btn .agency-icon {
+    margin-right: 4px;
+}
+
+.agency-btn-icon .agency-icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* ============ BADGES ============ */
+
+.agency-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.6;
+    white-space: nowrap;
+    background: var(--agency-light-bg);
+    color: var(--agency-text-muted);
+}
+
+.agency-badge--success { background: var(--agency-success-bg); color: var(--agency-success); }
+.agency-badge--danger  { background: var(--agency-danger-bg);  color: var(--agency-danger); }
+.agency-badge--warning { background: var(--agency-warning-bg); color: var(--agency-warning); }
+.agency-badge--info    { background: var(--agency-info-bg);    color: var(--agency-info); }
+.agency-badge--primary { background: var(--agency-primary-color); color: #ffffff; }
+
+/* ============ CHAMPS DE FORMULAIRE ============ */
+
+.agency-input,
+.agency-select,
+.agency-textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--agency-border-color);
+    border-radius: var(--agency-radius-xs);
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--agency-text-color);
+    background: var(--agency-surface-1);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    box-sizing: border-box;
+}
+
+.agency-input:focus,
+.agency-select:focus,
+.agency-textarea:focus {
+    outline: none;
+    border-color: var(--agency-primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+.agency-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* ============ UTILITAIRES LAYOUT (remplacement des styles inline) ============ */
+
+.agency-w-full { width: 100%; }
+.agency-maxw-760 { max-width: 760px; }
+.agency-mt-8  { margin-top: 8px; }
+.agency-mt-10 { margin-top: 10px; }
+.agency-mt-12 { margin-top: 12px; }
+.agency-mt-15 { margin-top: 15px; }
+.agency-mt-20 { margin-top: 20px; }
+.agency-mt-24 { margin-top: 24px; }
+.agency-mt-30 { margin-top: 30px; }
+.agency-mb-20 { margin-bottom: 20px; }
+.agency-my-40 { margin: 40px 0; }
+.agency-field-label { display: block; font-weight: 600; margin-bottom: 8px; }
+
+
+.agency-mt-16 { margin-top: 16px; }
+.agency-mb-16 { margin-bottom: 16px; }
+.agency-text-danger { color: var(--agency-danger); }
+.agency-muted-note { color: var(--agency-text-muted); margin-bottom: 16px; }
+.agency-grid-full-row { grid-column: 1 / -1; }
+
+
 /**
  * Agency Admin Styles
  */
@@ -385,162 +686,6 @@
     .agency-clients-grid {
         grid-template-columns: 1fr;
     }
-}
-
-/* ========================================
-   THEME PRESET CARDS
-   ======================================== */
-
-.agency-theme-presets-grid {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-bottom: 32px;
-}
-
-.agency-theme-card {
-    width: 180px;
-    border: 2px solid #e2e8f0;
-    border-radius: 14px;
-    overflow: hidden;
-    cursor: pointer;
-    background: #fff;
-    transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    user-select: none;
-}
-.agency-theme-card:hover {
-    border-color: #94a3b8;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    transform: translateY(-2px);
-}
-.agency-theme-card.is-active {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
-}
-
-/* Mini preview area */
-.agency-theme-preview {
-    height: 100px;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-.atp-header {
-    height: 20px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-    gap: 5px;
-}
-.atp-header-dot {
-    width: 18px;
-    height: 5px;
-    border-radius: 3px;
-    background: rgba(255,255,255,0.55);
-}
-.atp-header-dot-sm {
-    width: 10px;
-    height: 5px;
-    border-radius: 3px;
-    background: rgba(255,255,255,0.3);
-}
-.atp-body {
-    flex: 1;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-.atp-card {
-    background: #fff;
-    border-radius: var(--agency-radius-small);
-    padding: 7px 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    border: 1px solid rgba(0,0,0,0.08);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-}
-.atp-card-dark {
-    background: rgba(255,255,255,0.07);
-    border-color: rgba(255,255,255,0.1);
-}
-.atp-bar {
-    height: 5px;
-    border-radius: 3px;
-    width: 55%;
-}
-.atp-line {
-    height: 3px;
-    border-radius: 2px;
-    background: rgba(0,0,0,0.1);
-    width: 80%;
-}
-.atp-line-dark {
-    background: rgba(255,255,255,0.12);
-}
-.atp-line-sm {
-    width: 50%;
-}
-
-/* Card footer */
-.agency-theme-card-footer {
-    padding: 10px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-top: 1px solid #f1f5f9;
-    background: #fff;
-}
-.agency-theme-card-footer strong {
-    font-size: 13px;
-    font-weight: 600;
-    color: #1e293b;
-}
-.agency-theme-card-footer p {
-    font-size: 11px;
-    color: #64748b;
-    margin: 1px 0 0;
-}
-.agency-theme-active-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 18px;
-    height: 18px;
-    background: #6366f1;
-    border-radius: 50%;
-    color: #fff;
-    font-size: 10px;
-    font-weight: 700;
-    line-height: 1;
-    flex-shrink: 0;
-}
-.agency-theme-card:not(.is-active) .agency-theme-active-badge {
-    display: none;
-}
-
-/* Custom card */
-.agency-theme-card-custom .agency-theme-preview {
-    align-items: center;
-    justify-content: center;
-    background: #f8fafc;
-}
-.agency-theme-card-custom .atp-custom-icon {
-    font-size: 32px;
-    opacity: 0.4;
-}
-.agency-theme-card-custom .agency-theme-card-footer {
-    background: #f8fafc;
-}
-
-@media (max-width: 900px) {
-    .agency-theme-presets-grid { gap: 12px; }
-    .agency-theme-card { width: 150px; }
-    .agency-theme-preview { height: 82px; }
 }
 
 /* Tooltip lien vers tarifs (admin uniquement) */

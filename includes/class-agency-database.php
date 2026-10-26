@@ -14,7 +14,7 @@ class Agency_Database {
     /**
      * Version de la base de données
      */
-    const DB_VERSION = '2.8.0';
+    const DB_VERSION = '2.9.0';
 
     /**
      * Option contenant le dernier message d'erreur de migration.

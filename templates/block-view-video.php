@@ -584,16 +584,15 @@ $embed_asset_ids = array();
     <?php include AGENCY_PLUGIN_DIR . 'templates/partials/header.php'; ?>
 
     <!-- Sidebar manager -->
-    <?php $sidebar_context = 'block'; include AGENCY_PLUGIN_DIR . 'templates/partials/sidebar.php'; ?>
+    <?php include AGENCY_PLUGIN_DIR . 'templates/partials/sidebar.php'; ?>
 
     <main class="agency-main">
 
         <div class="agency-container">
             <div class="agency-block-view agency-block-video" data-block-id="<?php echo esc_attr($block->id); ?>">
-                <div class="block-header-full">
-                    <div class="block-type-badge"><?php echo esc_html(Agency_Block::get_type_label($block->type)); ?></div>
-                    <div class="block-project-name"><?php echo esc_html($project->name); ?></div>
-                    <h1 class="agency-title"><?php echo esc_html($block->title); ?></h1>
+                <?php include AGENCY_PLUGIN_DIR . 'templates/partials/block-head.php'; ?>
+
+                <div class="block-header-full agency-bv-bar">
 <?php
                     $_bv_description = $block->content ?? '';
                     ?>
@@ -638,14 +637,6 @@ $embed_asset_ids = array();
                             </button>
                             <button class="agency-btn agency-btn-secondary" id="embed-video-btn" type="button">
                                 <?php Agency_Icons::render('link', 16); ?> <?php esc_html_e('Embed a video', 'agency-client-portal'); ?>
-                            </button>
-                            <?php include AGENCY_PLUGIN_DIR . 'templates/partials/notify-client-button.php'; ?>
-                            <button class="agency-btn agency-btn-outline copy-block-link-btn"
-                                    data-block-id="<?php echo esc_attr($block->id); ?>"
-                                    data-client-id="<?php echo esc_attr($client->id); ?>"
-                                    data-client-slug="<?php echo esc_attr($client->slug); ?>"
-                                    data-project-slug="<?php echo esc_attr($project->slug); ?>">
-                                <?php Agency_Icons::render('copy', 16); ?> <?php esc_html_e('Copy link', 'agency-client-portal'); ?>
                             </button>
                         </div>
                     <?php endif; ?>
@@ -757,7 +748,7 @@ $embed_asset_ids = array();
                                                         <div class="comment-item" data-comment-id="<?php echo esc_attr($comment->id); ?>">
                                                             <div class="comment-header">
                                                                 <span class="comment-author"><?php echo esc_html($comment->user->display_name); ?></span>
-                                                                <span class="comment-date"><?php echo esc_html(human_time_diff(strtotime($comment->created_at), current_time('timestamp'))); ?></span>
+                                                                <span class="comment-date"><?php echo esc_html(Agency_Template::time_ago($comment->created_at)); ?></span>
                                                             </div>
                                                             <div class="comment-content"><?php echo wp_kses_post($comment->content); ?></div>
                                                             <?php if ($is_manager || get_current_user_id() === (int)$comment->user_id): ?>
@@ -875,7 +866,7 @@ $embed_asset_ids = array();
                                                         <div class="comment-item" data-comment-id="<?php echo esc_attr($comment->id); ?>">
                                                             <div class="comment-header">
                                                                 <span class="comment-author"><?php echo esc_html($comment->user->display_name); ?></span>
-                                                                <span class="comment-date"><?php echo esc_html(human_time_diff(strtotime($comment->created_at), current_time('timestamp'))); ?></span>
+                                                                <span class="comment-date"><?php echo esc_html(Agency_Template::time_ago($comment->created_at)); ?></span>
                                                             </div>
                                                             <div class="comment-content"><?php echo wp_kses_post($comment->content); ?></div>
                                                             <?php if ($is_manager || get_current_user_id() === (int)$comment->user_id): ?>

@@ -33,33 +33,54 @@
         $('#agec-portal-url').val(portalUrl);
     });
 
-    /* ---- Copy portal URL ---- */
+    /* ---- Copy portal URL / access link ---- */
     $(document).on('click', '.agec-copy-portal-url', function () {
-        var $input = $('#agec-portal-url');
-        $input[0].select();
-        document.execCommand('copy');
-        toast(__('URL copied!', 'agency-client-portal'));
+        AgencyUI.copyText($('#agec-portal-url').val(), __('URL copied!', 'agency-client-portal'));
     });
 
-    /* ---- Copy access link ---- */
     $(document).on('click', '#agec-copy-access-link', function () {
-        var $input = $('#agec-access-link-input');
-        $input[0].select();
-        document.execCommand('copy');
-        toast(__('Link copied!', 'agency-client-portal'));
+        var link = $('#agec-access-link-input').val();
+        if (link) { AgencyUI.copyText(link, __('Link copied!', 'agency-client-portal')); }
     });
 
-    /* ---- Color inputs sync (hex text ↔ color picker) ---- */
-    function bindColorSync(colorInputId, textInputId) {
-        var $color = $('#' + colorInputId);
-        var $text  = $('#' + textInputId);
-        $color.on('input', function () { $text.val($color.val()); });
-        $text.on('input', function () {
-            var val = $text.val();
-            if (/^#[0-9a-fA-F]{6}$/.test(val)) { $color.val(val); }
-        });
+    /* ---- Statut : interrupteur → champ caché ---- */
+    $('#agec-status-toggle').on('change', function () {
+        var active = $(this).is(':checked');
+        $('#agec-client-status').val(active ? 'active' : 'inactive');
+        $('#agec-status-label').text(active ? __('Active', 'agency-client-portal') : __('Inactive', 'agency-client-portal'));
+        markDirty();
+    });
+
+    /* ---- Modifications non enregistrées : barre d'enregistrement ---- */
+    var $savebar = $('#agec-savebar');
+    function markDirty() {
+        $savebar.addClass('is-dirty');
     }
-    bindColorSync('agec-primary-color-picker', 'agec-primary-color-text');
+    $(document).on('input change', '#agec-client-name, #agec-logo-url, #agec-bg-url, #agec-primary-color-text, #agec-primary-color-picker', markDirty);
+    $(document).on('click', '.agency-accent-field__preset', markDirty);
+
+    $('#agec-cancel-btn').on('click', function () {
+        window.location.reload();
+    });
+
+    $(window).on('beforeunload', function () {
+        if ($savebar.hasClass('is-dirty')) { return true; }
+    });
+
+    /* ---- Aperçus logo / avatar ---- */
+    $('#agec-logo-url').on('input change', function () {
+        var url = $(this).val();
+        $('#agec-logo-preview').attr('src', url).toggle(!!url);
+    });
+    $('#agec-primary-color-text').on('input', function () {
+        var val = $(this).val();
+        if (/^#[0-9a-fA-F]{6}$/.test(val)) { $('.agec-avatar').css('background', val); }
+    });
+    $('#agec-bg-url').on('input change', function () {
+        var url = $(this).val();
+        $('#agec-bg-preview').attr('src', url).toggle(!!url);
+        $('.agec-bg-frame').toggleClass('has-image', !!url);
+    });
 
     /* ---- Media uploader ---- */
     var logoFrame, bgFrame;
@@ -67,11 +88,10 @@
     $('#agec-logo-btn').on('click', function (e) {
         e.preventDefault();
         if (!logoFrame) {
-            logoFrame = wp.media({ title: 'Choisir un logo', button: { text: 'Utiliser ce logo' }, multiple: false });
+            logoFrame = wp.media({ title: __('Choose a logo', 'agency-client-portal'), button: { text: __('Use this logo', 'agency-client-portal') }, multiple: false });
             logoFrame.on('select', function () {
                 var url = logoFrame.state().get('selection').first().toJSON().url;
-                $('#agec-logo-url').val(url);
-                $('#agec-logo-preview').attr('src', url);
+                $('#agec-logo-url').val(url).trigger('change');
             });
         }
         logoFrame.open();
@@ -80,11 +100,10 @@
     $('#agec-bg-btn').on('click', function (e) {
         e.preventDefault();
         if (!bgFrame) {
-            bgFrame = wp.media({ title: 'Choisir une image de fond', button: { text: 'Utiliser cette image' }, multiple: false });
+            bgFrame = wp.media({ title: __('Choose a background image', 'agency-client-portal'), button: { text: __('Use this image', 'agency-client-portal') }, multiple: false });
             bgFrame.on('select', function () {
                 var url = bgFrame.state().get('selection').first().toJSON().url;
-                $('#agec-bg-url').val(url);
-                $('#agec-bg-preview').attr('src', url);
+                $('#agec-bg-url').val(url).trigger('change');
             });
         }
         bgFrame.open();
@@ -93,7 +112,7 @@
     /* ---- Save client ---- */
     $('#agec-save-btn').on('click', function () {
         var $btn = $(this);
-        $btn.prop('disabled', true).text('Enregistrement…');
+        $btn.prop('disabled', true).text(__('Saving…', 'agency-client-portal'));
 
         var payload = {
             name:                 $('#agec-client-name').val(),
@@ -117,17 +136,22 @@
                     $('#agec-slug-display').val(c.slug || '');
                     var portalUrl = window.location.origin + '/client/' + (c.slug || '') + '/';
                     $('#agec-portal-url').val(portalUrl);
+                    $('#agec-title').text(c.name || '');
+                    var active = (c.status || 'active') === 'active';
+                    $('#agec-status-pill').text(active ? __('Active', 'agency-client-portal') : __('Inactive', 'agency-client-portal'))
+                        .toggleClass('agency-pill--ok', active).toggleClass('agency-pill--off', !active);
+                    $savebar.removeClass('is-dirty');
                     toast(__('Changes saved!', 'agency-client-portal'));
                 } else {
-                    toast('Erreur lors de la sauvegarde.', true);
+                    toast(__('Error while saving.', 'agency-client-portal'), true);
                 }
             },
             error: function (xhr) {
-                var msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Erreur serveur.';
+                var msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : __('Server error.', 'agency-client-portal');
                 toast(msg, true);
             },
             complete: function () {
-                $btn.prop('disabled', false).text('Enregistrer');
+                $btn.prop('disabled', false).text(__('Save changes', 'agency-client-portal'));
             }
         });
     });
@@ -166,7 +190,7 @@
             if (resp.success && resp.data.access_url) {
                 $('#agec-access-link-input').val(resp.data.access_url);
                 $('#agec-access-link-wrap').show();
-                $('#agec-token-status').removeClass('inactive').addClass('active')
+                $('#agec-token-status').removeClass('inactive agency-alert--warn').addClass('active agency-alert--ok')
                     .find('.agec-token-label').text(__('Access token active', 'agency-client-portal'));
                 $('#agec-generate-token').hide();
                 $('#agec-regenerate-token, #agec-revoke-token').show();
@@ -207,8 +231,9 @@
             nonce:     ajaxNonce,
         }, function (resp) {
             if (resp.success) {
-                $('#agec-token-status').removeClass('active').addClass('inactive')
+                $('#agec-token-status').removeClass('active agency-alert--ok').addClass('inactive agency-alert--warn')
                     .find('.agec-token-label').text(__('No active access token', 'agency-client-portal'));
+                $('#agec-token-status .agec-token-date').remove();
                 $('#agec-access-link-wrap').hide();
                 $('#agec-access-link-input').val('');
                 $('#agec-generate-token').show();
@@ -226,7 +251,7 @@
             return;
         }
         var $btn = $(this);
-        $btn.prop('disabled', true).text('Suppression…');
+        $btn.prop('disabled', true).text(__('Deleting…', 'agency-client-portal'));
         $.post(ajaxUrl, {
             action:    'agency_hard_delete_client',
             client_id: clientId,
@@ -242,7 +267,7 @@
                 $btn.prop('disabled', false).text(__('Permanently delete the client', 'agency-client-portal'));
             }
         }).fail(function () {
-            toast('Erreur serveur.', true);
+            toast(__('Server error.', 'agency-client-portal'), true);
             $btn.prop('disabled', false).text(__('Permanently delete the client', 'agency-client-portal'));
         });
     });

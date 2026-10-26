@@ -1,74 +1,105 @@
 /* ============================================================
    AGENCY — DESIGN TOKENS
-   Source de vérité unique des variables CSS, chargée en premier
-   sur le frontend ET dans l'admin WP.
+   Source de vérité unique du design system (design/design_system.ai,
+   planche « MAIN DESIGN SYSTEM »). Interface sombre, gris neutres (zinc),
+   Inter + JetBrains Mono embarquées, rayons fixes.
 
-   ⚠️ Ne jamais renommer un token existant : le branding par client
-   (Agency_Frontend::load_global_branding) et les presets de thème
-   (Agency_Themes) injectent des overrides sur ces mêmes noms via
-   wp_add_inline_style, après ce fichier dans la cascade.
+   Chargé sur le frontend ET dans l'admin WP : ce fichier ne déclare que
+   les variables --ag-* et les polices. Les alias --agency-* hérités sont
+   limités au portail (assets/css/frontend/_app.css).
+
+   Seule personnalisation : la couleur du client (--ag-client et ses
+   variantes), injectée par Agency_Frontend::load_client_branding().
    ============================================================ */
 
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('../fonts/inter-latin-wght-normal.woff2') format('woff2-variations'), url('../fonts/inter-latin-wght-normal.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('../fonts/inter-latin-ext-wght-normal.woff2') format('woff2-variations'), url('../fonts/inter-latin-ext-wght-normal.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 100 800;
+    font-display: swap;
+    src: url('../fonts/jetbrains-mono-latin-wght-normal.woff2') format('woff2-variations'), url('../fonts/jetbrains-mono-latin-wght-normal.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 100 800;
+    font-display: swap;
+    src: url('../fonts/jetbrains-mono-latin-ext-wght-normal.woff2') format('woff2-variations'), url('../fonts/jetbrains-mono-latin-ext-wght-normal.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 :root {
-    /* --- Marque (surchargés par le branding client) --- */
-    --agency-primary-color: #000000;
-    --agency-secondary-color: #ffffff;
+    /* --- Surfaces --- */
+    --ag-bg:           #0E0E10;  /* fond de page */
+    --ag-panel:        #18181B;  /* sidebar, cartes, modales */
+    --ag-panel-hover:  #1C1C20;  /* carte survolée */
+    --ag-hover:        #222225;  /* ligne survolée, boutons secondaires */
+    --ag-active:       #2A2A2E;  /* ligne active, badges */
+    --ag-border:       #27272A;  /* bordures de panneaux, séparateurs */
+    --ag-line:         #3F3F46;  /* bordure survolée, pointillés */
+    --ag-field:        #1F1F23;  /* champs, recherche, menus */
+    --ag-field-border: #2E2E33;
+    --ag-focus:        #52525B;
+    --ag-image:        #484856;  /* emplacement image vide */
 
-    /* Accent "agence" : chrome interne (admin WP, dashboard manager).
-       Indépendant de la couleur de marque du client. */
-    --agency-accent: #3b82f6;
-    --agency-accent-hover: #2563eb;
+    /* --- Texte & icônes --- */
+    --ag-text-1: #F4F4F5;
+    --ag-text-2: #A1A1AA;
+    --ag-text-3: #71717A;
+    --ag-icon-a: #52525B;  /* ton de base des icônes bicolores */
+    --ag-icon-b: #A1A1AA;  /* ton de détail */
 
-    /* --- Texte & surfaces --- */
-    --agency-text-color: #333333;
-    --agency-text-muted: #6b7280;
-    --agency-light-bg: #f8f9fa;
-    --agency-surface-1: #ffffff;
-    --agency-border-color: #e0e0e0;
+    /* --- États --- */
+    --ag-danger:      #F87171;
+    --ag-danger-bg:   #2A1517;
+    --ag-danger-line: #5B2326;
+    --ag-ok:          #4ADE80;
+    --ag-ok-bg:       #0D3320;
+    --ag-warn:        #FBBF24;
+    --ag-warn-bg:     #33270B;
+    --ag-info:        #60A5FA;
+    --ag-info-bg:     #0F2742;
 
-    /* --- Couleurs sémantiques (états) --- */
-    --agency-success: #16a34a;
-    --agency-success-bg: #dcfce7;
-    --agency-danger: #dc2626;
-    --agency-danger-hover: #b91c1c;
-    --agency-danger-bg: #fee2e2;
-    --agency-warning: #d97706;
-    --agency-warning-bg: #fef3c7;
-    --agency-info: #2563eb;
-    --agency-info-bg: #dbeafe;
+    /* --- Couleur du client (surchargée par client) --- */
+    --ag-client:       #7C83FD;
+    --ag-client-hover: #9399FF;
+    --ag-client-soft:  #26273B;
+    --ag-on-client:    #0E0E10;
 
-    /* --- Ombres --- */
-    --agency-shadow:        0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.05);
-    --agency-shadow-hover:  0 4px 12px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.07);
-    --agency-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.14);
+    /* --- Typographie --- */
+    --ag-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --ag-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
-    /* --- Rayons (échelle à 4 crans) --- */
-    --agency-radius: 25px;        /* cartes, conteneurs */
-    --agency-radius-small: 12px;  /* éléments intermédiaires */
-    --agency-radius-button: 14px; /* boutons (surchargé par le branding client) */
-    --agency-radius-xs: 6px;      /* petits éléments : badges, inputs compacts */
+    /* --- Rayons (fixes) --- */
+    --ag-r-xs:    5px;   /* badges, kbd */
+    --ag-r-sm:    6px;   /* tags, petits boutons */
+    --ag-r:       8px;   /* lignes, boutons */
+    --ag-r-field: 9px;   /* champs */
+    --ag-r-md:    10px;  /* menus, popovers */
+    --ag-r-lg:    12px;  /* cartes, panneaux */
+    --ag-r-xl:    14px;  /* panneaux flottants, modales */
 
-    /* --- Espacement (adoption progressive) --- */
-    --agency-space-1: 4px;
-    --agency-space-2: 8px;
-    --agency-space-3: 12px;
-    --agency-space-4: 16px;
-    --agency-space-5: 24px;
-    --agency-space-6: 32px;
-
-    /* --- Divers --- */
-    --agency-transition: all 0.3s ease;
-    --agency-header-bg: rgba(255, 255, 255, 0.85);
-    --agency-header-height: 70px;
-
-    /* --- Sidebar manager (surchargés par le branding) --- */
-    --agency-sidebar-width-open:   240px;
-    --agency-sidebar-width-closed:  52px;
-    --agency-sidebar-bg:           #1a1a2e;
-    --agency-sidebar-text:         rgba(255, 255, 255, 0.75);
-    --agency-sidebar-text-hover:   #ffffff;
-    --agency-sidebar-accent:       rgba(255, 255, 255, 0.12);
-    --agency-sidebar-active-bg:    rgba(255, 255, 255, 0.18);
-    --agency-sidebar-border:       rgba(255, 255, 255, 0.08);
-    --agency-sidebar-muted:        rgba(255, 255, 255, 0.35);
+    /* --- Mise en page --- */
+    --ag-gutter:         8px;    /* marge des panneaux flottants */
+    --ag-sidebar-open:   264px;
+    --ag-sidebar-closed: 56px;
+    --ag-content-max:    1096px;
+    --ag-transition:     .15s ease;
 }

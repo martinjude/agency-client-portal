@@ -48,35 +48,21 @@ $allowed_ext_str     = implode(', ', $allowed_extensions);
     <?php include AGENCY_PLUGIN_DIR . 'templates/partials/header.php'; ?>
 
     <!-- Sidebar manager -->
-    <?php $sidebar_context = 'block'; include AGENCY_PLUGIN_DIR . 'templates/partials/sidebar.php'; ?>
+    <?php include AGENCY_PLUGIN_DIR . 'templates/partials/sidebar.php'; ?>
 
     <main class="agency-main">
         <div class="agency-container">
             <div class="agency-block-view agency-block-file-deposit">
 
                 <!-- Block Header -->
-                <div class="block-header-full">
-                    <div class="block-type-badge"><?php echo esc_html(Agency_Block::get_type_label($block->type)); ?></div>
-                    <div class="block-project-name"><?php echo esc_html($project->name); ?></div>
-                    <h1 class="agency-title"><?php echo esc_html($block->title); ?></h1>
+                <?php include AGENCY_PLUGIN_DIR . 'templates/partials/block-head.php'; ?>
+
+                <div class="block-header-full agency-bv-bar">
 
                     <?php if ($block->content): ?>
                     <div class="block-description">
                         <?php echo wp_kses_post($block->content); ?>
                     </div>
-                    <?php endif; ?>
-
-                    <?php if ($is_manager): ?>
-                        <div class="agency-actions">
-                            <?php include AGENCY_PLUGIN_DIR . 'templates/partials/notify-client-button.php'; ?>
-                            <button class="agency-btn agency-btn-outline copy-block-link-btn"
-                                    data-block-id="<?php echo esc_attr($block->id); ?>"
-                                    data-client-id="<?php echo esc_attr($client->id); ?>"
-                                    data-client-slug="<?php echo esc_attr($client->slug); ?>"
-                                    data-project-slug="<?php echo esc_attr($project->slug); ?>">
-                                <?php Agency_Icons::render('copy', 16); ?> <?php esc_html_e('Copy link', 'agency-client-portal'); ?>
-                            </button>
-                        </div>
                     <?php endif; ?>
                 </div>
 
@@ -234,11 +220,7 @@ $allowed_ext_str     = implode(', ', $allowed_extensions);
         </div>
     </main>
 
-    <footer class="agency-footer">
-        <div class="agency-container">
-            <p>&copy; <?php echo esc_html(wp_date('Y')); ?> - <?php echo esc_html($client->name); ?></p>
-        </div>
-    </footer>
+    <?php include AGENCY_PLUGIN_DIR . 'templates/partials/footer.php'; ?>
 </div>
 
 <?php ob_start(); ?>

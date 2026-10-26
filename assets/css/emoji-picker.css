@@ -137,37 +137,37 @@
 }
 
 /* Dark Theme */
-.agency-theme-dark .agency-emoji-popup {
-    background: #111827;
+.agency-emoji-popup {
+    background: var(--ag-panel);
 }
 
-.agency-theme-dark .agency-emoji-display {
-    background: #0b0f14;
+.agency-emoji-display {
+    background: var(--ag-bg);
 }
 
-.agency-theme-dark .agency-emoji-search {
-    background: #0b0f14;
-    border-color: #374151;
+.agency-emoji-search {
+    background: var(--ag-bg);
+    border-color: var(--ag-border);
 }
 
-.agency-theme-dark .agency-emoji-grid-container::-webkit-scrollbar-track {
-    background: #0b0f14;
+.agency-emoji-grid-container::-webkit-scrollbar-track {
+    background: var(--ag-bg);
 }
 
-.agency-theme-dark .agency-emoji-grid-container::-webkit-scrollbar-thumb {
-    background: #374151;
+.agency-emoji-grid-container::-webkit-scrollbar-thumb {
+    background: var(--ag-active);
 }
 
-.agency-theme-dark .agency-emoji-grid-container::-webkit-scrollbar-thumb:hover {
+.agency-emoji-grid-container::-webkit-scrollbar-thumb:hover {
     background: #4b5563;
 }
 
-.agency-theme-dark .agency-emoji-option:hover {
-    background: #1f2937;
+.agency-emoji-option:hover {
+    background: var(--ag-field);
 }
 
-.agency-theme-dark .agency-emoji-option.selected {
-    background: #1f2937;
+.agency-emoji-option.selected {
+    background: var(--ag-field);
 }
 
 /* Modal + formulaires : squelette déplacé dans assets/css/ui.css

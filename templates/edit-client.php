@@ -14,28 +14,28 @@ if (!$client) { wp_die(esc_html__('Client not found.', 'agency-client-portal'), 
 
 $has_token    = Agency_Client::has_active_token($client_id);
 $portal_url   = home_url('/client/' . $client->slug . '/');
-$dashboard_url = admin_url('admin.php?page=agency-portal');
+$dashboard_url = home_url('/agency/dashboard/');
 
-// Statistiques
+// Statistiques (requêtes groupées)
 $projects       = Agency_Project::get_by_client($client_id);
 $projects_count = count($projects);
-$blocks_count   = 0;
-$comments_count = 0;
-foreach ($projects as $project) {
-    $blocks = Agency_Block::get_by_project($project->id);
-    $blocks_count += count($blocks);
-    foreach ($blocks as $block) {
-        $comments_count += Agency_Comment::count_by_block($block->id);
-    }
+$stat_blocks    = Agency_Block::get_nav_by_projects(wp_list_pluck($projects, 'id'));
+$block_ids      = array();
+foreach ($stat_blocks as $list) {
+    $block_ids = array_merge($block_ids, wp_list_pluck($list, 'id'));
 }
+$blocks_count   = count($block_ids);
+$comments_count = array_sum(Agency_Comment::count_by_blocks($block_ids));
 
 $logo_url    = !empty($client->logo_url) ? $client->logo_url : '';
 $bg_url      = !empty($client->background_image_url) ? $client->background_image_url : '';
-$pri_color   = !empty($client->primary_color) ? $client->primary_color : '#000000';
+$pri_color   = Agency_Template::client_color($client);
 $status      = !empty($client->status) ? $client->status : 'active';
+$is_active   = $status === 'active';
 $created_at  = !empty($client->created_at)
-    ? date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($client->created_at))
+    ? date_i18n(get_option('date_format') . ' · ' . get_option('time_format'), strtotime($client->created_at))
     : '';
+$updated_at  = !empty($client->updated_at) ? date_i18n(get_option('date_format'), strtotime($client->updated_at)) : '';
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -48,189 +48,192 @@ $created_at  = !empty($client->created_at)
 </head>
 <body <?php body_class(); ?>>
 
-<?php // Toast : créé dynamiquement par AgencyUI.toast() (assets/js/ui.js) ?>
-
-<?php
-// Variables nécessaires au header et à la sidebar (définies AVANT les includes,
-// la sidebar s'auto-masque si $is_manager est vide).
-$is_manager      = current_user_can('manage_agency_projects');
-$sidebar_context = 'client';
-?>
-
-<!-- ===== Main layout (même structure que client-view / project-view) ===== -->
 <div class="agency-wrapper">
-
-    <!-- Header partagé en mode "edit" (boutons Aperçu + Enregistrer) -->
-    <?php $header_mode = 'edit'; include AGENCY_PLUGIN_DIR . 'templates/partials/header.php'; ?>
-
-    <!-- Sidebar manager (contexte client : liste les projets du client) -->
     <?php include AGENCY_PLUGIN_DIR . 'templates/partials/sidebar.php'; ?>
 
 <main class="agency-main">
-<div class="agec-layout">
+<div class="agency-container agec-layout">
 
-    <!-- Section : Détails du client -->
-    <div class="agec-card">
-        <div class="agec-card-title"><?php esc_html_e('Client details', 'agency-client-portal'); ?></div>
+    <?php Agency_Template::crumbs(array(
+        array(__('Clients', 'agency-client-portal'), $dashboard_url),
+        array($client->name, ''),
+    )); ?>
 
-        <div class="agec-field">
-            <label class="agec-label" for="agec-client-name"><?php esc_html_e('Client name', 'agency-client-portal'); ?> *</label>
-            <input type="text" id="agec-client-name" class="agec-input" value="<?php echo esc_attr($client->name); ?>" required>
-        </div>
-
-        <div class="agec-field">
-            <label class="agec-label"><?php esc_html_e('Slug', 'agency-client-portal'); ?></label>
-            <input type="text" id="agec-slug-display" class="agec-input" value="<?php echo esc_attr($client->slug); ?>" readonly>
-            <p class="agec-hint"><?php esc_html_e('Generated automatically from the name.', 'agency-client-portal'); ?></p>
-        </div>
-
-        <div class="agec-field">
-            <label class="agec-label"><?php esc_html_e('Portal URL', 'agency-client-portal'); ?></label>
-            <div class="agec-copy-row">
-                <input type="text" id="agec-portal-url" class="agec-input" value="<?php echo esc_url($portal_url); ?>" readonly>
-                <button type="button" class="agec-copy-btn agec-copy-portal-url"><?php esc_html_e('Copy', 'agency-client-portal'); ?></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Section : Logo & Couleurs -->
-    <div class="agec-card">
-        <div class="agec-card-title"><?php esc_html_e('Logo & Colors', 'agency-client-portal'); ?></div>
-
-        <div class="agec-field">
-            <label class="agec-label" for="agec-logo-url"><?php esc_html_e('Logo', 'agency-client-portal'); ?></label>
-            <div class="agec-media-field">
-                <input type="url" id="agec-logo-url" class="agec-input" value="<?php echo esc_url($logo_url); ?>" placeholder="https://…">
-                <button type="button" id="agec-logo-btn" class="agec-media-btn"><?php esc_html_e('Choose', 'agency-client-portal'); ?></button>
-            </div>
-            <img id="agec-logo-preview" class="agec-preview-img" src="<?php echo esc_url($logo_url); ?>" alt="Logo" <?php if (!$logo_url) echo 'style="display:none"'; ?>>
-        </div>
-
-        <div class="agec-field">
-            <label class="agec-label"><?php esc_html_e('Accent color', 'agency-client-portal'); ?></label>
-            <div class="agec-color-field">
-                <input type="color" id="agec-primary-color-picker" value="<?php echo esc_attr($pri_color); ?>">
-                <input type="text" id="agec-primary-color-text" class="agec-input" value="<?php echo esc_attr($pri_color); ?>" maxlength="7">
-            </div>
-            <p class="agec-hint"><?php esc_html_e('The client\'s single color — used for buttons, the header, filters and active highlights.', 'agency-client-portal'); ?></p>
-        </div>
-    </div>
-
-    <!-- Section : Image de fond -->
-    <div class="agec-card">
-        <div class="agec-card-title"><?php esc_html_e('Background image', 'agency-client-portal'); ?></div>
-
-        <div class="agec-field">
-            <label class="agec-label" for="agec-bg-url"><?php esc_html_e('Cover image', 'agency-client-portal'); ?></label>
-            <div class="agec-media-field">
-                <input type="url" id="agec-bg-url" class="agec-input" value="<?php echo esc_url($bg_url); ?>" placeholder="https://…">
-                <button type="button" id="agec-bg-btn" class="agec-media-btn"><?php esc_html_e('Choose', 'agency-client-portal'); ?></button>
-            </div>
-            <img id="agec-bg-preview" class="agec-bg-preview" src="<?php echo esc_url($bg_url); ?>" alt="<?php esc_attr_e('Background image', 'agency-client-portal'); ?>" <?php if (!$bg_url) echo 'style="display:none"'; ?>>
-            <p class="agec-hint"><?php esc_html_e('Displayed behind the client portal header.', 'agency-client-portal'); ?></p>
-        </div>
-    </div>
-
-    <!-- Section : Accès & Sécurité -->
-    <div class="agec-card">
-        <div class="agec-card-title"><?php esc_html_e('Access & Security', 'agency-client-portal'); ?></div>
-
-        <!-- Statut -->
-        <div class="agec-field">
-            <label class="agec-label" for="agec-client-status"><?php esc_html_e('Status', 'agency-client-portal'); ?></label>
-            <select id="agec-client-status" class="agec-select">
-                <option value="active" <?php selected($status, 'active'); ?>><?php esc_html_e('Active', 'agency-client-portal'); ?></option>
-                <option value="inactive" <?php selected($status, 'inactive'); ?>><?php esc_html_e('Inactive', 'agency-client-portal'); ?></option>
-            </select>
-            <p class="agec-hint"><?php esc_html_e('An inactive client can no longer access their space.', 'agency-client-portal'); ?></p>
-        </div>
-
-        <!-- Token -->
-        <div class="agec-field">
-            <label class="agec-label"><?php esc_html_e('Access link', 'agency-client-portal'); ?></label>
-
-            <div id="agec-token-status" class="agec-token-status <?php echo $has_token ? 'active' : 'inactive'; ?>">
-                <?php if ($has_token): ?>
-                    <span><?php Agency_Icons::render('check', 14); ?></span>
-                    <span class="agec-token-label"><?php esc_html_e('Access token active', 'agency-client-portal'); ?></span>
-                    <?php if ($client->token_created_at): ?>
-                        <small style="margin-left:auto;font-weight:400;">
-                            <?php echo esc_html(sprintf(
-                                /* translators: %s: date */
-                                __('Generated on %s', 'agency-client-portal'),
-                                date_i18n(get_option('date_format'), strtotime($client->token_created_at))
-                            )); ?>
-                        </small>
-                    <?php endif; ?>
+    <div class="agency-page-head">
+        <div class="agency-page-head__main">
+            <span class="agency-avatar agency-avatar--48 agec-avatar" style="background:<?php echo esc_attr($pri_color); ?>">
+                <?php if ($logo_url): ?>
+                    <img src="<?php echo esc_url($logo_url); ?>" alt="" data-initial="<?php echo esc_attr(Agency_Template::initial($client->name)); ?>" onerror="this.parentNode.textContent=this.dataset.initial">
                 <?php else: ?>
-                    <span><?php Agency_Icons::render('alert', 14); ?></span>
-                    <span class="agec-token-label"><?php esc_html_e('No active access token', 'agency-client-portal'); ?></span>
+                    <?php echo esc_html(Agency_Template::initial($client->name)); ?>
                 <?php endif; ?>
-            </div>
-
-            <div class="agec-token-actions">
-                <button type="button" id="agec-generate-token" class="agec-btn agec-btn-secondary" <?php echo $has_token ? 'style="display:none"' : ''; ?>>
-                    <?php esc_html_e('Generate an access link', 'agency-client-portal'); ?>
-                </button>
-                <button type="button" id="agec-regenerate-token" class="agec-btn agec-btn-secondary" <?php echo !$has_token ? 'style="display:none"' : ''; ?>>
-                    <?php esc_html_e('Regenerate token', 'agency-client-portal'); ?>
-                </button>
-                <button type="button" id="agec-revoke-token" class="agec-btn agec-btn-danger" <?php echo !$has_token ? 'style="display:none"' : ''; ?>>
-                    <?php esc_html_e('Revoke access', 'agency-client-portal'); ?>
-                </button>
-            </div>
-
-            <div id="agec-access-link-wrap" <?php echo !$has_token ? 'style="display:none"' : ''; ?>>
-                <div class="agec-copy-row">
-                    <input type="text" id="agec-access-link-input" class="agec-input" readonly placeholder="<?php esc_attr_e('Loading…', 'agency-client-portal'); ?>">
-                    <button type="button" id="agec-copy-access-link" class="agec-copy-btn"><?php esc_html_e('Copy', 'agency-client-portal'); ?></button>
+            </span>
+            <div class="agency-page-head__text">
+                <div class="agency-page-head__title-row">
+                    <h1 class="agency-page-title agency-page-title--sm" id="agec-title"><?php echo esc_html($client->name); ?></h1>
+                    <span class="agency-pill <?php echo $is_active ? 'agency-pill--ok' : 'agency-pill--off'; ?>" id="agec-status-pill"><?php echo $is_active ? esc_html__('Active', 'agency-client-portal') : esc_html__('Inactive', 'agency-client-portal'); ?></span>
                 </div>
-                <p class="agec-hint"><strong><?php esc_html_e('⚠️ Never share this link publicly!', 'agency-client-portal'); ?></strong> <?php esc_html_e('Share it only with the client concerned.', 'agency-client-portal'); ?></p>
+                <div class="agency-page-meta">
+                    <?php
+                    echo esc_html($client->slug . ($updated_at ? ' · ' . sprintf(/* translators: %s: date */ __('modified %s', 'agency-client-portal'), $updated_at) : ''));
+                    ?>
+                </div>
             </div>
         </div>
-
-        <?php if ($created_at): ?>
-        <div class="agec-field">
-            <label class="agec-label"><?php esc_html_e('Creation date', 'agency-client-portal'); ?></label>
-            <input type="text" class="agec-input" value="<?php echo esc_attr($created_at); ?>" readonly>
-        </div>
-        <?php endif; ?>
-
-        <!-- Statistiques -->
-        <div class="agec-field">
-            <label class="agec-label"><?php esc_html_e('Statistics', 'agency-client-portal'); ?></label>
-            <table class="agec-stats-table">
-                <tbody>
-                    <tr>
-                        <td><?php esc_html_e('Projects', 'agency-client-portal'); ?></td>
-                        <td><?php echo esc_html($projects_count); ?></td>
-                    </tr>
-                    <tr>
-                        <td><?php esc_html_e('Blocks', 'agency-client-portal'); ?></td>
-                        <td><?php echo esc_html($blocks_count); ?></td>
-                    </tr>
-                    <tr>
-                        <td><?php esc_html_e('Comments', 'agency-client-portal'); ?></td>
-                        <td><?php echo esc_html($comments_count); ?></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="agency-page-head__actions">
+            <a href="<?php echo esc_url($portal_url); ?>" class="agency-btn"><?php Agency_Icons::render_ui('external', 16); ?> <?php esc_html_e('Portal preview', 'agency-client-portal'); ?></a>
+            <?php if ($has_token): ?>
+            <button type="button" class="agency-btn agency-copy-access" data-client-id="<?php echo esc_attr($client_id); ?>"><?php Agency_Icons::render('copy', 16); ?> <?php esc_html_e('Copy portal link', 'agency-client-portal'); ?></button>
+            <?php endif; ?>
         </div>
     </div>
 
-    <!-- Section : Zone Danger -->
-    <div class="agec-card agec-danger-card">
-        <div class="agec-card-title"><?php esc_html_e('Danger Zone', 'agency-client-portal'); ?></div>
-        <p style="font-size:13px;color:#555;margin:0 0 16px;">
-            <?php esc_html_e('This action cannot be undone. It permanently deletes the client and all of its projects, blocks, comments and associated files.', 'agency-client-portal'); ?>
-        </p>
-        <button type="button" id="agec-delete-btn" class="agec-btn agec-btn-danger">
-            <?php esc_html_e('Permanently delete the client', 'agency-client-portal'); ?>
-        </button>
+    <div class="agec-grid">
+        <div class="agec-col">
+
+            <section class="agency-panel agec-card">
+                <h2 class="agency-panel__head"><?php esc_html_e('Client details', 'agency-client-portal'); ?></h2>
+                <div class="agency-panel__body">
+                    <div class="agency-form-group">
+                        <label class="agency-field-label-mono" for="agec-client-name"><?php esc_html_e('Client name', 'agency-client-portal'); ?> *</label>
+                        <input type="text" id="agec-client-name" class="agency-form-input" value="<?php echo esc_attr($client->name); ?>" required>
+                    </div>
+                    <div class="agency-form-group">
+                        <label class="agency-field-label-mono" for="agec-slug-display"><?php esc_html_e('Slug', 'agency-client-portal'); ?></label>
+                        <input type="text" id="agec-slug-display" class="agency-form-input" value="<?php echo esc_attr($client->slug); ?>" readonly>
+                        <p class="agency-form-hint"><?php esc_html_e('Generated automatically from the name.', 'agency-client-portal'); ?></p>
+                    </div>
+                    <div class="agency-form-group">
+                        <label class="agency-field-label-mono" for="agec-portal-url"><?php esc_html_e('Portal URL', 'agency-client-portal'); ?></label>
+                        <div class="agency-form-inline">
+                            <input type="text" id="agec-portal-url" class="agency-form-input" value="<?php echo esc_url($portal_url); ?>" readonly>
+                            <button type="button" class="agency-btn agec-copy-portal-url"><?php Agency_Icons::render('copy', 16); ?> <?php esc_html_e('Copy', 'agency-client-portal'); ?></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="agency-panel agec-card">
+                <h2 class="agency-panel__head"><?php esc_html_e('Logo & color', 'agency-client-portal'); ?></h2>
+                <div class="agency-panel__body">
+                    <div class="agency-form-group">
+                        <label class="agency-field-label-mono" for="agec-logo-url"><?php esc_html_e('Logo', 'agency-client-portal'); ?></label>
+                        <div class="agency-form-inline">
+                            <input type="url" id="agec-logo-url" class="agency-form-input" value="<?php echo esc_url($logo_url); ?>" placeholder="https://…">
+                            <button type="button" id="agec-logo-btn" class="agency-btn"><?php Agency_Icons::render('image', 16); ?> <?php esc_html_e('Choose', 'agency-client-portal'); ?></button>
+                        </div>
+                        <img id="agec-logo-preview" class="agency-logo-preview" src="<?php echo esc_url($logo_url); ?>" alt="" <?php if (!$logo_url) echo 'style="display:none"'; ?> onerror="this.style.display='none'">
+                    </div>
+                    <div class="agency-form-group">
+                        <label class="agency-field-label-mono" for="agec-primary-color-text"><?php esc_html_e('Accent color', 'agency-client-portal'); ?></label>
+                        <?php
+                        $agency_accent_field_id    = 'agec-primary-color';
+                        $agency_accent_field_value = $pri_color;
+                        include AGENCY_PLUGIN_DIR . 'templates/partials/accent-field.php';
+                        ?>
+                        <p class="agency-form-hint"><?php esc_html_e('The client\'s single color — used for primary buttons, the avatar, filters and active highlights.', 'agency-client-portal'); ?></p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="agency-panel agec-card">
+                <h2 class="agency-panel__head"><?php esc_html_e('Background image', 'agency-client-portal'); ?></h2>
+                <div class="agency-panel__body">
+                    <div class="agency-form-group">
+                        <label class="agency-field-label-mono" for="agec-bg-url"><?php esc_html_e('Cover image', 'agency-client-portal'); ?></label>
+                        <div class="agency-form-inline">
+                            <input type="url" id="agec-bg-url" class="agency-form-input" value="<?php echo esc_url($bg_url); ?>" placeholder="https://…">
+                            <button type="button" id="agec-bg-btn" class="agency-btn"><?php Agency_Icons::render('image', 16); ?> <?php esc_html_e('Choose', 'agency-client-portal'); ?></button>
+                        </div>
+                        <div class="agec-bg-frame<?php echo $bg_url ? ' has-image' : ''; ?>">
+                            <img id="agec-bg-preview" src="<?php echo esc_url($bg_url); ?>" alt="" <?php if (!$bg_url) echo 'style="display:none"'; ?> onerror="this.style.display='none'">
+                            <span class="agec-bg-empty"><?php Agency_Icons::render('image', 18); ?></span>
+                        </div>
+                        <p class="agency-form-hint"><?php esc_html_e('Kept with the client; used as a cover in the portal.', 'agency-client-portal'); ?></p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <div class="agec-col agec-col--side">
+
+            <section class="agency-panel agec-card" id="agec-access">
+                <h2 class="agency-panel__head"><?php esc_html_e('Access & security', 'agency-client-portal'); ?></h2>
+                <div class="agency-panel__body">
+                    <div class="agency-form-group agec-divided">
+                        <span class="agency-field-label-mono"><?php esc_html_e('Status', 'agency-client-portal'); ?></span>
+                        <label class="agec-switch">
+                            <span class="agency-toggle"><input type="checkbox" id="agec-status-toggle" <?php checked($is_active); ?>><span></span></span>
+                            <span id="agec-status-label"><?php echo $is_active ? esc_html__('Active', 'agency-client-portal') : esc_html__('Inactive', 'agency-client-portal'); ?></span>
+                        </label>
+                        <input type="hidden" id="agec-client-status" value="<?php echo esc_attr($status); ?>">
+                        <p class="agency-form-hint"><?php esc_html_e('An inactive client can no longer access their space.', 'agency-client-portal'); ?></p>
+                    </div>
+
+                    <div class="agency-form-group">
+                        <span class="agency-field-label-mono"><?php esc_html_e('Access link', 'agency-client-portal'); ?></span>
+                        <div id="agec-token-status" class="agency-alert agec-token-status <?php echo $has_token ? 'agency-alert--ok active' : 'agency-alert--warn inactive'; ?>">
+                            <?php Agency_Icons::render($has_token ? 'check' : 'alert', 14); ?>
+                            <span class="agec-token-label"><?php echo $has_token ? esc_html__('Access token active', 'agency-client-portal') : esc_html__('No active access token', 'agency-client-portal'); ?></span>
+                            <?php if ($has_token && $client->token_created_at): ?>
+                                <span class="agec-token-date"><?php echo esc_html(date_i18n(get_option('date_format'), strtotime($client->token_created_at))); ?></span>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="agec-token-actions">
+                            <button type="button" id="agec-generate-token" class="agency-btn" <?php echo $has_token ? 'style="display:none"' : ''; ?>><?php esc_html_e('Generate an access link', 'agency-client-portal'); ?></button>
+                            <button type="button" id="agec-regenerate-token" class="agency-btn" <?php echo !$has_token ? 'style="display:none"' : ''; ?>><?php esc_html_e('Regenerate token', 'agency-client-portal'); ?></button>
+                            <button type="button" id="agec-revoke-token" class="agency-btn agency-btn-danger" <?php echo !$has_token ? 'style="display:none"' : ''; ?>><?php esc_html_e('Revoke access', 'agency-client-portal'); ?></button>
+                        </div>
+
+                        <div id="agec-access-link-wrap" <?php echo !$has_token ? 'style="display:none"' : ''; ?>>
+                            <div class="agency-form-inline">
+                                <input type="text" id="agec-access-link-input" class="agency-form-input agec-mono" readonly placeholder="<?php esc_attr_e('Loading…', 'agency-client-portal'); ?>">
+                                <button type="button" id="agec-copy-access-link" class="agency-btn-icon" aria-label="<?php esc_attr_e('Copy', 'agency-client-portal'); ?>"><?php Agency_Icons::render('copy', 14); ?></button>
+                            </div>
+                            <div class="agency-alert agency-alert--warn agec-warning">
+                                <?php Agency_Icons::render('lock', 14); ?>
+                                <span><strong><?php esc_html_e('Never share this link publicly.', 'agency-client-portal'); ?></strong><br><?php esc_html_e('Share it only with the client concerned.', 'agency-client-portal'); ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="agency-panel agec-card">
+                <h2 class="agency-panel__head"><?php esc_html_e('Statistics', 'agency-client-portal'); ?></h2>
+                <div class="agency-panel__body">
+                    <div class="agec-stats">
+                        <div class="agec-stat"><strong><?php echo esc_html($projects_count); ?></strong><span><?php esc_html_e('Projects', 'agency-client-portal'); ?></span></div>
+                        <div class="agec-stat"><strong><?php echo esc_html($blocks_count); ?></strong><span><?php esc_html_e('Blocks', 'agency-client-portal'); ?></span></div>
+                        <div class="agec-stat"><strong><?php echo esc_html($comments_count); ?></strong><span><?php esc_html_e('Comments', 'agency-client-portal'); ?></span></div>
+                    </div>
+                    <?php if ($created_at): ?>
+                    <div class="agec-created"><span><?php esc_html_e('Created on', 'agency-client-portal'); ?></span><span><?php echo esc_html($created_at); ?></span></div>
+                    <?php endif; ?>
+                </div>
+            </section>
+
+        </div>
     </div>
 
-</div><!-- .agec-layout -->
-</main><!-- .agency-main -->
+    <section class="agec-danger">
+        <span class="agency-field-label-mono"><?php esc_html_e('Danger zone', 'agency-client-portal'); ?></span>
+        <p><?php esc_html_e('This action cannot be undone. It permanently deletes the client and all of its projects, blocks, comments and associated files.', 'agency-client-portal'); ?></p>
+        <button type="button" id="agec-delete-btn" class="agency-btn agency-btn-danger agency-btn-sm"><?php Agency_Icons::render('trash', 14); ?> <?php esc_html_e('Permanently delete the client', 'agency-client-portal'); ?></button>
+    </section>
+
+</div>
+</main>
+
+<div class="agec-savebar" id="agec-savebar">
+    <div class="agec-savebar__inner">
+        <span class="agec-savebar__state" id="agec-dirty-state"><span class="agec-savebar__dot"></span><span><?php esc_html_e('Unsaved changes', 'agency-client-portal'); ?></span></span>
+        <button type="button" id="agec-cancel-btn" class="agency-btn"><?php esc_html_e('Cancel', 'agency-client-portal'); ?></button>
+        <button type="button" id="agec-save-btn" class="agency-btn agency-btn-primary"><?php esc_html_e('Save changes', 'agency-client-portal'); ?></button>
+    </div>
+</div>
 </div><!-- .agency-wrapper -->
 
 <?php wp_footer(); ?>

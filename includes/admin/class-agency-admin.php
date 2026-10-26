@@ -155,11 +155,11 @@ class Agency_Admin {
         // Enqueue media uploader scripts for logo upload
         wp_enqueue_media();
         
-        // Tokens + primitives UI partagés avec le frontend, chargés avant admin.css
+        // L'admin garde le style WordPress : tokens + primitives clairs dans admin.css
+        // (ui.css est réservé au portail sombre).
         wp_enqueue_style('agency-tokens', AGENCY_PLUGIN_URL . 'assets/css/tokens.css', array(), AGENCY_VERSION);
-        wp_enqueue_style('agency-ui-css', AGENCY_PLUGIN_URL . 'assets/css/ui.css', array('agency-tokens'), AGENCY_VERSION);
-        wp_enqueue_style('agency-admin', AGENCY_PLUGIN_URL . 'assets/css/admin.css', array('agency-ui-css'), AGENCY_VERSION);
-        wp_enqueue_script('agency-ui', AGENCY_PLUGIN_URL . 'assets/js/ui.js', array(), AGENCY_VERSION, true);
+        wp_enqueue_style('agency-admin', AGENCY_PLUGIN_URL . 'assets/css/admin.css', array('agency-tokens'), AGENCY_VERSION);
+        wp_enqueue_script('agency-ui', AGENCY_PLUGIN_URL . 'assets/js/ui.js', array('wp-i18n'), AGENCY_VERSION, true);
         wp_enqueue_script('agency-admin', AGENCY_PLUGIN_URL . 'assets/js/admin.js', array('jquery', 'agency-ui', 'wp-i18n'), AGENCY_VERSION, true);
         wp_set_script_translations('agency-admin', 'agency-client-portal', AGENCY_PLUGIN_DIR . 'languages');
         
@@ -312,9 +312,6 @@ class Agency_Admin {
         if (isset($_POST['primary_color'])) {
             update_post_meta($post_id, 'primary_color', sanitize_hex_color(wp_unslash($_POST['primary_color'])));
         }
-        if (isset($_POST['secondary_color'])) {
-            update_post_meta($post_id, 'secondary_color', sanitize_hex_color(wp_unslash($_POST['secondary_color'])));
-        }
         // Legacy user association removed: token-based access only
 
         // Update custom table
@@ -322,7 +319,6 @@ class Agency_Admin {
             'name' => isset($_POST['client_name']) ? sanitize_text_field(wp_unslash($_POST['client_name'])) : '',
             'logo_url' => isset($_POST['client_logo']) ? esc_url_raw(wp_unslash($_POST['client_logo'])) : '',
             'primary_color' => isset($_POST['primary_color']) ? sanitize_hex_color(wp_unslash($_POST['primary_color'])) : '#000000',
-            'secondary_color' => isset($_POST['secondary_color']) ? sanitize_hex_color(wp_unslash($_POST['secondary_color'])) : '#ffffff',
         );
 
         // Legacy user permissions removed

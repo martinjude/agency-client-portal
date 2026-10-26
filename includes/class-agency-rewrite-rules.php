@@ -113,7 +113,6 @@ class Agency_Rewrite_Rules {
             'client_slug'          => $client ? $client->slug : '',
             'logo_url'             => $client ? (string) $client->logo_url : '',
             'primary_color'        => $client ? (string) $client->primary_color : '#000000',
-            'secondary_color'      => $client ? (string) $client->secondary_color : '#ffffff',
             'background_image_url' => $client ? (string) $client->background_image_url : '',
             'status'               => $client ? (string) $client->status : 'active',
             'has_token'            => $client ? (bool) Agency_Client::has_active_token($client_id) : false,
@@ -294,7 +293,6 @@ class Agency_Rewrite_Rules {
             return;
         }
         wp_enqueue_media(); // Nécessaire pour le sélecteur de logo dans le modal
-        wp_enqueue_style('agency-dashboard', AGENCY_PLUGIN_URL . 'assets/css/dashboard.css', array('agency-frontend'), AGENCY_VERSION);
         wp_enqueue_script('agency-dashboard', AGENCY_PLUGIN_URL . 'assets/js/dashboard.js', array('jquery', 'agency-emoji-picker', 'agency-ui', 'wp-i18n'), AGENCY_VERSION, true);
         wp_set_script_translations('agency-dashboard', 'agency-client-portal', AGENCY_PLUGIN_DIR . 'languages');
         // Localisation explicite : garantit agencyData même si agency-frontend ne se charge pas

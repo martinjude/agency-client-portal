@@ -46,8 +46,6 @@ class Agency_Privacy {
         $content .= '<li>' . esc_html__('Comments left by clients and the team on project blocks', 'agency-client-portal') . '</li>';
         $content .= '</ul>';
 
-        $content .= '<p>' . esc_html__('Google Fonts may be loaded, which sends the visitor\'s IP address and user agent to Google\'s servers.', 'agency-client-portal') . '</p>';
-
         wp_add_privacy_policy_content(
             __('Agency Client Portal', 'agency-client-portal'),
             wp_kses_post($content)

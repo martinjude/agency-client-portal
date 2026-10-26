@@ -50,15 +50,14 @@ $active_asset_id = !empty($assets) ? $assets[0]->id : null;
     <?php include AGENCY_PLUGIN_DIR . 'templates/partials/header.php'; ?>
 
     <!-- Sidebar manager -->
-    <?php $sidebar_context = 'block'; include AGENCY_PLUGIN_DIR . 'templates/partials/sidebar.php'; ?>
+    <?php include AGENCY_PLUGIN_DIR . 'templates/partials/sidebar.php'; ?>
 
     <main class="agency-main">
         <div class="agency-container">
             <div class="agency-block-view agency-block-versioned" data-block-id="<?php echo esc_attr($block->id); ?>">
-                <div class="block-header-full">
-                    <div class="block-type-badge"><?php echo esc_html(Agency_Block::get_type_label($block->type)); ?></div>
-                    <div class="block-project-name"><?php echo esc_html($project->name); ?></div>
-                    <h1 class="agency-title"><?php echo esc_html($block->title); ?></h1>
+                <?php include AGENCY_PLUGIN_DIR . 'templates/partials/block-head.php'; ?>
+
+                <div class="block-header-full agency-bv-bar">
 <?php
                     $_bv_subtitle = !empty($settings['subtitle']) ? $settings['subtitle'] : '';
                     $_bv_description = $block->content ?? '';
@@ -102,14 +101,6 @@ $active_asset_id = !empty($assets) ? $assets[0]->id : null;
                             <button class="agency-btn agency-btn-primary" id="upload-version-btn" type="button" data-accept="image/*,.svg,.pdf" data-multiple="false">
                                 <?php Agency_Icons::render('paperclip', 16); ?> <?php esc_html_e('New version', 'agency-client-portal'); ?>
                             </button>
-                            <?php include AGENCY_PLUGIN_DIR . 'templates/partials/notify-client-button.php'; ?>
-                            <button class="agency-btn agency-btn-outline copy-block-link-btn"
-                                    data-block-id="<?php echo esc_attr($block->id); ?>"
-                                    data-client-id="<?php echo esc_attr($client->id); ?>"
-                                    data-client-slug="<?php echo esc_attr($client->slug); ?>"
-                                    data-project-slug="<?php echo esc_attr($project->slug); ?>">
-                                <?php Agency_Icons::render('copy', 16); ?> <?php esc_html_e('Copy link', 'agency-client-portal'); ?>
-                            </button>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -132,21 +123,22 @@ $active_asset_id = !empty($assets) ? $assets[0]->id : null;
                                     'rejected' => __('Rejected', 'agency-client-portal'),
                                     'in_review' => __('In Review', 'agency-client-portal'),
                                     'archived' => __('Archived', 'agency-client-portal'),
+                                    'changes_requested' => __('Changes requested', 'agency-client-portal'),
                                 );
                                 $display_status = isset($asset->version_status) && isset($status_translations[$asset->version_status])
                                     ? $status_translations[$asset->version_status]
                                     : $asset->version_status;
                             ?>
-                            <button class="version-tab <?php echo $is_active ? 'is-active' : ''; ?>" data-version-id="<?php echo esc_attr($asset->id); ?>">
-                                <?php echo esc_html('V' . $vnum); ?>
-                                <span class="version-tab-label"><?php echo esc_html($vlabel); ?></span>
+                            <div class="version-tab <?php echo $is_active ? 'is-active' : ''; ?>" role="button" tabindex="0" data-version-id="<?php echo esc_attr($asset->id); ?>">
+                                <strong class="version-tab-num"><?php echo esc_html('V' . $vnum); ?></strong>
+                                <?php if ($vlabel !== 'V' . $vnum): ?><span class="version-tab-label"><?php echo esc_html($vlabel); ?></span><?php endif; ?>
                                 <?php if (!empty($asset->version_status)): ?>
                                     <span class="version-status version-status-<?php echo esc_attr($asset->version_status); ?>" data-status="<?php echo esc_attr($asset->version_status); ?>" data-version-id="<?php echo esc_attr($asset->id); ?>"><?php echo esc_html($display_status); ?></span>
                                 <?php endif; ?>
                                 <?php if ($is_manager): ?>
                                     <button class="version-delete-btn" data-version-id="<?php echo esc_attr($asset->id); ?>" title="<?php esc_attr_e('Delete this version', 'agency-client-portal'); ?>" onclick="event.stopPropagation();">×</button>
                                 <?php endif; ?>
-                            </button>
+                            </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </div>
@@ -245,7 +237,7 @@ $active_asset_id = !empty($assets) ? $assets[0]->id : null;
                                             <div class="comment-item" data-comment-id="<?php echo esc_attr($comment->id); ?>">
                                                 <div class="comment-header">
                                                     <span class="comment-author"><?php echo esc_html($comment->user->display_name); ?></span>
-                                                    <span class="comment-date"><?php echo esc_html(human_time_diff(strtotime($comment->created_at), current_time('timestamp'))); ?></span>
+                                                    <span class="comment-date"><?php echo esc_html(Agency_Template::time_ago($comment->created_at)); ?></span>
                                                 </div>
                                                 <div class="comment-content"><?php echo wp_kses_post($comment->content); ?></div>
                                                 <?php if ($is_manager || get_current_user_id() === (int)$comment->user_id): ?>
@@ -458,6 +450,13 @@ document.addEventListener('DOMContentLoaded', function() {
             tab.classList.add('is-active');
             const panel = document.querySelector('.version-panel[data-version-id="'+id+'"]');
             if (panel) panel.classList.add('is-active');
+        });
+        // Onglet focalisable : Entrée / Espace activent l'onglet
+        tab.addEventListener('keydown', (e) => {
+            if ((e.key === 'Enter' || e.key === ' ') && e.target === tab) {
+                e.preventDefault();
+                tab.click();
+            }
         });
     });
 

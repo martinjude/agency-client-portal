@@ -33,7 +33,7 @@ $external_links = Agency_External_Link::get_by_block($block_id);
     <?php include AGENCY_PLUGIN_DIR . 'templates/partials/header.php'; ?>
 
     <!-- Sidebar manager -->
-    <?php $sidebar_context = 'block'; include AGENCY_PLUGIN_DIR . 'templates/partials/sidebar.php'; ?>
+    <?php include AGENCY_PLUGIN_DIR . 'templates/partials/sidebar.php'; ?>
 
     <!-- Main Content -->
     <main class="agency-main">
@@ -41,10 +41,9 @@ $external_links = Agency_External_Link::get_by_block($block_id);
         <div class="agency-container">
             <div class="agency-block-view agency-block-script">
                 <!-- Block Header -->
-                <div class="block-header-full">
-                    <div class="block-type-badge"><?php echo esc_html(Agency_Block::get_type_label($block->type)); ?></div>
-                    <div class="block-project-name"><?php echo esc_html($project->name); ?></div>
-                    <h1 class="agency-title"><?php echo esc_html($block->title); ?></h1>
+                <?php include AGENCY_PLUGIN_DIR . 'templates/partials/block-head.php'; ?>
+
+                <div class="block-header-full agency-bv-bar">
 <?php
                     $_bv_subtitle_raw = !empty($block->settings) ? json_decode($block->settings, true) : array();
                     $_bv_subtitle = !empty($_bv_subtitle_raw['subtitle']) ? $_bv_subtitle_raw['subtitle'] : '';
@@ -105,19 +104,6 @@ $external_links = Agency_External_Link::get_by_block($block_id);
                             <?php endif; ?>
                         <?php endif; ?>
                     </div>
-
-                    <?php if ($is_manager): ?>
-                        <div class="agency-actions">
-                            <?php include AGENCY_PLUGIN_DIR . 'templates/partials/notify-client-button.php'; ?>
-                            <button class="agency-btn agency-btn-outline copy-block-link-btn"
-                                    data-block-id="<?php echo esc_attr($block->id); ?>"
-                                    data-client-id="<?php echo esc_attr($client->id); ?>"
-                                    data-client-slug="<?php echo esc_attr($client->slug); ?>"
-                                    data-project-slug="<?php echo esc_attr($project->slug); ?>">
-                                <?php Agency_Icons::render('copy', 16); ?> <?php esc_html_e('Copy link', 'agency-client-portal'); ?>
-                            </button>
-                        </div>
-                    <?php endif; ?>
                 </div>
                 
                 <!-- Two-Column Layout: 2/3 + 1/3 -->
@@ -200,7 +186,7 @@ $external_links = Agency_External_Link::get_by_block($block_id);
                                             <div class="comment-item" data-comment-id="<?php echo esc_attr($comment->id); ?>">
                                                 <div class="comment-header">
                                                     <span class="comment-author"><?php echo esc_html($comment->user->display_name); ?></span>
-                                                    <span class="comment-date"><?php echo esc_html(human_time_diff(strtotime($comment->created_at), current_time('timestamp'))); ?> <?php esc_html_e('ago', 'agency-client-portal'); ?></span>
+                                                    <span class="comment-date"><?php echo esc_html(Agency_Template::time_ago($comment->created_at)); ?></span>
                                                 </div>
                                                 <div class="comment-content">
                                                     <?php echo wp_kses_post($comment->content); ?>
@@ -236,12 +222,7 @@ $external_links = Agency_External_Link::get_by_block($block_id);
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="agency-footer">
-        <div class="agency-container">
-            <p>&copy; <?php echo esc_html(wp_date('Y')); ?> - <?php echo esc_html($client->name); ?></p>
-        </div>
-    </footer>
+    <?php include AGENCY_PLUGIN_DIR . 'templates/partials/footer.php'; ?>
 </div>
 
 <?php if ($is_manager): ?>

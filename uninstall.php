@@ -46,14 +46,21 @@ delete_option('agency_allowed_file_types');
 delete_option('agency_project_labels');
 
 // Options de branding
-delete_option('agency_theme_mode');
 delete_option('agency_brand_logo_url');
+// Options de thème supprimées en 2.9.0 (sites non migrés)
+delete_option('agency_theme');
+delete_option('agency_theme_mode');
+delete_option('agency_theme_preset');
+delete_option('agency_theme_gradients');
+delete_option('agency_theme_is_dark');
+delete_option('agency_theme_accent');
 delete_option('agency_ui_font');
 delete_option('agency_card_border_width');
 delete_option('agency_card_border_color');
 delete_option('agency_card_border_radius');
 delete_option('agency_bg_color_light');
 delete_option('agency_bg_color_dark');
+delete_option('agency_sidebar_bg_color');
 
 // Options de textes par défaut des blocs
 delete_option('agency_block_default_text_script');

@@ -15,7 +15,6 @@ if (isset($_POST['agency_create_client']) && wp_verify_nonce(sanitize_text_field
         'name' => sanitize_text_field(wp_unslash($_POST['client_name'])),
         'logo_url' => esc_url_raw(wp_unslash($_POST['client_logo'])),
         'primary_color' => sanitize_hex_color(wp_unslash($_POST['primary_color'])),
-        'secondary_color' => sanitize_hex_color(wp_unslash($_POST['secondary_color'])),
     );
 
     // Créer le post CPT agency_client
@@ -29,7 +28,6 @@ if (isset($_POST['agency_create_client']) && wp_verify_nonce(sanitize_text_field
         // Associer les métadonnées au post
         update_post_meta($post_id, 'logo_url', $data['logo_url']);
         update_post_meta($post_id, 'primary_color', $data['primary_color']);
-        update_post_meta($post_id, 'secondary_color', $data['secondary_color']);
 
         // Créer l'entrée en base personnalisée (token-based access only)
         $client_id = Agency_Client::create($data);
@@ -91,15 +89,6 @@ if (isset($_POST['agency_create_client']) && wp_verify_nonce(sanitize_text_field
                         <input type="color" id="primary_color" name="primary_color" value="#000000" required>
                         <span class="agency-color-preview"></span>
                         <p class="description"><?php esc_html_e('Client\'s main color.', 'agency-client-portal'); ?></p>
-                    </div>
-                </div>
-                
-                <div class="agency-meta-col">
-                    <div class="agency-form-group">
-                        <label for="secondary_color"><?php esc_html_e('Secondary Color *', 'agency-client-portal'); ?></label>
-                        <input type="color" id="secondary_color" name="secondary_color" value="#ffffff" required>
-                        <span class="agency-color-preview"></span>
-                        <p class="description"><?php esc_html_e('Client\'s secondary color.', 'agency-client-portal'); ?></p>
                     </div>
                 </div>
             </div>

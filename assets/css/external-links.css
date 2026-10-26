@@ -34,7 +34,7 @@
 
 .external-link-item:hover {
     background: var(--agency-primary-color);
-    color: white;
+    color: var(--ag-text-1);
     border-color: var(--agency-primary-color);
     transform: translateY(-2px);
     box-shadow: var(--agency-shadow);
@@ -72,15 +72,15 @@
 }
 
 /* Dark theme overrides */
-.agency-theme-dark .external-link-item {
-    background: #1f2937;
-    border-color: #374151;
+.external-link-item {
+    background: var(--ag-field);
+    border-color: var(--ag-border);
     color: var(--agency-text-color);
 }
 
-.agency-theme-dark .external-link-item:hover {
+.external-link-item:hover {
     background: var(--agency-primary-color);
-    color: white;
+    color: var(--ag-text-1);
 }
 
 /* Form help text */
@@ -91,6 +91,6 @@
     color: var(--agency-text-muted);
 }
 
-.agency-theme-dark .agency-form-help {
-    color: #9ca3af;
+.agency-form-help {
+    color: var(--ag-text-3);
 }

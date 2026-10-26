@@ -2,64 +2,50 @@
    DARK THEME — new components
    ======================================== */
 
-.agency-theme-dark .agency-label-filter,
-.agency-theme-dark .agency-label-toggle {
-    background: #111827;
-    border-color: #374151;
+.agency-label-toggle {
+    background: var(--ag-panel);
+    border-color: var(--ag-border);
     color: var(--agency-text-color);
 }
 
-.agency-theme-dark .agency-label-filter.active,
-.agency-theme-dark .agency-label-toggle.selected {
+.agency-label-toggle.selected {
     background: var(--agency-primary-color);
     border-color: var(--agency-primary-color);
-    color: #ffffff;
+    color: var(--ag-text-1);
 }
 
-.agency-theme-dark .agency-separator-block .separator-inner::before,
-.agency-theme-dark .agency-separator-block .separator-inner::after {
-    background: #374151;
+.agency-link-manager-panel {
+    background: var(--ag-panel);
+    border-color: var(--ag-border);
 }
 
-.agency-theme-dark .agency-link-manager-panel {
-    background: #111827;
-    border-color: #374151;
+.agency-link-display {
+    background: var(--ag-panel);
+    border-color: var(--ag-border);
 }
 
-.agency-theme-dark .agency-link-display {
-    background: #111827;
-    border-color: #374151;
+.version-history-list {
+    background: var(--ag-panel);
 }
 
-.agency-theme-dark .version-history-list {
-    background: #111827;
+.suggest-slide-form {
+    background: var(--ag-panel);
 }
 
-.agency-theme-dark .suggest-slide-form {
-    background: #111827;
-}
-
-.agency-theme-dark .suggest-text-input {
-    background: #0b0f14;
-    border-color: #374151;
+.suggest-text-input {
+    background: var(--ag-bg);
+    border-color: var(--ag-border);
     color: var(--agency-text-color);
 }
 
-.agency-theme-dark .storyboard-insert-btn {
-    background: #111827;
-    border-color: #374151;
+.storyboard-insert-btn {
+    background: var(--ag-panel);
+    border-color: var(--ag-border);
 }
 
 /* ========================================
    PROJECT COVER ACTIONS
    ======================================== */
-
-.project-cover-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 6px 0 8px 0;
-}
 
 /* Danger button variant : déplacé dans assets/css/ui.css */
 
@@ -89,7 +75,7 @@
 }
 .script-description[contenteditable="true"]:focus,
 .block-description[contenteditable="true"]:focus {
-    background: var(--agency-bg-color, #fff);
+    background: var(--agency-bg-color, var(--ag-panel));
     box-shadow: 0 0 0 2px rgba(var(--agency-primary-rgb, 0,0,0), 0.1);
 }
 .script-description:empty::before,
@@ -101,14 +87,10 @@
 }
 
 /* Dark theme */
-.agency-theme-dark .script-description,
-.agency-theme-dark .block-description {
-    background: #0b0f14;
-    border-left-color: #374151;
-}
-.agency-theme-dark .project-cover-actions .agency-btn-secondary {
-    border-color: #374151;
-    color: var(--agency-text-color);
+.script-description,
+.block-description {
+    background: var(--ag-bg);
+    border-left-color: var(--ag-border);
 }
 
 /* ========================================
@@ -200,7 +182,7 @@
     padding: 12px 16px;
     border: 1px solid var(--agency-border-color);
     border-radius: 8px;
-    background: var(--agency-bg-secondary, #f8f9fa);
+    background: var(--agency-bg-secondary, var(--ag-field));
 }
 
 .preset-card-thumb {
@@ -426,59 +408,59 @@
 }
 
 /* === File Deposit — Dark Mode === */
-.agency-theme-dark .file-deposit-settings,
-.agency-theme-dark .file-deposit-upload,
-.agency-theme-dark .file-deposit-list {
+.file-deposit-settings,
+.file-deposit-upload,
+.file-deposit-list {
     color: var(--agency-text-color);
 }
 
-.agency-theme-dark .file-deposit-zone {
+.file-deposit-zone {
     border-color: rgba(255, 255, 255, 0.2);
     background: rgba(255, 255, 255, 0.04);
 }
 
-.agency-theme-dark .file-deposit-zone:hover,
-.agency-theme-dark .file-deposit-zone.is-dragover {
+.file-deposit-zone:hover,
+.file-deposit-zone.is-dragover {
     border-color: var(--agency-primary-color);
     background: rgba(255, 255, 255, 0.08);
 }
 
-.agency-theme-dark .file-deposit-item {
+.file-deposit-item {
     background: rgba(255, 255, 255, 0.06);
     border-color: rgba(255, 255, 255, 0.1);
 }
 
-.agency-theme-dark .file-deposit-item:hover {
+.file-deposit-item:hover {
     background: rgba(255, 255, 255, 0.1);
 }
 
-.agency-theme-dark .file-deposit-item-name {
+.file-deposit-item-name {
     color: var(--agency-text-color);
 }
 
-.agency-theme-dark .file-deposit-item-meta {
+.file-deposit-item-meta {
     color: var(--agency-text-muted);
 }
 
-.agency-theme-dark .file-deposit-item-icon {
+.file-deposit-item-icon {
     color: var(--agency-text-muted);
 }
 
-.agency-theme-dark .file-deposit-settings h3,
-.agency-theme-dark .file-deposit-upload h3,
-.agency-theme-dark .file-deposit-list h3 {
+.file-deposit-settings h3,
+.file-deposit-upload h3,
+.file-deposit-list h3 {
     color: var(--agency-text-color);
 }
 
-.agency-theme-dark .file-deposit-constraints {
+.file-deposit-constraints {
     color: var(--agency-text-muted);
 }
 
-.agency-theme-dark .file-deposit-progress-bar {
+.file-deposit-progress-bar {
     background: rgba(255, 255, 255, 0.1);
 }
 
-.agency-theme-dark .file-deposit-empty {
+.file-deposit-empty {
     color: var(--agency-text-muted);
 }
 
@@ -496,9 +478,9 @@
 .pdf-preview-frame {
     width: 100%;
     height: 600px;
-    border: 1px solid var(--agency-border-color, #e0e0e0);
+    border: 1px solid var(--agency-border-color, var(--ag-border));
     border-radius: var(--agency-radius-small);
-    background: #fff;
+    background: var(--ag-panel);
 }
 
 .pdf-download-fallback {
@@ -506,8 +488,8 @@
     align-items: center;
     gap: 10px;
     padding: 10px 16px;
-    background: var(--agency-secondary-color, #fff);
-    border: 1px solid var(--agency-border-color, #e0e0e0);
+    background: var(--agency-secondary-color, var(--ag-panel));
+    border: 1px solid var(--agency-border-color, var(--ag-border));
     border-radius: var(--agency-radius-small);
     font-size: 14px;
 }
@@ -538,19 +520,19 @@
     margin: 0 0 16px;
     font-size: 1.15rem;
     font-weight: 600;
-    color: var(--agency-text-color, #333);
+    color: var(--agency-text-color, var(--ag-text-1));
 }
 
 .upload-progress-info {
     font-size: 14px;
-    color: var(--agency-text-muted, #6b7280);
+    color: var(--agency-text-muted, var(--ag-text-3));
     margin-bottom: 16px;
 }
 
 .upload-progress-bar-container {
     width: 100%;
     height: 8px;
-    background: var(--agency-border-color, #e0e0e0);
+    background: var(--agency-border-color, var(--ag-active));
     border-radius: 4px;
     overflow: hidden;
 }
@@ -580,7 +562,7 @@
     border-radius: 50%;
     border: none;
     background: rgba(0, 0, 0, 0.35);
-    color: #fff;
+    color: var(--ag-text-1);
     font-size: 18px;
     line-height: 1;
     cursor: pointer;
@@ -603,65 +585,14 @@
    v0.9.4 — HAMBURGER MENU (mobile)
    ======================================== */
 
-.agency-hamburger {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    gap: 5px;
-    width: 36px;
-    height: 36px;
-    padding: 6px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: background 0.2s;
-}
-
-.agency-hamburger:hover {
-    background: rgba(0, 0, 0, 0.06);
-}
-
-.agency-hamburger span {
-    display: block;
-    width: 100%;
-    height: 2px;
-    background: var(--agency-text-color, #333);
-    border-radius: 1px;
-    transition: transform 0.3s, opacity 0.3s;
-}
-
-.agency-hamburger.is-active span:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
-}
-
-.agency-hamburger.is-active span:nth-child(2) {
-    opacity: 0;
-}
-
-.agency-hamburger.is-active span:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
-}
-
 /* ========================================
    v0.9.4 — MOBILE RESPONSIVE OVERRIDES
    ======================================== */
 
 @media (max-width: 768px) {
     /* Show hamburger on mobile */
-    .agency-hamburger {
-        display: flex;
-    }
 
     /* Ensure dropdown isn't clipped and header is fixed */
-    .agency-header-fixed {
-        overflow: visible;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 99990;
-    }
 
     /* Fix project card overflow on mobile */
     .block-title-small,
@@ -679,47 +610,14 @@
     }
 
     /* Header layout */
-    .agency-header-container {
-        flex-wrap: nowrap;
-        position: relative;
-        padding: 0 12px;
-    }
 
-    .agency-header-left {
-        flex: 1;
-        min-width: 0;
-    }
+    
 
     /* Hide right section by default on mobile */
-    .agency-header-right {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: var(--agency-header-bg, rgba(255,255,255,0.95));
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        flex-direction: column;
-        padding: 16px 20px;
-        gap: 12px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-        border-top: 1px solid var(--agency-border-color, #e0e0e0);
-        z-index: 99991;
-        overflow-y: auto;
-        max-height: 80vh;
-    }
 
-    .agency-header-right.is-open {
-        display: flex;
-    }
+    
 
     /* Breadcrumb vertical on mobile menu */
-    .agency-header-breadcrumb {
-        flex-direction: column;
-        gap: 8px;
-        font-size: 0.9em;
-    }
 
     .breadcrumb-separator {
         display: none;
@@ -730,28 +628,13 @@
     }
 
     /* User section in mobile menu */
-    .agency-header-user {
-        padding-top: 8px;
-        border-top: 1px solid var(--agency-border-color, #e0e0e0);
-    }
 
     /* Reduced paddings on mobile */
-    .agency-main {
-        padding-top: 16px;
-    }
 
-    .agency-container {
-        padding: 0 12px;
-    }
+    
 
     /* Prevent horizontal overflow on mobile */
-    .agency-wrapper {
-        overflow-x: hidden;
-    }
 
-    .agency-wrapper,
-    .agency-main,
-    .agency-container,
     .agency-block-view {
         max-width: 100%;
     }
@@ -792,23 +675,16 @@
 }
 
 /* Dark theme adjustments for new elements */
-.agency-theme-dark .agency-hamburger span {
-    background: var(--agency-text-color, #e4e4e7);
+
+.agency-upload-modal {
+    background: var(--agency-card-bg, var(--ag-panel));
 }
 
-.agency-theme-dark .agency-hamburger:hover {
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.agency-theme-dark .agency-upload-modal {
-    background: var(--agency-card-bg, #16191f);
-}
-
-.agency-theme-dark .storyboard-slide-delete {
+.storyboard-slide-delete {
     background: rgba(255, 255, 255, 0.25);
 }
 
-.agency-theme-dark .pdf-preview-frame {
+.pdf-preview-frame {
     background: #1a1a2e;
     border-color: var(--agency-border-color);
 }
@@ -846,7 +722,7 @@
 .agency-resize-tooltip {
     position: absolute;
     background: rgba(0, 0, 0, 0.8);
-    color: white;
+    color: var(--ag-text-1);
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 12px;

@@ -19,69 +19,6 @@
             this.initClientTitleEditor();
             this.initLazyBackgrounds();
             this.initCodeCopy();
-            this.initMobileHeader();
-        },
-
-        initMobileHeader: function() {
-            const hamburger = document.getElementById('agency-hamburger');
-            if (!hamburger) return;
-
-            const drawer = document.querySelector('.agency-header-right');
-            if (!drawer) return;
-
-            const close = () => {
-                drawer.classList.remove('is-open');
-                hamburger.classList.remove('is-active');
-                hamburger.setAttribute('aria-expanded', 'false');
-                document.body.classList.remove('agency-header-drawer-open');
-            };
-            const open = () => {
-                drawer.classList.add('is-open');
-                hamburger.classList.add('is-active');
-                hamburger.setAttribute('aria-expanded', 'true');
-                document.body.classList.add('agency-header-drawer-open');
-            };
-            const toggle = () => {
-                drawer.classList.contains('is-open') ? close() : open();
-            };
-
-            hamburger.setAttribute('aria-expanded', 'false');
-            hamburger.setAttribute('aria-controls', 'agency-header-drawer');
-            drawer.id = drawer.id || 'agency-header-drawer';
-
-            hamburger.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggle();
-            });
-
-            // Fermer sur Escape
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && drawer.classList.contains('is-open')) {
-                    close();
-                    hamburger.focus();
-                }
-            });
-
-            // Fermer au clic hors drawer
-            document.addEventListener('click', (e) => {
-                if (!drawer.classList.contains('is-open')) return;
-                if (drawer.contains(e.target) || hamburger.contains(e.target)) return;
-                close();
-            });
-
-            // Fermer au clic sur un lien interne au drawer
-            drawer.addEventListener('click', (e) => {
-                const link = e.target.closest('a');
-                if (link && drawer.classList.contains('is-open')) {
-                    close();
-                }
-            });
-
-            // Si le viewport repasse en desktop, réinitialiser
-            const mql = window.matchMedia('(min-width: 769px)');
-            const handleResize = (m) => { if (m.matches) close(); };
-            if (mql.addEventListener) mql.addEventListener('change', handleResize);
-            else mql.addListener(handleResize);
         },
 
         initCodeCopy: function() {
@@ -166,6 +103,7 @@
                     animation: 150,
                     delay: 100,
                     delayOnTouchOnly: true,
+                    draggable: '.agency-block',
                     onMove: (evt) => {
                         // Only cancel drag if we're actively resizing
                         if (this.blockResizing) {
@@ -244,8 +182,8 @@
             const gap = parseInt(computedStyle.gap) || 20;
             const cellWidth = (gridContainer.offsetWidth - gap * (cells - 1)) / cells;
             
-            // Fixed reference height for predictable resizing (300px min-height + gap)
-            const BASE_ROW_HEIGHT = 300;
+            // Hauteur de référence d'une carte (couverture 150 px + corps) + gap
+            const BASE_ROW_HEIGHT = 290;
             const cellHeight = BASE_ROW_HEIGHT + gap;
 
             const startX = e.clientX;
@@ -269,7 +207,7 @@
 
                 // Calculate new width (expanding to the right)
                 const cellsToAdd = Math.round(deltaX / cellWidth);
-                const newWidth = Math.max(1, Math.min(3, currentWidth + cellsToAdd));
+                const newWidth = Math.max(1, Math.min(4, currentWidth + cellsToAdd));
 
                 // Calculate new height (expanding downward)
                 const rowsToAdd = Math.round(deltaY / cellHeight);

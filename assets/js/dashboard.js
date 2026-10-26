@@ -16,8 +16,7 @@
         $('#agd-client-name').val('');
         $('#agd-logo-url').val('');
         $('#agd-logo-preview').hide().attr('src', '');
-        $('#agd-primary-color-picker').val('#000000');
-        $('#agd-primary-color-text').val('#000000');
+        AgencyUI.setAccent(document.querySelector('[data-accent-field="agd-primary-color"]'), '#7C83FD');
         $('#agd-modal-error').hide().text('');
         $('#agd-modal-save').prop('disabled', false).text(__('Create client', 'agency-client-portal'));
 
@@ -50,15 +49,26 @@
         }
     });
 
-    /* ---- Sync couleur picker ↔ texte hex ---- */
-    $(document).on('input', '#agd-primary-color-picker', function () {
-        $('#agd-primary-color-text').val($(this).val());
-    });
-    $(document).on('input', '#agd-primary-color-text', function () {
-        var val = $(this).val();
-        if (/^#[0-9a-fA-F]{6}$/.test(val)) {
-            $('#agd-primary-color-picker').val(val);
-        }
+    /* ---- Recherche et filtre de statut des clients ---- */
+    var statusFilter = 'all';
+    function filterClients() {
+        var term  = ($('#agd-client-search').val() || '').toLowerCase().trim();
+        var shown = 0;
+        $('#agd-clients-grid .agency-client-card').each(function () {
+            var $card = $(this);
+            var ok = (term === '' || String($card.data('client-name')).toLowerCase().indexOf(term) !== -1)
+                && (statusFilter === 'all' || $card.data('client-status') === statusFilter);
+            $card.toggle(ok);
+            if (ok) { shown++; }
+        });
+        $('#agd-no-results').prop('hidden', shown > 0);
+    }
+    $(document).on('input', '#agd-client-search', filterClients);
+    $(document).on('click', '#agd-status-filter .agency-label-filter', function () {
+        statusFilter = $(this).data('status');
+        $('#agd-status-filter .agency-label-filter').removeClass('active');
+        $(this).addClass('active');
+        filterClients();
     });
 
     /* ---- Media uploader logo ---- */
@@ -66,8 +76,8 @@
         e.preventDefault();
         if (!logoFrame) {
             logoFrame = wp.media({
-                title: 'Choisir un logo',
-                button: { text: 'Utiliser ce logo' },
+                title: __('Choose a logo', 'agency-client-portal'),
+                button: { text: __('Use this logo', 'agency-client-portal') },
                 multiple: false
             });
             logoFrame.on('select', function () {
@@ -83,7 +93,7 @@
     $(document).on('click', '#agd-modal-save', function () {
         var name = $.trim($('#agd-client-name').val());
         if (!name) {
-            $('#agd-modal-error').text('Le nom du client est obligatoire.').show();
+            $('#agd-modal-error').text(__('The client name is required.', 'agency-client-portal')).show();
             return;
         }
 
@@ -94,7 +104,7 @@
         var payload = {
             name:          name,
             logo_url:      $('#agd-logo-url').val() || '',
-            primary_color: $('#agd-primary-color-text').val() || '#000000'
+            primary_color: $('#agd-primary-color-text').val() || '#7C83FD'
         };
 
         $.ajax({
@@ -127,51 +137,7 @@
         });
     });
 
-    /* ---- Copier le lien d'accès client ---- */
-    $(document).on('click', '.agd-copy-link', function () {
-        var clientId = $(this).data('client-id');
-        var $btn     = $(this);
-        $btn.prop('disabled', true).text('…');
-
-        $.post(ajaxUrl, {
-            action:    'agency_get_access_url',
-            client_id: clientId,
-            nonce:     ajaxNonce
-        }, function (resp) {
-            if (resp.success && resp.data && resp.data.access_url) {
-                var url = resp.data.access_url;
-                if (navigator.clipboard && window.isSecureContext) {
-                    navigator.clipboard.writeText(url).then(function () {
-                        toast(__('Link copied to clipboard!', 'agency-client-portal'));
-                    }).catch(function () {
-                        fallbackCopy(url);
-                    });
-                } else {
-                    fallbackCopy(url);
-                }
-            } else if (resp.data && resp.data.code === 'token_plaintext_expired') {
-                toast(__('Legacy token — go to Edit client to regenerate it.', 'agency-client-portal'), true);
-            } else {
-                toast(__('Unable to retrieve the access link.', 'agency-client-portal'), true);
-            }
-        }).fail(function () {
-            toast(__('Server error while retrieving the link.', 'agency-client-portal'), true);
-        }).always(function () {
-            $btn.prop('disabled', false).text('Copier le lien');
-        });
-    });
-
-    function fallbackCopy(text) {
-        var $tmp = $('<input>').val(text).appendTo('body');
-        $tmp[0].select();
-        try {
-            document.execCommand('copy');
-            toast(__('Link copied to clipboard!', 'agency-client-portal'));
-        } catch (e) {
-            toast('Copiez manuellement : ' + text, true);
-        }
-        $tmp.remove();
-    }
+    /* Copie du lien d'accès : gérée par manager.js (.agency-copy-access) */
 
     /* ---- Initialisation au chargement du DOM ---- */
     $(document).ready(function () {

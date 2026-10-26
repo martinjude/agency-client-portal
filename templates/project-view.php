@@ -45,7 +45,7 @@ if ($is_manager && isset($_POST['ajax_create_block']) && isset($_POST['block_typ
         'type' => $type,
         'title' => $default_title,
         'content' => $default_content,
-        'grid_width' => ($type === 'separator') ? 12 : 3,
+        'grid_width' => ($type === 'separator') ? 12 : 1,
         'status' => 'active',
         'created_at' => current_time('mysql'),
     );
@@ -72,102 +72,140 @@ $project_cover_url = Agency_Project::get_cover_full_url($project);
 <div class="agency-wrapper">
 
 
-    <!-- Project cover image (behind header) -->
-    <?php if ($project_cover_url): ?>
-    <div class="agency-project-cover" style="--cover-url: url('<?php echo esc_url($project_cover_url); ?>');"></div>
-    <?php endif; ?>
-
-    <!-- Header -->
     <?php include AGENCY_PLUGIN_DIR . 'templates/partials/header.php'; ?>
+    <?php include AGENCY_PLUGIN_DIR . 'templates/partials/sidebar.php'; ?>
 
-    <!-- Sidebar manager -->
-    <?php $sidebar_context = 'project'; include AGENCY_PLUGIN_DIR . 'templates/partials/sidebar.php'; ?>
+    <?php
+    // Données des cartes : assets et commentaires chargés une fois
+    $card_blocks    = array_values(array_filter($blocks, function ($b) { return !in_array($b->type, array('separator', 'progress_bar'), true); }));
+    $comment_counts = Agency_Comment::count_by_blocks(wp_list_pluck($card_blocks, 'id'));
+    $total_comments = array_sum($comment_counts);
+    $block_types_used = array();
+    foreach ($card_blocks as $cb) {
+        $block_types_used[$cb->type] = Agency_Block::get_type_label($cb->type);
+    }
+    $subtitle_text = !empty($project->subtitle) ? $project->subtitle : '';
+    ?>
 
-    <!-- Main Content -->
     <main class="agency-main">
-        
         <div class="agency-container">
             <div class="agency-project-view">
-                <div class="project-header">
-                    <h1 class="agency-title"><?php
-                        // FIX: Output emoji directly without escaping, but escape the project name
-                        echo esc_html($project_emoji) . ' ' . esc_html($project->name);
-                    ?></h1>
-                    <?php if ($is_manager): ?>
-                    <div class="project-cover-actions">
-                        <button class="agency-btn agency-btn-sm agency-btn-secondary" id="set-project-cover-btn" type="button">
-                            <?php Agency_Icons::render('image', 16); ?> <?php echo esc_html($project_cover_url ? __('Change cover', 'agency-client-portal') : __('Add a cover', 'agency-client-portal')); ?>
-                        </button>
-						<?php if ($project_cover_url): ?>
-                        <button class="agency-btn agency-btn-sm agency-btn-danger" id="remove-project-cover-btn" type="button">
-                            <?php Agency_Icons::render('x', 16); ?> <?php esc_html_e('Remove cover', 'agency-client-portal'); ?>
-                        </button>
-                        <?php endif; ?>
-                    </div>
-                    <?php endif; ?>
-                    <?php
-                    $subtitle_text = !empty($project->subtitle)
-                        ? esc_html($project->subtitle)
-                        : esc_html__('Find all your project deliverables here', 'agency-client-portal');
-                    ?>
-                    <?php if ($is_manager): ?>
-                    <h4 class="agency-subtitle agency-subtitle-editable"
-                        contenteditable="true"
-                        data-project-id="<?php echo intval($project->id); ?>"
-                        data-original="<?php echo esc_attr(!empty($project->subtitle) ? $project->subtitle : __('Find all your project deliverables here', 'agency-client-portal')); ?>"
-                        title="<?php esc_attr_e('Click to edit', 'agency-client-portal'); ?>"><?php echo esc_html($subtitle_text); ?></h4>
-                    <?php else: ?>
-                    <h4 class="agency-subtitle"><?php echo esc_html($subtitle_text); ?></h4>
-                    <?php endif; ?>
-                    
-                    <?php if ($is_manager): ?>
-                    <div class="agency-actions">
-                            <button class="agency-btn agency-btn-primary" id="add-block-btn" type="button">
-                                <?php esc_html_e('+ Add a block', 'agency-client-portal'); ?>
-                            </button>
-                            <button class="agency-btn agency-btn-secondary"
-                                    id="add-progress-bar-btn" type="button"
-                                    data-project-id="<?php echo intval($project->id); ?>">
-                                <?php Agency_Icons::render('bar-chart', 16); ?> <?php esc_html_e('Add a progress bar', 'agency-client-portal'); ?>
-                            </button>
-                            <button class="agency-btn agency-btn-secondary" id="add-separator-btn" type="button">
-                                <?php Agency_Icons::render('minus', 16); ?> <?php esc_html_e('Add a separator', 'agency-client-portal'); ?>
-                            </button>
-                            <button class="agency-btn agency-btn-secondary"
-                                    id="save-preset-btn" type="button"
-                                    data-project-id="<?php echo intval($project->id); ?>">
-                                <?php Agency_Icons::render('save', 16); ?> <?php esc_html_e('Save a layout', 'agency-client-portal'); ?>
-                            </button>
-                            <button class="agency-btn agency-btn-secondary"
-                                    id="import-preset-btn" type="button"
-                                    data-project-id="<?php echo intval($project->id); ?>">
-                                <?php Agency_Icons::render('download', 16); ?> <?php esc_html_e('Import a layout', 'agency-client-portal'); ?>
-                            </button>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <div class="agency-links">
-                        <?php if (!empty($external_links)): ?>
-                            <div class="external-links-display">
-                                <?php foreach ($external_links as $link): ?>
-                                    <a href="<?php echo esc_url($link->url); ?>" class="external-link-item" target="_blank" rel="noopener" data-link-id="<?php echo esc_attr($link->id); ?>">
-                                        <span class="link-emoji"><?php echo esc_html($link->emoji); ?></span>
-                                        <span class="link-text"><?php echo esc_html($link->text); ?></span>
-                                        <?php if ($is_manager): ?>
-                                            <button class="edit-external-link" data-link-id="<?php echo esc_attr($link->id); ?>" data-link-emoji="<?php echo esc_attr($link->emoji); ?>" data-link-text="<?php echo esc_attr($link->text); ?>" data-link-url="<?php echo esc_attr($link->url); ?>" title="<?php esc_attr_e('Edit', 'agency-client-portal'); ?>"><?php Agency_Icons::render('edit', 14); ?></button>
-                                            <button class="delete-external-link" data-link-id="<?php echo esc_attr($link->id); ?>" title="<?php esc_attr_e('Delete', 'agency-client-portal'); ?>">×</button>
-                                        <?php endif; ?>
-                                    </a>
-                                <?php endforeach; ?>
+
+                <?php Agency_Template::crumbs(array(
+                    array($is_manager ? $client->name : __('Projects', 'agency-client-portal'), home_url("/client/{$client->slug}/")),
+                    array($project->name, ''),
+                )); ?>
+
+                <div class="agency-page-head">
+                    <div class="agency-page-head__main">
+                        <span class="agency-page-emoji" data-agency-emoji><?php echo esc_html($project_emoji); ?></span>
+                        <div class="agency-page-head__text">
+                            <h1 class="agency-page-title"><?php echo esc_html($project->name); ?></h1>
+                            <div class="agency-page-meta">
+                                <?php
+                                echo esc_html(implode(' · ', array_filter(array(
+                                    /* translators: %d: number of blocks */
+                                    sprintf(_n('%d block', '%d blocks', count($card_blocks), 'agency-client-portal'), count($card_blocks)),
+                                    /* translators: %d: number of comments */
+                                    sprintf(_n('%d comment', '%d comments', $total_comments, 'agency-client-portal'), $total_comments),
+                                    /* translators: %s: relative time, e.g. "2 hours ago" */
+                                    sprintf(__('updated %s', 'agency-client-portal'), Agency_Template::time_ago(!empty($project->updated_at) ? $project->updated_at : $project->created_at)),
+                                ))));
+                                ?>
                             </div>
-                        <?php endif; ?>
-                        <?php if ($is_manager): ?>
-                            <button class="agency-btn agency-btn-secondary" id="add-external-link-btn" type="button">
-                                <?php Agency_Icons::render('link', 16); ?> <?php esc_html_e('Add a link', 'agency-client-portal'); ?>
-                            </button>
-                        <?php endif; ?>
+                            <?php if ($is_manager): ?>
+                                <p class="agency-page-sub">
+                                    <span class="agency-subtitle-editable agency-inline-edit"
+                                          contenteditable="true"
+                                          data-project-id="<?php echo intval($project->id); ?>"
+                                          data-placeholder="<?php esc_attr_e('Add a subtitle for the client…', 'agency-client-portal'); ?>"
+                                          data-original="<?php echo esc_attr($subtitle_text); ?>"
+                                          title="<?php esc_attr_e('Click to edit', 'agency-client-portal'); ?>"><?php echo esc_html($subtitle_text); ?></span>
+                                </p>
+                            <?php elseif ($subtitle_text !== ''): ?>
+                                <p class="agency-page-sub"><?php echo esc_html($subtitle_text); ?></p>
+                            <?php endif; ?>
+                        </div>
                     </div>
-                    
+                    <?php if ($is_manager): ?>
+                    <div class="agency-page-head__actions">
+                        <button class="agency-btn" id="set-project-cover-btn" type="button">
+                            <?php Agency_Icons::render('image', 16); ?> <?php esc_html_e('Cover', 'agency-client-portal'); ?>
+                        </button>
+                        <div class="agency-dropdown">
+                            <button type="button" class="agency-btn-icon" data-agency-dropdown aria-haspopup="true" aria-expanded="false" aria-label="<?php esc_attr_e('More actions', 'agency-client-portal'); ?>">
+                                <?php Agency_Icons::render_ui('more', 16); ?>
+                            </button>
+                            <div class="agency-menu" role="menu">
+                                <button type="button" class="agency-menu__item" id="add-progress-bar-btn" data-project-id="<?php echo intval($project->id); ?>"><?php Agency_Icons::render('bar-chart', 16); ?> <?php esc_html_e('Add a progress bar', 'agency-client-portal'); ?></button>
+                                <button type="button" class="agency-menu__item" id="add-separator-btn"><?php Agency_Icons::render('minus', 16); ?> <?php esc_html_e('Add a separator', 'agency-client-portal'); ?></button>
+                                <button type="button" class="agency-menu__item" id="add-external-link-btn"><?php Agency_Icons::render('link', 16); ?> <?php esc_html_e('Add a link', 'agency-client-portal'); ?></button>
+                                <hr class="agency-menu__sep">
+                                <button type="button" class="agency-menu__item" id="save-preset-btn" data-project-id="<?php echo intval($project->id); ?>"><?php Agency_Icons::render('save', 16); ?> <?php esc_html_e('Save a layout', 'agency-client-portal'); ?></button>
+                                <button type="button" class="agency-menu__item" id="import-preset-btn" data-project-id="<?php echo intval($project->id); ?>"><?php Agency_Icons::render('download', 16); ?> <?php esc_html_e('Import a layout', 'agency-client-portal'); ?></button>
+                                <?php if ($project_cover_url): ?>
+                                <hr class="agency-menu__sep">
+                                <button type="button" class="agency-menu__item agency-menu__item--danger" id="remove-project-cover-btn"><?php Agency_Icons::render('x', 16); ?> <?php esc_html_e('Remove cover', 'agency-client-portal'); ?></button>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                </div>
+
+                <?php if (!empty($external_links)): ?>
+                <div class="agency-links">
+                    <div class="external-links-display">
+                        <?php foreach ($external_links as $link): ?>
+                            <a href="<?php echo esc_url($link->url); ?>" class="external-link-item" target="_blank" rel="noopener" data-link-id="<?php echo esc_attr($link->id); ?>">
+                                <span class="link-emoji"><?php echo esc_html($link->emoji); ?></span>
+                                <span class="link-text"><?php echo esc_html($link->text); ?></span>
+                                <?php if ($is_manager): ?>
+                                    <button class="edit-external-link" data-link-id="<?php echo esc_attr($link->id); ?>" data-link-emoji="<?php echo esc_attr($link->emoji); ?>" data-link-text="<?php echo esc_attr($link->text); ?>" data-link-url="<?php echo esc_attr($link->url); ?>" title="<?php esc_attr_e('Edit', 'agency-client-portal'); ?>"><?php Agency_Icons::render('edit', 14); ?></button>
+                                    <button class="delete-external-link" data-link-id="<?php echo esc_attr($link->id); ?>" title="<?php esc_attr_e('Delete', 'agency-client-portal'); ?>">×</button>
+                                <?php endif; ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <?php if ($project->description): ?>
+                    <div class="project-description agency-page-sub agency-mb-20">
+                        <?php echo wp_kses_post($project->description); ?>
+                    </div>
+                <?php endif; ?>
+
+                <div class="agency-toolbar">
+                    <label class="agency-search">
+                        <?php Agency_Icons::render_ui('search', 16); ?>
+                        <input type="search" id="block-search" placeholder="<?php esc_attr_e('Search a block', 'agency-client-portal'); ?>" autocomplete="off">
+                    </label>
+                    <?php if (count($block_types_used) > 1): ?>
+                    <div class="agency-dropdown">
+                        <button type="button" class="agency-btn" data-agency-dropdown aria-haspopup="true" aria-expanded="false">
+                            <?php Agency_Icons::render_ui('filter', 16); ?> <?php esc_html_e('Filter', 'agency-client-portal'); ?>
+                        </button>
+                        <div class="agency-menu" id="block-type-filters">
+                            <div class="agency-menu__label"><?php esc_html_e('Block type', 'agency-client-portal'); ?></div>
+                            <button type="button" class="agency-label-filter active" data-type="all"><?php esc_html_e('All', 'agency-client-portal'); ?></button>
+                            <?php foreach ($block_types_used as $type_key => $type_label): ?>
+                                <button type="button" class="agency-label-filter" data-type="<?php echo esc_attr($type_key); ?>"><?php echo esc_html($type_label); ?></button>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                    <div class="agency-seg" data-agency-view-toggle="blocks-list" role="group" aria-label="<?php esc_attr_e('Display', 'agency-client-portal'); ?>">
+                        <button type="button" data-view="grid" class="is-on" aria-label="<?php esc_attr_e('Grid', 'agency-client-portal'); ?>"><?php Agency_Icons::render_ui('grid', 16); ?></button>
+                        <button type="button" data-view="list" aria-label="<?php esc_attr_e('List', 'agency-client-portal'); ?>"><?php Agency_Icons::render_ui('list', 16); ?></button>
+                    </div>
+                    <?php if ($is_manager): ?>
+                    <button class="agency-btn agency-btn-primary" id="add-block-btn" type="button">
+                        <?php Agency_Icons::render_ui('plus', 16); ?> <?php esc_html_e('New block', 'agency-client-portal'); ?>
+                    </button>
+                    <?php endif; ?>
+                </div>
+
                     <?php if ($is_manager): ?>
                         
                         <!-- Modal de création de bloc -->
@@ -696,208 +734,227 @@ $project_cover_url = Agency_Project::get_cover_full_url($project);
                         });
                         <?php wp_print_inline_script_tag(ob_get_clean()); ?>
                     <?php endif; ?>
-</div>
 
-                <?php if ($project->description): ?>
-                    <div class="project-description">
-                        <?php echo wp_kses_post($project->description); ?>
+                <h2 class="agency-sec-h"><?php esc_html_e('Blocks', 'agency-client-portal'); ?> <span class="agency-badge"><?php echo esc_html(count($card_blocks)); ?></span></h2>
+
+                <?php if (empty($blocks) && !$is_manager): ?>
+                    <div class="agency-empty">
+                        <p class="agency-empty__title"><?php esc_html_e('No blocks for this project.', 'agency-client-portal'); ?></p>
                     </div>
-                <?php endif; ?>
-                
-                <?php if (empty($blocks)): ?>
-                    <p class="agency-empty-state"><?php esc_html_e('No blocks for this project.', 'agency-client-portal'); ?></p>
                 <?php else: ?>
                     <div class="agency-blocks-grid <?php echo $is_manager ? 'sortable' : ''; ?>" id="blocks-list">
                         <?php foreach ($blocks as $block): ?>
                             <?php
-                            $comments_count = Agency_Comment::count_by_block($block->id);
-                            $assets_count = Agency_Asset::count_by_block($block->id);
-                            $assets = Agency_Asset::get_by_block($block->id);
-                            
-                            // Pour versioned_media, trier par version_number DESC pour avoir la dernière version en premier
-                            if ($block->type === 'versioned_media' && !empty($assets)) {
-                                usort($assets, function($a, $b) {
-                                    $va = isset($a->version_number) ? intval($a->version_number) : 1;
-                                    $vb = isset($b->version_number) ? intval($b->version_number) : 1;
-                                    return $vb <=> $va;
-                                });
-                            }
-                            
-                            $first_asset = !empty($assets) ? $assets[0] : null;
-                            $grid_width = isset($block->grid_width) ? intval($block->grid_width) : 3;
-                            $grid_height = isset($block->grid_height) ? intval($block->grid_height) : 1;
                             $block_settings = Agency_Block::get_settings($block);
-                            $allow_media_download = Agency_Block::is_media_download_allowed($block);
-                            $preview_only_for_token_client = !$is_manager && $token_authenticated && !$allow_media_download;
 
-                            // Déterminer l'URL de l'image de fond
-                            $background_image_url = '';
-
-                            // D'abord vérifier si une image de fond est définie dans les paramètres
-                            if (!empty($block_settings['background_image_url'])) {
-                                $background_image_url = $block_settings['background_image_url'];
-                            }
-
-                            // Sinon utiliser le premier média image comme fallback
-                            if (empty($background_image_url) && $first_asset && $first_asset->file_type === 'image') {
-                                $background_image_url = Agency_Asset::get_thumbnail_url($first_asset->id);
-                            }
-
-                            // URL de destination de la card (client seulement)
-                            // Pour les blocs "lien", redirecter directement vers l'URL définie
-                            $block_card_url = home_url("/client/{$client->slug}/project/{$project->slug}/block/{$block->id}");
-                            if (!$is_manager && $block->type === 'link') {
-                                if (!empty($block_settings['link_url'])) {
-                                    $block_card_url = $block_settings['link_url'];
-                                }
-                            }
-                            ?>
-
-                            <?php if ($block->type === 'progress_bar'): ?>
-                                <?php
+                            if ($block->type === 'progress_bar'):
                                 $pb_steps = !empty($block_settings['steps']) && is_array($block_settings['steps']) ? $block_settings['steps'] : array();
-                                ?>
-                                <div class="agency-block agency-progress-bar-block"
+                            ?>
+                                <div class="agency-block agency-progress-bar-block agency-grid-full-row"
                                      data-block-id="<?php echo esc_attr($block->id); ?>"
                                      data-block-type="progress_bar"
-                                     data-steps="<?php echo esc_attr(wp_json_encode($pb_steps)); ?>"
-                                     class="agency-grid-full-row">
+                                     data-steps="<?php echo esc_attr(wp_json_encode($pb_steps)); ?>">
                                     <div class="progress-bar-steps">
                                         <?php if (empty($pb_steps)): ?>
                                             <p class="progress-bar-empty"><?php esc_html_e('No steps defined', 'agency-client-portal'); ?></p>
                                         <?php else: ?>
                                             <?php foreach ($pb_steps as $pb_step): ?>
-                                            <?php $pb_pct = intval($pb_step['percent'] ?? 0); ?>
+                                            <?php $pb_pct = max(0, min(100, intval($pb_step['percent'] ?? 0))); ?>
                                             <div class="progress-bar-step">
-                                                <div class="progress-bar-step-header">
-                                                    <span class="progress-bar-step-label"><?php echo esc_html($pb_step['name'] ?? ''); ?></span>
-                                                </div>
+                                                <span class="progress-bar-step-label"><?php echo esc_html($pb_step['name'] ?? ''); ?></span>
                                                 <div class="progress-bar-track">
                                                     <div class="progress-bar-fill<?php echo esc_attr($pb_pct >= 100 ? ' is-complete' : ''); ?>" style="width: <?php echo esc_attr($pb_pct); ?>%;"></div>
                                                 </div>
-                                                <span class="progress-bar-percent"><?php echo esc_html($pb_pct); ?>%</span>
+                                                <span class="progress-bar-percent"><?php echo esc_html($pb_pct); ?> %</span>
                                             </div>
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </div>
                                     <?php if ($is_manager): ?>
                                     <div class="progress-bar-actions">
-                                        <button class="agency-btn-icon agency-edit-progress-bar"
-                                                data-block-id="<?php echo esc_attr($block->id); ?>"
-                                                title="<?php esc_attr_e('Edit', 'agency-client-portal'); ?>"><?php Agency_Icons::render('edit', 16); ?></button>
-                                        <button class="agency-btn-icon delete-block"
-                                                data-block-id="<?php echo esc_attr($block->id); ?>"
-                                                title="<?php esc_attr_e('Delete', 'agency-client-portal'); ?>"><?php Agency_Icons::render('trash', 16); ?></button>
+                                        <button class="agency-btn-icon agency-btn-icon--sm agency-edit-progress-bar" data-block-id="<?php echo esc_attr($block->id); ?>" title="<?php esc_attr_e('Edit', 'agency-client-portal'); ?>"><?php Agency_Icons::render('edit', 14); ?></button>
+                                        <button class="agency-btn-icon agency-btn-icon--sm agency-btn-icon--danger delete-block" data-block-id="<?php echo esc_attr($block->id); ?>" title="<?php esc_attr_e('Delete', 'agency-client-portal'); ?>"><?php Agency_Icons::render('trash', 14); ?></button>
                                     </div>
                                     <?php endif; ?>
                                 </div>
-                            <?php elseif ($block->type === 'separator'): ?>
-                                <?php
-                                $sep_settings = $block_settings;
-                                $sep_label = !empty($sep_settings['separator_label']) ? $sep_settings['separator_label'] : esc_html($block->title);
-                                ?>
-                                <div class="agency-block agency-separator-block"
+                            <?php elseif ($block->type === 'separator'):
+                                $sep_label = !empty($block_settings['separator_label']) ? $block_settings['separator_label'] : $block->title;
+                            ?>
+                                <div class="agency-block agency-separator-block agency-grid-full-row"
                                      data-block-id="<?php echo esc_attr($block->id); ?>"
-                                     data-block-type="separator"
-                                     class="agency-grid-full-row">
+                                     data-block-type="separator">
                                     <div class="separator-inner">
                                         <?php if ($is_manager): ?>
-                                            <span class="separator-label"
-                                                  contenteditable="true"
-                                                  data-block-id="<?php echo esc_attr($block->id); ?>"><?php echo esc_html($sep_label); ?></span>
-                                            <button class="agency-btn-icon delete-block" data-block-id="<?php echo esc_attr($block->id); ?>" title="<?php esc_attr_e('Delete', 'agency-client-portal'); ?>"><?php Agency_Icons::render('trash', 16); ?></button>
+                                            <span class="separator-label" contenteditable="true" data-block-id="<?php echo esc_attr($block->id); ?>"><?php echo esc_html($sep_label); ?></span>
+                                            <button class="agency-btn-icon agency-btn-icon--ghost agency-btn-icon--danger delete-block" data-block-id="<?php echo esc_attr($block->id); ?>" title="<?php esc_attr_e('Delete', 'agency-client-portal'); ?>"><?php Agency_Icons::render('trash', 14); ?></button>
                                         <?php else: ?>
                                             <span class="separator-label"><?php echo esc_html($sep_label); ?></span>
                                         <?php endif; ?>
                                     </div>
                                 </div>
-                            <?php else: ?>
+                            <?php else:
+                                $comments_count = isset($comment_counts[intval($block->id)]) ? $comment_counts[intval($block->id)] : 0;
+                                $assets = Agency_Asset::get_by_block($block->id);
+                                if ($block->type === 'versioned_media' && !empty($assets)) {
+                                    // Dernière version en premier
+                                    usort($assets, function ($a, $b) {
+                                        return intval($b->version_number ?? 1) <=> intval($a->version_number ?? 1);
+                                    });
+                                }
+                                $first_asset  = !empty($assets) ? $assets[0] : null;
+                                $grid_width   = max(1, min(4, isset($block->grid_width) ? intval($block->grid_width) : 1));
+                                $grid_height  = max(1, min(2, isset($block->grid_height) ? intval($block->grid_height) : 1));
+                                $allow_media_download = Agency_Block::is_media_download_allowed($block);
+                                $bg_setting   = !empty($block_settings['background_image_url']) ? $block_settings['background_image_url'] : '';
 
-                            <div class="agency-block<?php echo $background_image_url ? ' has-block-bg' : ''; ?><?php echo !$is_manager ? ' clickable-card' : ''; ?>"
-                                  data-block-id="<?php echo esc_attr($block->id); ?>"
-                                  data-block-type="<?php echo esc_attr($block->type); ?>"
-                                    data-allow-media-download="<?php echo $allow_media_download ? '1' : '0'; ?>"
-                                    data-client-can-comment="<?php echo Agency_Block::client_can_comment_allowed($block) ? '1' : '0'; ?>"
-                                    data-notify-on-comment="<?php echo Agency_Block::notify_on_comment_enabled($block) ? '1' : '0'; ?>"
-                                  data-grid-width="<?php echo esc_attr($grid_width); ?>"
-                                  data-grid-height="<?php echo esc_attr($grid_height); ?>"
-                                  <?php if ($background_image_url): ?>data-background-image="<?php echo esc_attr($background_image_url); ?>"<?php endif; ?>
-                                  <?php if (!$is_manager): ?>data-block-url="<?php echo esc_url($block_card_url); ?>"<?php if ($block->type === 'link' && $block_card_url !== home_url("/client/{$client->slug}/project/{$project->slug}/block/{$block->id}")): ?> data-block-target="_blank"<?php endif; ?><?php endif; ?>
-                                  style="grid-column: span <?php echo esc_attr($grid_width); ?>; grid-row: span <?php echo esc_attr($grid_height); ?>; --agency-grid-height: <?php echo esc_attr($grid_height); ?>;"
-                                  <?php if ($background_image_url): ?>data-bg-lazy="<?php echo esc_url($background_image_url); ?>"<?php endif; ?>>
+                                $block_url    = home_url("/client/{$client->slug}/project/{$project->slug}/block/{$block->id}/");
+                                $card_url     = $block_url;
+                                $card_target  = '';
+                                if (!$is_manager && $block->type === 'link' && !empty($block_settings['link_url'])) {
+                                    $card_url    = $block_settings['link_url'];
+                                    $card_target = '_blank';
+                                }
 
-                                <div class="block-content-wrapper">
-                                    <div class="block-type-badge"><?php echo esc_html(Agency_Block::get_type_label($block->type)); ?></div>
-                                    <h3 class="block-title"><?php echo esc_html($block->title); ?></h3>
+                                // Méta de la carte selon le type
+                                $updated = Agency_Template::time_ago(!empty($block->updated_at) ? $block->updated_at : $block->created_at);
+                                if ($block->type === 'file_deposit') {
+                                    /* translators: %d: number of received files */
+                                    $card_meta = sprintf(_n('%d file received', '%d files received', count($assets), 'agency-client-portal'), count($assets));
+                                } else {
+                                    /* translators: %s: relative time, e.g. "2 hours ago" */
+                                    $card_meta = sprintf(__('Updated %s', 'agency-client-portal'), $updated);
+                                }
 
-                                    <div class="block-content">
-                                        <?php if (($block->type === 'storyboard' || $block->type === 'versioned_media') && $first_asset): ?>
-                                            <div class="block-preview-media">
-                                                <?php if ($first_asset->file_type === 'image'): ?>
-                                                    <img src="<?php echo esc_url(Agency_Asset::get_thumbnail_url($first_asset->id)); ?>"
-                                                         alt="<?php echo esc_attr($first_asset->original_filename); ?>"
-                                                         class="preview-image"
-                                                         loading="lazy">
-                                                    <?php if ($block->type === 'versioned_media' && !empty($first_asset->version_number)): ?>
-                                                        <span class="version-badge">V<?php echo intval($first_asset->version_number); ?></span>
-                                                    <?php endif; ?>
-                                                <?php elseif ($first_asset->file_type === 'video'): ?>
-                                                    <video class="preview-video">
-                                                        <source src="<?php echo esc_url($preview_only_for_token_client ? Agency_Asset::get_preview_url($first_asset->id) : Agency_Asset::get_url($first_asset->id)); ?>">
-                                                    </video>
-                                                <?php endif; ?>
-                                                <?php if ($assets_count > 1): ?>
-                                                    <span class="media-count">+<?php echo esc_html(($assets_count - 1)); ?></span>
-                                                <?php endif; ?>
+                                // Image d'aperçu : réglage du bloc, sinon premier média image
+                                $thumb_of = function ($asset) {
+                                    return ($asset && $asset->file_type === 'image') ? Agency_Asset::get_thumbnail_url($asset->id) : '';
+                                };
+                                $preview_img = $bg_setting ? $bg_setting : $thumb_of($first_asset);
+                            ?>
+                            <div class="agency-card agency-block"
+                                 data-block-id="<?php echo esc_attr($block->id); ?>"
+                                 data-block-type="<?php echo esc_attr($block->type); ?>"
+                                 data-block-title="<?php echo esc_attr($block->title); ?>"
+                                 data-allow-media-download="<?php echo $allow_media_download ? '1' : '0'; ?>"
+                                 data-client-can-comment="<?php echo Agency_Block::client_can_comment_allowed($block) ? '1' : '0'; ?>"
+                                 data-notify-on-comment="<?php echo Agency_Block::notify_on_comment_enabled($block) ? '1' : '0'; ?>"
+                                 data-grid-width="<?php echo esc_attr($grid_width); ?>"
+                                 data-grid-height="<?php echo esc_attr($grid_height); ?>"
+                                 <?php if ($bg_setting): ?>data-background-image="<?php echo esc_attr($bg_setting); ?>"<?php endif; ?>
+                                 style="grid-column: span <?php echo esc_attr($grid_width); ?>; grid-row: span <?php echo esc_attr($grid_height); ?>;">
+
+                                <a href="<?php echo esc_url($card_url); ?>" class="agency-card__link" aria-label="<?php echo esc_attr($block->title); ?>"<?php if ($card_target): ?> target="_blank" rel="noopener noreferrer"<?php endif; ?>></a>
+
+                                <div class="agency-card__cover agency-card__cover--<?php echo esc_attr($block->type); ?>"<?php if ($preview_img && !in_array($block->type, array('storyboard', 'versioned_media', 'script', 'code', 'file_deposit'), true)): ?> data-bg-lazy="<?php echo esc_url($preview_img); ?>"<?php endif; ?>>
+                                    <?php if ($block->type === 'video'): ?>
+                                        <span class="agency-prev-play"><?php Agency_Icons::render_ui('play', 16); ?></span>
+
+                                    <?php elseif ($block->type === 'storyboard'): ?>
+                                        <?php $sb_imgs = array_values(array_filter(array_map($thumb_of, array_slice($assets, 0, 3)))); ?>
+                                        <?php if ($bg_setting) { array_unshift($sb_imgs, $bg_setting); } ?>
+                                        <div class="agency-prev-mosaic">
+                                            <span class="agency-prev-mosaic__big"<?php if (!empty($sb_imgs[0])): ?> style="background-image:url('<?php echo esc_url($sb_imgs[0]); ?>')"<?php endif; ?>></span>
+                                            <span class="agency-prev-mosaic__col">
+                                                <span<?php if (!empty($sb_imgs[1])): ?> style="background-image:url('<?php echo esc_url($sb_imgs[1]); ?>')"<?php endif; ?>></span>
+                                                <span<?php if (!empty($sb_imgs[2])): ?> style="background-image:url('<?php echo esc_url($sb_imgs[2]); ?>')"<?php endif; ?>></span>
+                                            </span>
+                                        </div>
+                                        <?php if (count($assets) > 0): ?>
+                                            <span class="agency-prev-chip agency-prev-chip--bl"><?php
+                                                /* translators: %d: number of storyboard frames */
+                                                echo esc_html(sprintf(_n('%d shot', '%d shots', count($assets), 'agency-client-portal'), count($assets)));
+                                            ?></span>
+                                        <?php endif; ?>
+
+                                    <?php elseif ($block->type === 'versioned_media'): ?>
+                                        <span class="agency-prev-poster"<?php if ($preview_img): ?> style="background-image:url('<?php echo esc_url($preview_img); ?>')"<?php endif; ?>></span>
+                                        <?php if ($first_asset && !empty($first_asset->version_number)): ?>
+                                            <span class="agency-prev-chip agency-prev-chip--tr agency-prev-chip--client">V<?php echo intval($first_asset->version_number); ?></span>
+                                        <?php endif; ?>
+
+                                    <?php elseif ($block->type === 'script'): ?>
+                                        <div class="agency-prev-text"><?php echo esc_html(mb_substr(trim(wp_strip_all_tags(str_replace(array('</p>', '<br>', '<br/>', '<br />'), "\n", (string) $block->content))), 0, 320)); ?></div>
+
+                                    <?php elseif ($block->type === 'code'): ?>
+                                        <pre class="agency-prev-code"><?php echo esc_html(implode("\n", array_slice(explode("\n", (string) $block->content), 0, 8))); ?></pre>
+
+                                    <?php elseif ($block->type === 'link'): ?>
+                                        <?php if (!$preview_img): ?>
+                                            <?php
+                                            $link_url  = !empty($block_settings['link_url']) ? $block_settings['link_url'] : '';
+                                            $link_host = $link_url ? preg_replace('/^www\./', '', (string) wp_parse_url($link_url, PHP_URL_HOST)) : '';
+                                            ?>
+                                            <div class="agency-prev-link">
+                                                <span class="agency-prev-link__fav"><?php Agency_Icons::render_glyph('link', 20); ?></span>
+                                                <span class="agency-prev-link__name"><?php echo esc_html($block->title); ?></span>
+                                                <?php if ($link_host): ?><span class="agency-prev-link__dom"><?php echo esc_html($link_host); ?></span><?php endif; ?>
                                             </div>
-                                        <?php elseif ($block->content): ?>
-                                            <div class="block-snippet">
-                                                <?php
-                                                $snippet = wp_strip_all_tags($block->content);
-                                                echo esc_html(mb_substr($snippet, 0, 150)) . (mb_strlen($snippet) > 150 ? '...' : '');
-                                                ?>
+                                        <?php endif; ?>
+                                        <span class="agency-prev-chip agency-prev-chip--tr"><?php Agency_Icons::render_ui('external', 12); ?></span>
+
+                                    <?php elseif ($block->type === 'file_deposit'): ?>
+                                        <?php if (!empty($assets)): ?>
+                                        <div class="agency-prev-files">
+                                            <?php foreach (array_slice($assets, 0, 3) as $fa): ?>
+                                                <span class="agency-prev-file">
+                                                    <?php Agency_Icons::render_glyph('script', 14); ?>
+                                                    <span><?php echo esc_html(!empty($fa->original_name) ? $fa->original_name : $fa->filename); ?></span>
+                                                    <span class="agency-prev-file__size"><?php echo esc_html(size_format(intval($fa->file_size), 0)); ?></span>
+                                                </span>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <?php else: ?>
+                                            <div class="agency-prev-empty"><?php Agency_Icons::render_glyph('file_deposit', 28); ?></div>
+                                        <?php endif; ?>
+
+                                    <?php elseif (!$preview_img): ?>
+                                        <div class="agency-prev-empty"><?php Agency_Icons::render_glyph($block->type, 28); ?></div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="agency-card__body">
+                                    <div class="agency-card__tags">
+                                        <span class="agency-tag agency-tag--icon"><?php Agency_Icons::render_glyph($block->type, 14); ?> <?php echo esc_html(Agency_Block::get_type_label($block->type)); ?></span>
+                                        <?php if ($is_manager): ?>
+                                        <div class="agency-dropdown agency-card__menu">
+                                            <button type="button" class="agency-btn-icon agency-btn-icon--ghost" data-agency-dropdown aria-haspopup="true" aria-expanded="false" aria-label="<?php esc_attr_e('Block actions', 'agency-client-portal'); ?>">
+                                                <?php Agency_Icons::render_ui('more-v', 16); ?>
+                                            </button>
+                                            <div class="agency-menu" role="menu">
+                                                <a class="agency-menu__item" href="<?php echo esc_url($block_url); ?>"><?php Agency_Icons::render_ui('external', 16); ?> <?php esc_html_e('Open block', 'agency-client-portal'); ?></a>
+                                                <button type="button" class="agency-menu__item edit-block" data-block-id="<?php echo esc_attr($block->id); ?>"><?php Agency_Icons::render('edit', 16); ?> <?php esc_html_e('Rename & settings', 'agency-client-portal'); ?></button>
+                                                <button type="button" class="agency-menu__item agency-copy-url" data-url="<?php echo esc_url($block_url); ?>"><?php Agency_Icons::render('link', 16); ?> <?php esc_html_e('Copy link', 'agency-client-portal'); ?></button>
+                                                <hr class="agency-menu__sep">
+                                                <button type="button" class="agency-menu__item agency-menu__item--danger delete-block" data-block-id="<?php echo esc_attr($block->id); ?>"><?php Agency_Icons::render('trash', 16); ?> <?php esc_html_e('Delete', 'agency-client-portal'); ?></button>
                                             </div>
+                                        </div>
                                         <?php endif; ?>
                                     </div>
-
-                                    <div class="block-footer">
-                                        <?php
-                                        $footer_url = $block_card_url;
-                                        $footer_target = (!$is_manager && $block->type === 'link' && $footer_url !== home_url("/client/{$client->slug}/project/{$project->slug}/block/{$block->id}")) ? '_blank' : '_self';
-                                        ?>
-                                        <a href="<?php echo esc_url($footer_url); ?>"
-                                           class="agency-btn agency-btn-sm agency-btn-primary"
-                                           <?php if ($footer_target === '_blank'): ?>target="_blank" rel="noopener noreferrer"<?php endif; ?>>
-                                            <?php esc_html_e('View details', 'agency-client-portal'); ?>
-                                            <?php if ($comments_count > 0): ?>
-                                                <span class="comments-badge"><?php echo esc_html($comments_count); ?></span>
-                                            <?php endif; ?>
-                                        </a>
-
-                                        <?php if ($is_manager): ?>
-                                            <div class="block-actions">
-                                                <button class="agency-btn-icon edit-block" data-block-id="<?php echo esc_attr($block->id); ?>" title="<?php esc_attr_e('Edit', 'agency-client-portal'); ?>">
-                                                    <?php Agency_Icons::render('edit', 16); ?>
-                                                </button>
-                                                <button class="agency-btn-icon delete-block" data-block-id="<?php echo esc_attr($block->id); ?>" title="<?php esc_attr_e('Delete', 'agency-client-portal'); ?>">
-                                                    <?php Agency_Icons::render('trash', 16); ?>
-                                                </button>
-                                            </div>
-                                        <?php endif; ?>
+                                    <h3 class="agency-card__title"><span class="agency-card__title-text block-title"><?php echo esc_html($block->title); ?></span></h3>
+                                    <div class="agency-card__meta"><?php echo esc_html($card_meta); ?></div>
+                                    <div class="agency-card__foot">
+                                        <span class="agency-chat<?php echo $comments_count > 0 ? ' agency-chat--unread' : ''; ?>">
+                                            <?php if ($comments_count > 0): ?><span class="agency-chat__dot"></span><?php endif; ?>
+                                            <?php Agency_Icons::render_ui('bubble', 14); ?>
+                                            <?php echo esc_html($comments_count); ?>
+                                        </span>
                                     </div>
                                 </div>
 
                                 <?php if ($is_manager): ?>
-                                    <!-- Resize icon (bottom-right corner) -->
-                                    <div class="block-resize-icon" data-handle="se" title="<?php esc_attr_e('Resize', 'agency-client-portal'); ?>">
-                                        ⇲
-                                    </div>
+                                    <div class="block-resize-icon" data-handle="se" title="<?php esc_attr_e('Resize', 'agency-client-portal'); ?>">⇲</div>
                                 <?php endif; ?>
                             </div>
-
-                            <?php endif; // separator check ?>
+                            <?php endif; ?>
                         <?php endforeach; ?>
+                        <?php if ($is_manager): ?>
+                            <button type="button" class="agency-card agency-card--add" id="add-block-card">
+                                <span class="agency-card__plus"><?php Agency_Icons::render_ui('plus', 18); ?></span>
+                                <?php esc_html_e('New block', 'agency-client-portal'); ?>
+                            </button>
+                        <?php endif; ?>
                     </div>
+                    <p class="agency-empty-state" id="blocks-no-results" hidden><?php esc_html_e('No block matches your search.', 'agency-client-portal'); ?></p>
                 <?php endif; ?>
             </div>
         </div>
@@ -908,27 +965,37 @@ $project_cover_url = Agency_Project::get_cover_full_url($project);
 </div>
 
 <?php ob_start(); ?>
-// Make block cards clickable for clients
+// Recherche et filtre par type des blocs
 document.addEventListener('DOMContentLoaded', function() {
-    var clickableCards = document.querySelectorAll('.agency-block.clickable-card');
-    clickableCards.forEach(function(card) {
-        card.style.cursor = 'pointer';
-        card.addEventListener('click', function(e) {
-            // Don't trigger if clicking on a button or link
-            if (e.target.closest('button') || e.target.closest('a')) {
-                return;
-            }
-            var url = card.getAttribute('data-block-url');
-            var target = card.getAttribute('data-block-target');
-            if (url) {
-                if (target === '_blank') {
-                    window.open(url, '_blank', 'noopener,noreferrer');
-                } else {
-                    window.location.href = url;
-                }
-            }
+    var search = document.getElementById('block-search');
+    var typeFilter = 'all';
+    function applyBlockFilters() {
+        var term = search ? search.value.toLowerCase().trim() : '';
+        var shown = 0;
+        document.querySelectorAll('#blocks-list > .agency-block').forEach(function(card) {
+            var isCard = card.classList.contains('agency-card');
+            var ok = !isCard ? (term === '' && typeFilter === 'all')
+                : ((typeFilter === 'all' || card.dataset.blockType === typeFilter)
+                    && (term === '' || (card.dataset.blockTitle || '').toLowerCase().indexOf(term) !== -1));
+            card.style.display = ok ? '' : 'none';
+            if (ok && isCard) shown++;
+        });
+        var add = document.getElementById('add-block-card');
+        if (add) add.style.display = (term === '' && typeFilter === 'all') ? '' : 'none';
+        var none = document.getElementById('blocks-no-results');
+        if (none) none.hidden = shown > 0 || (term === '' && typeFilter === 'all');
+    }
+    if (search) search.addEventListener('input', AgencyUI.debounce(applyBlockFilters, 150));
+    document.querySelectorAll('#block-type-filters .agency-label-filter').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            typeFilter = btn.dataset.type;
+            document.querySelectorAll('#block-type-filters .agency-label-filter').forEach(function(b) { b.classList.toggle('active', b === btn); });
+            applyBlockFilters();
         });
     });
+
+    var addCard = document.getElementById('add-block-card');
+    if (addCard) addCard.addEventListener('click', function() { document.getElementById('add-block-btn').click(); });
 
     <?php if ($is_manager): ?>
     // Separator button: create a separator block

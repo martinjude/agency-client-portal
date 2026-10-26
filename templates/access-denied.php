@@ -16,12 +16,6 @@ if (!defined('ABSPATH')) {
 }
 
 $brand_logo_url = get_option('agency_brand_logo_url', '');
-$theme_mode     = get_option('agency_theme_mode', 'light');
-$is_dark        = ($theme_mode === 'dark');
-$bg_color       = $is_dark ? get_option('agency_bg_color_dark', '#0b0f14') : get_option('agency_bg_color_light', '#f8f9fa');
-$text_color     = $is_dark ? '#e4e4e7' : '#1a1a2e';
-$muted_color    = $is_dark ? '#8b8b9e' : '#6b6b80';
-$card_bg        = $is_dark ? '#16191f' : '#ffffff';
 $home_url       = home_url('/');
 ?>
 <!DOCTYPE html>
@@ -34,65 +28,67 @@ $home_url       = home_url('/');
     <?php ob_start(); ?>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: <?php echo esc_attr($bg_color); ?>;
-            color: <?php echo esc_attr($text_color); ?>;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 24px 16px;
+            background: var(--ag-bg);
+            color: var(--ag-text-1);
+            font-family: var(--ag-font);
+            -webkit-font-smoothing: antialiased;
         }
-        .agency-access-denied {
-            text-align: center;
-            max-width: 480px;
-            width: 100%;
-        }
-        .agency-access-denied__logo {
-            margin-bottom: 40px;
-        }
-        .agency-access-denied__logo img {
-            max-width: 180px;
-            max-height: 60px;
-            height: auto;
-        }
+        .agency-access-denied { display: flex; flex-direction: column; align-items: center; gap: 24px; width: 100%; max-width: 480px; }
+        .agency-access-denied__logo img { display: block; max-width: 160px; max-height: 48px; border-radius: 12px; }
         .agency-access-denied__card {
-            background: <?php echo esc_attr($card_bg); ?>;
-            border-radius: 16px;
-            padding: 48px 36px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 24px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 40px 48px 0;
+            border: 1px solid var(--ag-border);
+            border-radius: var(--ag-r-xl);
+            background: var(--ag-panel);
+            text-align: center;
         }
         .agency-access-denied__icon {
-            font-size: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
             margin-bottom: 20px;
-            line-height: 1;
+            border: 1px solid var(--ag-border);
+            border-radius: var(--ag-r-xl);
+            background: var(--ag-hover);
         }
-        .agency-access-denied__title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            line-height: 1.4;
-        }
-        .agency-access-denied__reason {
-            font-size: 15px;
-            color: <?php echo esc_attr($muted_color); ?>;
-            line-height: 1.6;
-            margin-bottom: 32px;
-        }
+        .agency-access-denied__title { font: 600 20px/28px var(--ag-font); letter-spacing: -.005em; }
+        .agency-access-denied__reason { max-width: 360px; margin: 10px 0 0; color: var(--ag-text-2); font: 400 14px/21px var(--ag-font); }
         .agency-access-denied__link {
-            display: inline-block;
-            padding: 10px 24px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            height: 36px;
+            margin-top: 24px;
+            padding: 0 14px;
+            border: 1px solid var(--ag-border);
+            border-radius: var(--ag-r);
+            background: var(--ag-hover);
+            color: var(--ag-text-1);
+            font: 500 13px/18px var(--ag-font);
             text-decoration: none;
-            color: <?php echo esc_attr($muted_color); ?>;
-            border: 1px solid <?php echo $is_dark ? '#2a2d35' : '#e0e0e0'; ?>;
-            transition: opacity 0.2s;
         }
-        .agency-access-denied__link:hover { opacity: 0.7; }
+        .agency-access-denied__link:hover { background: var(--ag-active); border-color: var(--ag-line); }
+        .agency-access-denied__foot {
+            align-self: stretch;
+            margin-top: 32px;
+            padding: 14px 0 16px;
+            border-top: 1px solid var(--ag-border);
+            color: var(--ag-text-3);
+            font: 400 11px/16px var(--ag-mono);
+        }
     <?php
-    wp_register_style('agency-access-denied', false, array(), AGENCY_VERSION);
+    wp_register_style('agency-tokens', AGENCY_PLUGIN_URL . 'assets/css/tokens.css', array(), AGENCY_VERSION);
+    wp_register_style('agency-access-denied', false, array('agency-tokens'), AGENCY_VERSION);
     wp_add_inline_style('agency-access-denied', ob_get_clean());
     wp_print_styles('agency-access-denied');
     ?>
@@ -106,18 +102,17 @@ $home_url       = home_url('/');
         <?php endif; ?>
 
         <div class="agency-access-denied__card">
-            <div class="agency-access-denied__icon">&#128274;</div>
+            <div class="agency-access-denied__icon"><?php Agency_Icons::render_glyph('lock', 24); ?></div>
             <h1 class="agency-access-denied__title">
                 <?php echo esc_html__('Please use your link to access your space.', 'agency-client-portal'); ?>
             </h1>
-            <?php if (!empty($error_reason)) : ?>
-                <p class="agency-access-denied__reason">
-                    <?php echo esc_html($error_reason); ?>
-                </p>
-            <?php endif; ?>
+            <p class="agency-access-denied__reason">
+                <?php echo esc_html(!empty($error_reason) ? $error_reason : __('No access link detected. Please use the link provided by your agency.', 'agency-client-portal')); ?>
+            </p>
             <a href="<?php echo esc_url($home_url); ?>" class="agency-access-denied__link">
                 <?php echo esc_html__('Back to home', 'agency-client-portal'); ?>
             </a>
+            <div class="agency-access-denied__foot"><?php esc_html_e('Error 403 · link missing or expired', 'agency-client-portal'); ?></div>
         </div>
     </div>
 </body>

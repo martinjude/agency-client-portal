@@ -11,8 +11,8 @@ Clients open their space from a private link, with no WordPress account needed. 
 ## Features
 
 - Token-based client access (no login), with links you can regenerate or revoke at any time
-- A branded portal for each client: logo, accent color, background image
-- Global themes: fonts, card style, border radius, light and dark backgrounds
+- A portal for each client with its logo and a single accent color
+- One fixed dark design system (Inter + JetBrains Mono, bundled) and an agency sidebar listing every client, project and block
 - Projects built from blocks: script, storyboard, versioned media, video, link, file deposit, code, separator, progress bar…
 - Drag-and-drop ordering and resizable grid cards
 - Comments on blocks, email notifications, a "Notify client" button

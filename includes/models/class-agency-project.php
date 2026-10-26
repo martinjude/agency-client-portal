@@ -25,6 +25,32 @@ class Agency_Project {
     }
 
     /**
+     * Projets actifs de plusieurs clients en une requête, groupés par client_id.
+     *
+     * @param int[] $client_ids
+     * @return array<int, object[]>
+     */
+    public static function get_by_clients(array $client_ids) {
+        global $wpdb;
+        $client_ids = array_values(array_filter(array_map('intval', $client_ids)));
+        if (empty($client_ids)) {
+            return array();
+        }
+        $table        = $wpdb->prefix . 'agency_projects';
+        $placeholders = implode(',', array_fill(0, count($client_ids), '%d'));
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $placeholders ne contient que des %d.
+        $rows = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM $table WHERE client_id IN ($placeholders) AND status = 'active' AND (is_archived = 0 OR is_archived IS NULL) ORDER BY order_position ASC, created_at DESC",
+            $client_ids
+        ));
+        $grouped = array();
+        foreach ($rows as $row) {
+            $grouped[intval($row->client_id)][] = $row;
+        }
+        return $grouped;
+    }
+
+    /**
      * Obtenir les projets archivés d'un client
      */
     public static function get_archived_by_client($client_id) {
