@@ -1,0 +1,74 @@
+/* ============================================================
+   AGENCY — DESIGN TOKENS
+   Source de vérité unique des variables CSS, chargée en premier
+   sur le frontend ET dans l'admin WP.
+
+   ⚠️ Ne jamais renommer un token existant : le branding par client
+   (Agency_Frontend::load_global_branding) et les presets de thème
+   (Agency_Themes) injectent des overrides sur ces mêmes noms via
+   wp_add_inline_style, après ce fichier dans la cascade.
+   ============================================================ */
+
+:root {
+    /* --- Marque (surchargés par le branding client) --- */
+    --agency-primary-color: #000000;
+    --agency-secondary-color: #ffffff;
+
+    /* Accent "agence" : chrome interne (admin WP, dashboard manager).
+       Indépendant de la couleur de marque du client. */
+    --agency-accent: #3b82f6;
+    --agency-accent-hover: #2563eb;
+
+    /* --- Texte & surfaces --- */
+    --agency-text-color: #333333;
+    --agency-text-muted: #6b7280;
+    --agency-light-bg: #f8f9fa;
+    --agency-surface-1: #ffffff;
+    --agency-border-color: #e0e0e0;
+
+    /* --- Couleurs sémantiques (états) --- */
+    --agency-success: #16a34a;
+    --agency-success-bg: #dcfce7;
+    --agency-danger: #dc2626;
+    --agency-danger-hover: #b91c1c;
+    --agency-danger-bg: #fee2e2;
+    --agency-warning: #d97706;
+    --agency-warning-bg: #fef3c7;
+    --agency-info: #2563eb;
+    --agency-info-bg: #dbeafe;
+
+    /* --- Ombres --- */
+    --agency-shadow:        0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.05);
+    --agency-shadow-hover:  0 4px 12px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.07);
+    --agency-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.14);
+
+    /* --- Rayons (échelle à 4 crans) --- */
+    --agency-radius: 25px;        /* cartes, conteneurs */
+    --agency-radius-small: 12px;  /* éléments intermédiaires */
+    --agency-radius-button: 14px; /* boutons (surchargé par le branding client) */
+    --agency-radius-xs: 6px;      /* petits éléments : badges, inputs compacts */
+
+    /* --- Espacement (adoption progressive) --- */
+    --agency-space-1: 4px;
+    --agency-space-2: 8px;
+    --agency-space-3: 12px;
+    --agency-space-4: 16px;
+    --agency-space-5: 24px;
+    --agency-space-6: 32px;
+
+    /* --- Divers --- */
+    --agency-transition: all 0.3s ease;
+    --agency-header-bg: rgba(255, 255, 255, 0.85);
+    --agency-header-height: 70px;
+
+    /* --- Sidebar manager (surchargés par le branding) --- */
+    --agency-sidebar-width-open:   240px;
+    --agency-sidebar-width-closed:  52px;
+    --agency-sidebar-bg:           #1a1a2e;
+    --agency-sidebar-text:         rgba(255, 255, 255, 0.75);
+    --agency-sidebar-text-hover:   #ffffff;
+    --agency-sidebar-accent:       rgba(255, 255, 255, 0.12);
+    --agency-sidebar-active-bg:    rgba(255, 255, 255, 0.18);
+    --agency-sidebar-border:       rgba(255, 255, 255, 0.08);
+    --agency-sidebar-muted:        rgba(255, 255, 255, 0.35);
+}

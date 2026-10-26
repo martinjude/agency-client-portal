@@ -1,0 +1,19 @@
+# OS / éditeurs
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Dépendances / outils locaux
+/node_modules/
+/vendor/
+*.log
+.env
+.env.*
+
+# Fichiers de design sources (non distribués)
+/design/
+
+# Archives de build
+*.zip

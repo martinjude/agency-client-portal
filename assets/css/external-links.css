@@ -1,0 +1,96 @@
+/* ===========================
+   External Links Styles
+   =========================== */
+
+.agency-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.external-links-display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.external-link-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--agency-light-bg);
+    border: 1px solid var(--agency-border-color);
+    border-radius: var(--agency-radius-small);
+    text-decoration: none;
+    color: var(--agency-text-color);
+    font-size: 14px;
+    font-weight: 500;
+    transition: var(--agency-transition);
+    position: relative;
+}
+
+.external-link-item:hover {
+    background: var(--agency-primary-color);
+    color: white;
+    border-color: var(--agency-primary-color);
+    transform: translateY(-2px);
+    box-shadow: var(--agency-shadow);
+}
+
+.external-link-item .link-emoji {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.external-link-item .link-text {
+    line-height: 1;
+}
+
+.external-link-item .delete-external-link {
+    margin-left: 4px;
+    padding: 2px 6px;
+    background: transparent;
+    border: none;
+    color: var(--agency-text-muted);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    transition: var(--agency-transition);
+    border-radius: 4px;
+}
+
+.external-link-item .delete-external-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--agency-danger);
+}
+
+.external-link-item:hover .delete-external-link {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Dark theme overrides */
+.agency-theme-dark .external-link-item {
+    background: #1f2937;
+    border-color: #374151;
+    color: var(--agency-text-color);
+}
+
+.agency-theme-dark .external-link-item:hover {
+    background: var(--agency-primary-color);
+    color: white;
+}
+
+/* Form help text */
+.agency-form-help {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--agency-text-muted);
+}
+
+.agency-theme-dark .agency-form-help {
+    color: #9ca3af;
+}

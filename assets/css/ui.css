@@ -1,0 +1,430 @@
+/* ============================================================
+   AGENCY — PRIMITIVES UI PARTAGÉES
+   Boutons, badges, inputs, spinner, toast.
+   Chargé après tokens.css, sur le frontend ET dans l'admin WP.
+   Source de vérité unique : ne pas redéfinir ces classes ailleurs.
+   ============================================================ */
+
+/* Dans l'admin WP, les boutons utilisent l'accent "agence" (pas la
+   couleur de marque du client) et une forme plus rectangulaire. */
+body.wp-admin {
+    --agency-primary-color: var(--agency-accent);
+    --agency-radius-button: 8px;
+    --agency-radius-small: 8px;
+}
+
+/* ============ BOUTONS ============ */
+
+.agency-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--agency-radius-button);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--agency-transition);
+    text-decoration: none;
+    text-align: center;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.agency-btn-primary {
+    background: var(--agency-primary-color);
+    color: #ffffff;
+}
+
+.agency-btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: var(--agency-shadow);
+    color: #ffffff;
+}
+
+.agency-btn-secondary {
+    background: var(--agency-light-bg);
+    color: var(--agency-text-color);
+    border: 1px solid var(--agency-border-color);
+}
+
+.agency-btn-secondary:hover {
+    background: #e9ecef;
+}
+
+.agency-btn-outline {
+    background: transparent;
+    border: 1px solid var(--agency-border-color);
+    color: var(--agency-text-color);
+}
+
+.agency-btn-outline:hover {
+    background: var(--agency-light-bg);
+    border-color: var(--agency-primary-color);
+    color: var(--agency-primary-color);
+    transform: translateY(-1px);
+}
+
+.agency-theme-dark .agency-btn-outline {
+    border-color: var(--agency-border-color);
+    color: var(--agency-text-color);
+}
+
+.agency-theme-dark .agency-btn-outline:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--agency-primary-color);
+    color: var(--agency-primary-color);
+}
+
+.agency-btn-danger {
+    background: transparent;
+    color: var(--agency-danger);
+    border: 1px solid var(--agency-danger);
+}
+
+.agency-btn-danger:hover {
+    background: var(--agency-danger);
+    color: #ffffff;
+}
+
+/* Variante danger pleine (actions destructives fortes) */
+.agency-btn-danger-solid {
+    background: var(--agency-danger);
+    color: #ffffff;
+}
+
+.agency-btn-danger-solid:hover {
+    background: var(--agency-danger-hover);
+    color: #ffffff;
+}
+
+/* Variante fantôme : discrète, hérite du contexte */
+.agency-btn-ghost {
+    background: transparent;
+    color: var(--agency-text-muted);
+}
+
+.agency-btn-ghost:hover {
+    background: var(--agency-light-bg);
+    color: var(--agency-text-color);
+}
+
+.agency-btn-text {
+    background: none;
+    border: none;
+    color: var(--agency-danger);
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 13px;
+    transition: var(--agency-transition);
+}
+
+.agency-btn-text:hover {
+    text-decoration: underline;
+}
+
+/* Tailles (modificateurs purs : couleur via les variantes ci-dessus) */
+.agency-btn-sm {
+    padding: 6px 14px;
+    font-size: 13px;
+    gap: 5px;
+}
+
+.agency-btn-lg {
+    padding: 14px 32px;
+    font-size: 15px;
+}
+
+/* Bouton-icône nu (actions inline : télécharger, supprimer…) */
+.agency-btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: inherit;
+    line-height: 1;
+    padding: 5px;
+    transition: var(--agency-transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.agency-btn-icon:hover {
+    transform: scale(1.2);
+}
+
+/* ============ ICÔNES SVG (Agency_Icons) ============ */
+
+.agency-icon {
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.agency-btn .agency-icon {
+    margin-right: 4px;
+}
+
+.agency-btn-icon .agency-icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* ============ BADGES ============ */
+
+.agency-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.6;
+    white-space: nowrap;
+    background: var(--agency-light-bg);
+    color: var(--agency-text-muted);
+}
+
+.agency-badge--success { background: var(--agency-success-bg); color: var(--agency-success); }
+.agency-badge--danger  { background: var(--agency-danger-bg);  color: var(--agency-danger); }
+.agency-badge--warning { background: var(--agency-warning-bg); color: var(--agency-warning); }
+.agency-badge--info    { background: var(--agency-info-bg);    color: var(--agency-info); }
+.agency-badge--primary { background: var(--agency-primary-color); color: #ffffff; }
+
+/* ============ CHAMPS DE FORMULAIRE ============ */
+
+.agency-input,
+.agency-select,
+.agency-textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--agency-border-color);
+    border-radius: var(--agency-radius-xs);
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--agency-text-color);
+    background: var(--agency-surface-1);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    box-sizing: border-box;
+}
+
+.agency-input:focus,
+.agency-select:focus,
+.agency-textarea:focus {
+    outline: none;
+    border-color: var(--agency-primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+.agency-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* ============ SPINNER ============ */
+
+.agency-spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: agency-spin 0.7s linear infinite;
+    vertical-align: middle;
+}
+
+@keyframes agency-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============ TOAST ============ */
+
+/* Élément unique créé/réutilisé par AgencyUI.toast() (assets/js/ui.js) */
+.agency-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--agency-text-color);
+    color: #ffffff;
+    padding: 12px 24px;
+    border-radius: var(--agency-radius-small);
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+    z-index: 100000;
+    pointer-events: none;
+    max-width: min(90vw, 480px);
+    text-align: center;
+    box-shadow: var(--agency-shadow-strong);
+}
+
+.agency-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.agency-toast--error   { background: var(--agency-danger); }
+.agency-toast--success { background: var(--agency-success); }
+
+.agency-theme-dark .agency-toast {
+    background: #e8e8f0;
+    color: #1a1a2e;
+}
+
+/* ============ MODALES & CHAMPS DE FORMULAIRE (squelette partagé) ============ */
+
+/* Overlay + boîte : ouvrir en ajoutant .active sur .agency-modal */
+.agency-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 99999; /* Higher than agency-header-fixed */
+    align-items: center;
+    justify-content: center;
+    padding-top: var(--agency-header-height, 70px);
+}
+
+.agency-modal.active {
+    display: flex;
+}
+
+.agency-modal-content {
+    background: var(--agency-secondary-color);
+    border-radius: var(--agency-radius);
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    max-height: calc(100vh - var(--agency-header-height, 70px) - 40px);
+    overflow-y: auto;
+    box-shadow: var(--agency-shadow-strong);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.agency-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.agency-modal-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--agency-text-color);
+    margin: 0;
+}
+
+.agency-modal-close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--agency-text-muted);
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: var(--agency-transition);
+}
+
+.agency-modal-close:hover {
+    background: var(--agency-light-bg);
+    color: var(--agency-text-color);
+}
+
+.agency-modal-body {
+    margin-bottom: 20px;
+}
+
+.agency-form-group {
+    margin-bottom: 20px;
+}
+
+.agency-form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--agency-text-color);
+}
+
+.agency-form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--agency-border-color);
+    border-radius: var(--agency-radius-small);
+    font-size: 16px;
+    color: var(--agency-text-color);
+    background: var(--agency-light-bg);
+    transition: var(--agency-transition);
+}
+
+.agency-form-input:focus {
+    outline: none;
+    border-color: var(--agency-primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.agency-modal-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* Dark Theme Modal */
+.agency-theme-dark .agency-modal-content {
+    background: #111827;
+}
+
+.agency-theme-dark .agency-form-input {
+    background: #0b0f14;
+}
+
+/* ============ UTILITAIRES LAYOUT (remplacement des styles inline) ============ */
+
+.agency-w-full { width: 100%; }
+.agency-maxw-760 { max-width: 760px; }
+.agency-mt-8  { margin-top: 8px; }
+.agency-mt-10 { margin-top: 10px; }
+.agency-mt-12 { margin-top: 12px; }
+.agency-mt-15 { margin-top: 15px; }
+.agency-mt-20 { margin-top: 20px; }
+.agency-mt-24 { margin-top: 24px; }
+.agency-mt-30 { margin-top: 30px; }
+.agency-mb-20 { margin-bottom: 20px; }
+.agency-my-40 { margin: 40px 0; }
+.agency-field-label { display: block; font-weight: 600; margin-bottom: 8px; }
+
+
+.agency-mt-16 { margin-top: 16px; }
+.agency-mb-16 { margin-bottom: 16px; }
+.agency-text-danger { color: var(--agency-danger); }
+.agency-muted-note { color: var(--agency-text-muted); margin-bottom: 16px; }
+.agency-grid-full-row { grid-column: 1 / -1; }

@@ -1,0 +1,435 @@
+/* =========================================================
+   Dashboard — Page d'accueil frontend pour les managers
+   Dépend de : agency-frontend.css (variables CSS, header, boutons)
+              agency-emoji-picker.css (modal)
+   ========================================================= */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ---- Corps de la page ---- */
+body.agency-dashboard-page {
+    background: var(--agency-light-bg, #f8f9fa);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+/* ---- Zone de bienvenue (remplace le simple espaceur) ---- */
+body.agency-dashboard-page .agency-header-spacer.agd-welcome {
+    height: auto;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 36px 24px 28px;
+    text-align: center;
+    background: var(--agency-panel-bg, #fff);
+    border-bottom: 1px solid var(--agency-border-color, #e0e0e6);
+}
+
+.agd-welcome-title {
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 700;
+    color: var(--agency-text-color, #1a1a2e);
+    margin: 0 0 6px;
+    line-height: 1.2;
+}
+
+.agd-welcome-sub {
+    font-size: 14px;
+    color: var(--agency-text-muted, #6b7280);
+    margin: 0;
+}
+
+.agd-api-message {
+    margin-top: 12px;
+    font-size: 13px;
+    padding: 8px 20px;
+    border-radius: var(--agency-radius-small);
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--agency-text-color, #1a1a2e);
+}
+
+/* ---- Barre d'actions (bouton Nouveau client) ---- */
+.agd-actions-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+/* ---- Layout principal ---- */
+.agd-layout {
+    max-width: 1200px;
+    margin: 32px auto 80px;
+    padding: 0 24px;
+}
+
+/* ---- En-tête de section ---- */
+.agd-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.agd-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--agency-text-muted, #6b7280);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin: 0;
+}
+
+/* ---- Grille des clients ---- */
+.agd-clients-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* ---- Carte client ---- */
+.agd-client-card {
+    background: var(--agency-panel-bg, #fff);
+    border-radius: var(--agency-radius);
+    border: var(--agency-card-border-width, 1px) solid var(--agency-card-border-color, var(--agency-border-color, #e0e0e6));
+    box-shadow: var(--agency-shadow, 0 2px 8px rgba(0,0,0,.08));
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: box-shadow .2s ease, transform .2s ease;
+}
+
+.agd-client-card:hover {
+    box-shadow: var(--agency-shadow-hover, 0 4px 16px rgba(0,0,0,.12));
+    transform: translateY(-2px);
+}
+
+/* ---- Partie haute : avatar + infos + badges ---- */
+.agd-client-card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+/* ---- Avatar (logo image ou initiales colorées) ---- */
+.agd-client-avatar {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 50%;
+    background: #3b82f6;
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    flex-shrink: 0;
+}
+
+/* ---- Infos client (nom + compteur) ---- */
+.agd-client-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.agd-client-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--agency-text-color, #1a1a2e);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.agd-client-meta {
+    font-size: 12px;
+    color: var(--agency-text-muted, #6b7280);
+    margin-top: 3px;
+}
+
+/* ---- Badges (statut, token) ---- */
+.agd-badges {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.agd-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.6;
+    white-space: nowrap;
+}
+
+.agd-badge-active {
+    background: var(--agency-success-bg);
+    color: var(--agency-success);
+}
+
+.agd-badge-inactive {
+    background: var(--agency-danger-bg);
+    color: var(--agency-danger);
+}
+
+.agd-badge-token {
+    background: transparent;
+    font-size: 15px;
+    padding: 0;
+    line-height: 1;
+}
+
+/* ---- Boutons d'action de la carte ---- */
+.agd-client-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 4px;
+    border-top: 1px solid var(--agency-border-color, #e0e0e6);
+}
+
+.agd-btn-sm.agency-btn {
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: var(--agency-radius-small);
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+/* ---- État vide ---- */
+.agd-empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--agency-text-muted, #6b7280);
+}
+
+.agd-empty-state p {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.agd-empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    display: block;
+}
+
+/* ---- Styles formulaire modal (agec-* — edit-client.css n'est pas chargé sur le dashboard) ---- */
+.agd-layout .agec-field,
+.agency-modal .agec-field {
+    margin-bottom: 16px;
+}
+.agd-layout .agec-field:last-child,
+.agency-modal .agec-field:last-child { margin-bottom: 0; }
+
+.agd-layout .agec-label,
+.agency-modal .agec-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--agency-text-muted, #555);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.agd-layout .agec-input,
+.agency-modal .agec-input {
+    display: block;
+    width: 100%;
+    padding: 9px 12px;
+    border: var(--agency-card-border-width, 1px) solid var(--agency-card-border-color, var(--agency-border-color, #d8d8e0));
+    border-radius: var(--agency-radius-small);
+    font-size: 14px;
+    color: var(--agency-text-color, #1a1a2e);
+    background: var(--agency-light-bg, #fff);
+    transition: border-color .15s;
+    box-sizing: border-box;
+}
+.agd-layout .agec-input:focus,
+.agency-modal .agec-input:focus {
+    outline: none;
+    border-color: var(--agency-primary-color, #1a1a2e);
+}
+
+.agency-modal .agec-color-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.agency-modal .agec-color-field input[type="color"] {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--agency-border-color, #d8d8e0);
+    border-radius: var(--agency-radius-small);
+    padding: 2px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.agency-modal .agec-color-field .agec-input {
+    font-family: monospace;
+    font-size: 13px;
+}
+
+.agency-modal .agec-media-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.agency-modal .agec-media-field .agec-input { flex: 1; }
+.agency-modal .agec-media-btn {
+    flex-shrink: 0;
+    padding: 9px 14px;
+    border: var(--agency-card-border-width, 1px) solid var(--agency-card-border-color, var(--agency-border-color, #d8d8e0));
+    border-radius: var(--agency-radius-small);
+    background: var(--agency-header-bg, #f6f6f8);
+    color: var(--agency-text-color, #333);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity .15s;
+}
+.agency-modal .agec-media-btn:hover { opacity: .8; }
+
+/* Dark theme pour les champs du modal */
+body.agency-theme-dark .agency-modal .agec-input {
+    background: var(--agency-light-bg, #0f0f1a);
+    color: var(--agency-text-color, #e8e8f0);
+    border-color: var(--agency-border-color, #2d2d4e);
+}
+body.agency-theme-dark .agency-modal .agec-media-btn {
+    background: var(--agency-header-bg, #1a1a2e);
+    color: var(--agency-text-color, #e8e8f0);
+    border-color: var(--agency-border-color, #2d2d4e);
+}
+
+/* ---- Message d'erreur dans le modal ---- */
+.agd-error-msg {
+    background: #fef2f2;
+    color: var(--agency-danger);
+    border: 1px solid #fecaca;
+    border-radius: var(--agency-radius-small);
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-top: 12px;
+}
+
+/* ---- Toast : composant unifié .agency-toast (assets/css/ui.css) ---- */
+
+/* ---- Header — mode dashboard ---- */
+.agency-header-mode-dashboard .agency-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.agency-header-mode-dashboard #agd-new-client-btn {
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.agency-header-mode-dashboard .agency-header-user-name {
+    font-size: 13px;
+    color: var(--agency-text-muted, #6b7280);
+    display: none; /* Masqué sur mobile pour gagner de la place */
+}
+
+.agency-header-site-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--agency-text-color, #1a1a2e);
+}
+
+/* ---- Dark theme ---- */
+.agency-theme-dark body.agency-dashboard-page,
+body.agency-theme-dark.agency-dashboard-page {
+    background: var(--agency-dark-bg, #0f0f13);
+}
+
+body.agency-theme-dark .agency-header-spacer.agd-welcome {
+    background: var(--agency-dark-panel-bg, #1a1a2e);
+    border-bottom-color: var(--agency-dark-border, #2d2d4e);
+}
+
+body.agency-theme-dark .agd-welcome-title {
+    color: var(--agency-dark-text, #e8e8f0);
+}
+
+body.agency-theme-dark .agd-api-message {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--agency-dark-text, #e8e8f0);
+}
+
+.agency-theme-dark .agd-client-card {
+    background: var(--agency-dark-panel-bg, #1a1a2e);
+    border-color: var(--agency-dark-border, #2d2d4e);
+}
+
+.agency-theme-dark .agd-client-name {
+    color: var(--agency-dark-text, #e8e8f0);
+}
+
+.agency-theme-dark .agd-section-title {
+    color: var(--agency-dark-text-muted, #8888aa);
+}
+
+.agency-theme-dark .agd-client-card-actions {
+    border-top-color: var(--agency-dark-border, #2d2d4e);
+}
+
+.agency-theme-dark .agd-badge-active {
+    background: #0d3320;
+    color: #4ade80;
+}
+
+.agency-theme-dark .agd-badge-inactive {
+    background: #3b0a0a;
+    color: #f87171;
+}
+
+/* ---- Responsive ---- */
+@media (min-width: 769px) {
+    .agency-header-mode-dashboard .agency-header-user-name {
+        display: inline;
+    }
+}
+
+@media (max-width: 1024px) {
+    .agd-clients-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .agd-layout {
+        padding: 0 16px;
+        margin-top: 20px;
+    }
+
+    .agd-clients-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .agency-header-mode-dashboard #agd-new-client-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}

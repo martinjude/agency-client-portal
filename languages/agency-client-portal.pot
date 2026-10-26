@@ -1,0 +1,3839 @@
+# Copyright (C) 2026 Martin Jude
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Agency Client Portal 2.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/martinjude/agency-client-portal/issues\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-26T09:52:22+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: agency-client-portal\n"
+
+#. Plugin Name of the plugin
+#: agency.php
+#: includes/class-agency-privacy.php:39
+#: includes/class-agency-privacy.php:52
+#: includes/class-agency-privacy.php:65
+#: includes/class-agency-privacy.php:173
+msgid "Agency Client Portal"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: agency.php
+msgid "https://github.com/martinjude/agency-client-portal"
+msgstr ""
+
+#. Description of the plugin
+#: agency.php
+msgid "Client portal for creative agencies and freelances."
+msgstr ""
+
+#. Author of the plugin
+#: agency.php
+msgid "Martin Jude"
+msgstr ""
+
+#. Author URI of the plugin
+#: agency.php
+msgid "https://martinjude.fr"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:58
+#: templates/admin/dashboard.php:45
+msgid "Agency Portal"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:59
+msgid "Agency"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:70
+#: includes/admin/class-agency-admin.php:71
+#: templates/dashboard.php:68
+#: templates/partials/header.php:120
+#: templates/partials/sidebar.php:60
+#: templates/partials/sidebar.php:69
+msgid "Dashboard"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:83
+#: includes/admin/class-agency-admin.php:84
+msgid "New Client"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:94
+#: includes/admin/class-agency-admin.php:95
+msgid "Debug"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:106
+#: includes/admin/class-agency-admin.php:107
+#: templates/partials/sidebar.php:187
+#: templates/partials/sidebar.php:196
+msgid "Settings"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:170
+#: includes/frontend/class-agency-frontend.php:108
+msgid "Are you sure you want to delete this item?"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:182
+msgid "Client Details"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:191
+#: templates/admin/settings.php:137
+msgid "Branding"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:200
+#: templates/edit-client.php:136
+msgid "Access & Security"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:345
+msgid "Agency Plugin Debug"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:411
+msgid "Danger zone"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:412
+msgid "These actions cannot be undone. Use them for debugging only."
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:432
+#: includes/admin/class-agency-admin.php:470
+#: includes/admin/class-agency-admin.php:507
+#: includes/admin/class-agency-admin.php:535
+#: includes/admin/class-agency-admin.php:599
+#: includes/admin/class-agency-admin.php:622
+#: includes/class-agency-assets-manager.php:405
+#: includes/class-agency-assets-manager.php:410
+#: includes/class-agency-assets-manager.php:488
+#: includes/class-agency-assets-manager.php:942
+#: includes/class-agency-assets-manager.php:947
+#: includes/class-agency-security.php:78
+#: includes/class-agency-security.php:79
+#: templates/access-denied.php:33
+#: templates/block-view-code.php:24
+#: templates/block-view-link.php:24
+#: templates/block-view-storyboard.php:24
+#: templates/client-view.php:33
+msgid "Access denied"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:437
+#: includes/admin/class-agency-admin.php:475
+#: includes/admin/class-agency-admin.php:511
+#: includes/admin/class-agency-admin.php:540
+#: includes/admin/class-agency-admin.php:582
+#: includes/admin/class-agency-admin.php:602
+#: includes/admin/class-agency-admin.php:625
+#: includes/admin/class-agency-admin.php:732
+#: includes/frontend/class-agency-frontend.php:467
+msgid "Security error"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:442
+#: includes/admin/class-agency-admin.php:480
+#: includes/admin/class-agency-admin.php:516
+#: includes/admin/class-agency-admin.php:545
+#: includes/admin/class-agency-admin.php:606
+#: includes/admin/class-agency-admin.php:629
+msgid "Invalid client ID"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:460
+msgid "Error while regenerating the token"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:498
+msgid "Error while revoking the token"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:521
+#: includes/admin/class-agency-admin.php:551
+#: includes/class-agency-assets-manager.php:340
+#: templates/client-view.php:15
+#: templates/project-view.php:9
+msgid "Client not found"
+msgstr ""
+
+#. translators: %s: client name
+#: includes/admin/class-agency-admin.php:527
+#, php-format
+msgid "Client \"%s\" has been permanently deleted."
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:561
+msgid "Access link generated successfully"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:569
+msgid "This client's access link cannot be retrieved (created before the update). Click \"Regenerate\" once to produce a permanently copyable link — this will invalidate the old link."
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:574
+msgid "Error while generating the link. Check that the client exists in the database."
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:589
+msgid "Logged out successfully"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:611
+msgid "Token regenerated"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:614
+msgid "Failed to regenerate the token"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:634
+msgid "Access revoked"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:637
+msgid "Failed to revoke the token"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:656
+msgid "Incomplete database migration."
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:667
+msgid "🎉 Agency Portal - New feature!"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:668
+msgid "Simplified client access"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:670
+msgid "Your clients can now access their space without creating a WordPress account!"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:671
+msgid "➤ Use the \"Generate Access Link\" button on each client record."
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:672
+msgid "➤ The previous system remains available for your internal team."
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:676
+msgid "Got it"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:679
+msgid "View my clients"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:707
+#: templates/admin/settings.php:474
+msgid "Warning:"
+msgstr ""
+
+#. translators: %d: number of clients
+#: includes/admin/class-agency-admin.php:710
+#, php-format
+msgid "%d client does not have an access link yet."
+msgid_plural "%d clients do not have an access link yet."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-agency-admin.php:719
+msgid "Fix now"
+msgstr ""
+
+#: includes/admin/class-agency-admin.php:746
+#: includes/class-agency-requirements-check.php:189
+#: includes/class-agency-requirements-check.php:242
+msgid "Insufficient permissions"
+msgstr ""
+
+#: includes/class-agency-assets-manager.php:116
+msgid "Upload failed"
+msgstr ""
+
+#: includes/class-agency-assets-manager.php:128
+msgid "Permission denied"
+msgstr ""
+
+#: includes/class-agency-assets-manager.php:134
+#: includes/class-agency-assets-manager.php:328
+#: includes/class-agency-rest-api.php:651
+#: includes/class-agency-rest-api.php:1241
+#: includes/class-agency-rest-api.php:1278
+msgid "Block not found"
+msgstr ""
+
+#. translators: %d: maximum file size in MB
+#: includes/class-agency-assets-manager.php:152
+#, php-format
+msgid "The file exceeds the configured limit (%d MB)"
+msgstr ""
+
+#. translators: %d: version number
+#: includes/class-agency-assets-manager.php:191
+#: templates/block-view-versioned.php:124
+#: templates/block-view-versioned.php:159
+#, php-format
+msgid "Version %d"
+msgstr ""
+
+#: includes/class-agency-assets-manager.php:283
+#: templates/block-view-file-deposit.php:300
+#: templates/block-view-storyboard.php:673
+#: templates/block-view-storyboard.php:678
+#: templates/block-view-versioned.php:595
+#: templates/block-view-versioned.php:602
+#: templates/block-view-video.php:113
+#: templates/block-view-video.php:124
+msgid "Error during upload"
+msgstr ""
+
+#: includes/class-agency-assets-manager.php:287
+msgid "Invalid uploaded file"
+msgstr ""
+
+#. translators: %s: maximum file size
+#: includes/class-agency-assets-manager.php:293
+#, php-format
+msgid "The file is too large (max: %s)"
+msgstr ""
+
+#: includes/class-agency-assets-manager.php:302
+#: includes/class-agency-assets-manager.php:312
+msgid "File type not allowed"
+msgstr ""
+
+#: includes/class-agency-assets-manager.php:306
+msgid "Invalid file extension"
+msgstr ""
+
+#: includes/class-agency-assets-manager.php:334
+#: includes/class-agency-shortcodes.php:93
+#: templates/project-view.php:14
+msgid "Project not found"
+msgstr ""
+
+#: includes/class-agency-assets-manager.php:390
+#: includes/class-agency-assets-manager.php:399
+#: includes/class-agency-assets-manager.php:927
+#: includes/class-agency-assets-manager.php:936
+msgid "Asset not found"
+msgstr ""
+
+#: includes/class-agency-assets-manager.php:424
+msgid "Media download is disabled for this block."
+msgstr ""
+
+#: includes/class-agency-assets-manager.php:429
+msgid "This media is only available in preview mode."
+msgstr ""
+
+#: includes/class-agency-assets-manager.php:436
+msgid "Preview not available for this media."
+msgstr ""
+
+#: includes/class-agency-assets-manager.php:451
+#: includes/class-agency-assets-manager.php:492
+msgid "File not found"
+msgstr ""
+
+#: includes/class-agency-assets-manager.php:551
+msgid "File not readable"
+msgstr ""
+
+#: includes/class-agency-assets-manager.php:961
+msgid "Thumbnail not available"
+msgstr ""
+
+#: includes/class-agency-cover-upload.php:54
+msgid "Unauthorized"
+msgstr ""
+
+#: includes/class-agency-cover-upload.php:62
+msgid "client_slug is required"
+msgstr ""
+
+#: includes/class-agency-mailer.php:90
+#: templates/partials/notify-client-button.php:60
+msgid "Email subject"
+msgstr ""
+
+#: includes/class-agency-mailer.php:91
+msgid "Greeting (e.g. \"Hello John,\")"
+msgstr ""
+
+#: includes/class-agency-mailer.php:92
+msgid "Main message content (HTML allowed)"
+msgstr ""
+
+#: includes/class-agency-mailer.php:93
+msgid "Action button URL"
+msgstr ""
+
+#: includes/class-agency-mailer.php:94
+msgid "Action button label"
+msgstr ""
+
+#: includes/class-agency-mailer.php:95
+#: templates/partials/notify-client-button.php:55
+msgid "Recipient name"
+msgstr ""
+
+#: includes/class-agency-mailer.php:96
+msgid "Comment author name"
+msgstr ""
+
+#: includes/class-agency-mailer.php:97
+msgid "Comment content"
+msgstr ""
+
+#: includes/class-agency-mailer.php:98
+#: templates/client-view.php:158
+#: templates/client-view.php:227
+msgid "Project name"
+msgstr ""
+
+#: includes/class-agency-mailer.php:99
+#: includes/class-agency-privacy.php:107
+#: templates/dashboard.php:218
+#: templates/edit-client.php:77
+msgid "Client name"
+msgstr ""
+
+#: includes/class-agency-mailer.php:100
+msgid "Site name"
+msgstr ""
+
+#: includes/class-agency-mailer.php:101
+msgid "Brand logo URL"
+msgstr ""
+
+#: includes/class-agency-mailer.php:102
+msgid "Site URL"
+msgstr ""
+
+#: includes/class-agency-mailer.php:103
+msgid "Current year"
+msgstr ""
+
+#: includes/class-agency-notifications.php:63
+msgid "User"
+msgstr ""
+
+#: includes/class-agency-notifications.php:66
+msgid "The client"
+msgstr ""
+
+#: includes/class-agency-notifications.php:71
+msgid "a block"
+msgstr ""
+
+#. translators: 1: commenter name, 2: block title, 3: project name
+#: includes/class-agency-notifications.php:77
+#, php-format
+msgid "%1$s posted a comment on \"%2$s\" in the project \"%3$s\":"
+msgstr ""
+
+#. translators: 1: commenter name, 2: project name
+#: includes/class-agency-notifications.php:86
+#, php-format
+msgid "New comment from %1$s on %2$s"
+msgstr ""
+
+#. translators: %s: recipient name
+#: includes/class-agency-notifications.php:93
+#: includes/class-agency-notifications.php:150
+#, php-format
+msgid "Hello %s,"
+msgstr ""
+
+#: includes/class-agency-notifications.php:96
+msgid "View comment"
+msgstr ""
+
+#: includes/class-agency-notifications.php:115
+#: includes/class-agency-rest-api.php:756
+msgid "Block not found."
+msgstr ""
+
+#: includes/class-agency-notifications.php:120
+msgid "Project not found."
+msgstr ""
+
+#: includes/class-agency-notifications.php:125
+#: includes/class-agency-rewrite-rules.php:282
+#: templates/edit-client.php:13
+msgid "Client not found."
+msgstr ""
+
+#: includes/class-agency-notifications.php:130
+msgid "Recipient email address is invalid or missing."
+msgstr ""
+
+#: includes/class-agency-notifications.php:138
+msgid "The client's access link cannot be retrieved. Regenerate it once from the client record."
+msgstr ""
+
+#. translators: %s: project name
+#: includes/class-agency-notifications.php:146
+#, php-format
+msgid "Update on your project %s"
+msgstr ""
+
+#. translators: %s: recipient name
+#: includes/class-agency-notifications.php:151
+msgid "Hello,"
+msgstr ""
+
+#: includes/class-agency-notifications.php:158
+#: includes/class-agency-post-types.php:163
+#: assets/js/admin.js:122
+msgid "View project"
+msgstr ""
+
+#: includes/class-agency-notifications.php:165
+msgid "Sending the email failed."
+msgstr ""
+
+#: includes/class-agency-post-types.php:93
+#: includes/class-agency-post-types.php:123
+#: includes/models/class-agency-comment.php:31
+#: includes/models/class-agency-comment.php:54
+msgid "Client"
+msgstr ""
+
+#: includes/class-agency-post-types.php:122
+#: templates/admin/dashboard.php:53
+msgid "Clients"
+msgstr ""
+
+#: includes/class-agency-post-types.php:124
+msgid "Add client"
+msgstr ""
+
+#: includes/class-agency-post-types.php:125
+msgid "Add new client"
+msgstr ""
+
+#: includes/class-agency-post-types.php:126
+#: templates/edit-client.php:46
+#: templates/partials/header.php:127
+msgid "Edit client"
+msgstr ""
+
+#: includes/class-agency-post-types.php:127
+#: templates/dashboard.php:206
+msgid "New client"
+msgstr ""
+
+#: includes/class-agency-post-types.php:128
+msgid "View client"
+msgstr ""
+
+#: includes/class-agency-post-types.php:129
+msgid "Search clients"
+msgstr ""
+
+#: includes/class-agency-post-types.php:130
+msgid "No clients found"
+msgstr ""
+
+#: includes/class-agency-post-types.php:157
+#: templates/admin/dashboard.php:94
+#: templates/admin/meta-boxes/access.php:136
+#: templates/dashboard.php:180
+#: templates/edit-client.php:205
+#: templates/partials/header.php:224
+#: templates/partials/header.php:225
+#: templates/partials/sidebar.php:130
+msgid "Projects"
+msgstr ""
+
+#: includes/class-agency-post-types.php:158
+#: templates/client-view.php:511
+msgid "Project"
+msgstr ""
+
+#: includes/class-agency-post-types.php:159
+msgid "Add project"
+msgstr ""
+
+#: includes/class-agency-post-types.php:160
+msgid "Add new project"
+msgstr ""
+
+#: includes/class-agency-post-types.php:161
+msgid "Edit project"
+msgstr ""
+
+#: includes/class-agency-post-types.php:162
+msgid "New project"
+msgstr ""
+
+#: includes/class-agency-post-types.php:164
+msgid "Search projects"
+msgstr ""
+
+#: includes/class-agency-post-types.php:165
+msgid "No projects found"
+msgstr ""
+
+#: includes/class-agency-privacy.php:41
+msgid "This plugin stores the following data in the WordPress database:"
+msgstr ""
+
+#: includes/class-agency-privacy.php:43
+msgid "Client names and associated identifiers"
+msgstr ""
+
+#: includes/class-agency-privacy.php:44
+msgid "Access tokens (stored hashed) for passwordless authentication"
+msgstr ""
+
+#: includes/class-agency-privacy.php:45
+msgid "Files uploaded by clients and the team (stored in the wp-content/agency-uploads/ directory)"
+msgstr ""
+
+#: includes/class-agency-privacy.php:46
+msgid "Comments left by clients and the team on project blocks"
+msgstr ""
+
+#: includes/class-agency-privacy.php:49
+msgid "Google Fonts may be loaded, which sends the visitor's IP address and user agent to Google's servers."
+msgstr ""
+
+#: includes/class-agency-privacy.php:102
+msgid "Agency Clients"
+msgstr ""
+
+#: includes/class-agency-privacy.php:103
+msgid "Client data managed through Agency Client Portal."
+msgstr ""
+
+#: includes/class-agency-privacy.php:111
+#: templates/admin/meta-boxes/client-details.php:32
+#: templates/edit-client.php:82
+msgid "Slug"
+msgstr ""
+
+#: includes/class-agency-privacy.php:115
+#: includes/class-agency-privacy.php:147
+#: templates/admin/meta-boxes/access.php:99
+#: templates/block-view-versioned.php:181
+#: templates/block-view-versioned.php:295
+#: templates/block-view-versioned.php:329
+#: templates/edit-client.php:140
+msgid "Status"
+msgstr ""
+
+#: includes/class-agency-privacy.php:134
+msgid "Agency Comments"
+msgstr ""
+
+#: includes/class-agency-privacy.php:135
+msgid "Comments left through Agency Client Portal."
+msgstr ""
+
+#: includes/class-agency-privacy.php:139
+msgid "Content"
+msgstr ""
+
+#: includes/class-agency-privacy.php:143
+msgid "Type"
+msgstr ""
+
+#: includes/class-agency-privacy.php:151
+#: templates/edit-client.php:194
+msgid "Creation date"
+msgstr ""
+
+#. translators: %d: nombre de fiches clients conservées
+#: includes/class-agency-privacy.php:235
+#, php-format
+msgid "%d client record(s) retained for business retention reasons."
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:45
+msgid "PHP version"
+msgstr ""
+
+#. translators: 1: current PHP version, 2: minimum PHP version
+#: includes/class-agency-requirements-check.php:46
+#, php-format
+msgid "PHP %1$s (✓ >= %2$s required)"
+msgstr ""
+
+#. translators: 1: current PHP version, 2: minimum PHP version
+#: includes/class-agency-requirements-check.php:47
+msgid "Optimal support for modern security functions"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:55
+msgid "Optimized performance detected"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:56
+msgid "PHP 8+ improves token system performance"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:62
+msgid "Insufficient PHP version"
+msgstr ""
+
+#. translators: 1: current PHP version, 2: minimum PHP version
+#: includes/class-agency-requirements-check.php:63
+#, php-format
+msgid "PHP %1$s detected (minimum: %2$s)"
+msgstr ""
+
+#. translators: 1: current PHP version, 2: minimum PHP version
+#: includes/class-agency-requirements-check.php:64
+msgid "Update PHP for optimal security"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:79
+msgid "WordPress version"
+msgstr ""
+
+#. translators: 1: current WordPress version, 2: minimum WordPress version
+#: includes/class-agency-requirements-check.php:80
+#, php-format
+msgid "WordPress %1$s (✓ >= %2$s required)"
+msgstr ""
+
+#. translators: 1: current WordPress version, 2: minimum WordPress version
+#: includes/class-agency-requirements-check.php:81
+msgid "Modern APIs and hooks available"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:86
+msgid "Insufficient WordPress version"
+msgstr ""
+
+#. translators: 1: current WordPress version, 2: minimum WordPress version
+#: includes/class-agency-requirements-check.php:87
+#, php-format
+msgid "WordPress %1$s detected (minimum: %2$s)"
+msgstr ""
+
+#. translators: 1: current WordPress version, 2: minimum WordPress version
+#: includes/class-agency-requirements-check.php:88
+msgid "Update WordPress for full compatibility"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:98
+msgid "Secure token generation"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:99
+msgid "Cookie and data handling"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:100
+msgid "SHA-256 token hashing"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:101
+msgid "UTF-8 character support"
+msgstr ""
+
+#. translators: %s: PHP extension name
+#: includes/class-agency-requirements-check.php:108
+#: includes/class-agency-requirements-check.php:133
+#: includes/class-agency-requirements-check.php:140
+#, php-format
+msgid "%s extension"
+msgstr ""
+
+#. translators: %s: PHP extension name
+#: includes/class-agency-requirements-check.php:109
+#: includes/class-agency-requirements-check.php:289
+msgid "✓ Available"
+msgstr ""
+
+#. translators: %s: PHP extension name
+#: includes/class-agency-requirements-check.php:115
+#, php-format
+msgid "%s extension missing"
+msgstr ""
+
+#. translators: %s: PHP extension name
+#: includes/class-agency-requirements-check.php:116
+#, php-format
+msgid "Required for: %s"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:117
+msgid "Contact your host to enable this extension"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:124
+msgid "Advanced encryption (PHP 7.2+)"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:125
+msgid "Image processing for client logos"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:126
+msgid "External HTTP requests"
+msgstr ""
+
+#. translators: %s: PHP extension name
+#: includes/class-agency-requirements-check.php:134
+msgid "✓ Available (optional)"
+msgstr ""
+
+#. translators: %s: PHP extension name
+#: includes/class-agency-requirements-check.php:141
+msgid "Not available (optional)"
+msgstr ""
+
+#. translators: %s: feature improved by the extension
+#: includes/class-agency-requirements-check.php:142
+#, php-format
+msgid "Would improve: %s"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:159
+#: includes/class-agency-requirements-check.php:166
+msgid "Database Connection"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:160
+msgid "✓ Operational"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:161
+msgid "MySQL/MariaDB connection active"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:167
+msgid "Connection failed"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:168
+msgid "Check the database configuration"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:181
+#: includes/class-agency-requirements-check.php:188
+msgid "Database Permissions"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:182
+msgid "✓ CREATE/DROP allowed"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:183
+msgid "Can create Agency tables"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:190
+msgid "CREATE TABLE required for installation"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:199
+#: includes/class-agency-requirements-check.php:206
+msgid "Database Charset"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:200
+msgid "✓ UTF-8 detected"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:201
+msgid "International character support"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:207
+msgid "UTF-8 not detected"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:208
+msgid "May cause issues with emojis and special characters"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:223
+#: includes/class-agency-requirements-check.php:249
+msgid "Agency Upload Folder"
+msgstr ""
+
+#. translators: %s: upload folder path
+#: includes/class-agency-requirements-check.php:224
+#, php-format
+msgid "✓ Accessible (%s)"
+msgstr ""
+
+#. translators: %s: upload folder path
+#: includes/class-agency-requirements-check.php:225
+msgid "Secure storage of client files"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:234
+#: includes/class-agency-requirements-check.php:241
+msgid "File Writing"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:235
+msgid "✓ Write permissions OK"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:236
+msgid "Can save client assets"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:243
+msgid "CHMOD 755 or 777 required on the upload folder"
+msgstr ""
+
+#. translators: %s: folder path
+#: includes/class-agency-requirements-check.php:250
+#, php-format
+msgid "Unable to create %s"
+msgstr ""
+
+#. translators: %s: folder path
+#: includes/class-agency-requirements-check.php:251
+msgid "Check the wp-content folder permissions"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:264
+#: includes/class-agency-requirements-check.php:271
+#: includes/class-agency-requirements-check.php:278
+msgid "Random Generator"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:265
+msgid "✓ random_bytes() available"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:266
+msgid "Cryptographically secure generation"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:272
+msgid "Fallback: openssl_random_pseudo_bytes()"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:273
+msgid "Works but random_bytes() is recommended"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:279
+msgid "No secure function available"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:280
+msgid "PHP 7.0+ or the OpenSSL extension is required"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:288
+#: includes/class-agency-requirements-check.php:295
+msgid "SHA-256 Hashing"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:290
+msgid "Secure token hashing"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:296
+msgid "Not available"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:297
+msgid "The hash extension is required for PHP"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:305
+#: includes/class-agency-requirements-check.php:312
+msgid "Secure Comparison"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:306
+msgid "✓ hash_equals() available"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:307
+msgid "Protection against timing attacks"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:313
+msgid "hash_equals() not available"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:314
+msgid "PHP 5.6+ recommended for optimal security"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:327
+#: includes/class-agency-requirements-check.php:334
+msgid "HTTPS Connection"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:328
+msgid "✓ SSL/TLS enabled"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:329
+msgid "Secure cookies and data encryption"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:335
+msgid "HTTP detected (not secure)"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:336
+msgid "HTTPS strongly recommended for production"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:348
+#: includes/class-agency-requirements-check.php:355
+msgid "PHP Memory"
+msgstr ""
+
+#. translators: %s: PHP memory limit
+#: includes/class-agency-requirements-check.php:349
+#, php-format
+msgid "✓ %s available"
+msgstr ""
+
+#. translators: %s: PHP memory limit
+#: includes/class-agency-requirements-check.php:350
+msgid "Sufficient to process tokens and data"
+msgstr ""
+
+#. translators: %s: PHP memory limit
+#: includes/class-agency-requirements-check.php:356
+#, php-format
+msgid "%s (64M+ recommended)"
+msgstr ""
+
+#. translators: %s: PHP memory limit
+#: includes/class-agency-requirements-check.php:357
+msgid "May limit performance with many clients"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:366
+#: includes/class-agency-requirements-check.php:373
+msgid "Execution Time"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:367
+msgid "✓ Unlimited"
+msgstr ""
+
+#. translators: %d: max execution time in seconds
+#: includes/class-agency-requirements-check.php:367
+#, php-format
+msgid "✓ %ds"
+msgstr ""
+
+#. translators: %d: max execution time in seconds
+#: includes/class-agency-requirements-check.php:368
+msgid "Sufficient for migration operations"
+msgstr ""
+
+#. translators: %d: max execution time in seconds
+#: includes/class-agency-requirements-check.php:374
+#, php-format
+msgid "%ds (30s+ recommended)"
+msgstr ""
+
+#. translators: %d: max execution time in seconds
+#: includes/class-agency-requirements-check.php:375
+msgid "May interrupt large migrations"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:438
+msgid "✅ System ready for production"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:439
+msgid "⚠️ Working, with a few recommended improvements"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:440
+msgid "❌ Critical issues to fix"
+msgstr ""
+
+#. translators: 1: requirements met, 2: warnings, 3: errors
+#: includes/class-agency-requirements-check.php:450
+#, php-format
+msgid "Requirements OK: %1$d | Warnings: %2$d | Errors: %3$d"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:457
+msgid "Requirements Met"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:470
+msgid "Recommended Improvements"
+msgstr ""
+
+#: includes/class-agency-requirements-check.php:483
+msgid "Critical Issues"
+msgstr ""
+
+#: includes/class-agency-rest-api.php:474
+msgid "Client ID and Project Name are required."
+msgstr ""
+
+#: includes/class-agency-rest-api.php:484
+msgid "Client does not exist."
+msgstr ""
+
+#: includes/class-agency-rest-api.php:499
+msgid "Failed to create project. Check error logs for details."
+msgstr ""
+
+#. translators: %s: exception message
+#: includes/class-agency-rest-api.php:516
+#, php-format
+msgid "Exception during project creation: %s"
+msgstr ""
+
+#: includes/class-agency-rest-api.php:562
+msgid "No project provided or client missing"
+msgstr ""
+
+#: includes/class-agency-rest-api.php:615
+#: assets/js/frontend.js:1001
+msgid "Email sent to the client."
+msgstr ""
+
+#: includes/class-agency-rest-api.php:646
+#: includes/class-agency-rest-api.php:964
+#: includes/class-agency-rest-api.php:1236
+#: includes/class-agency-rest-api.php:1273
+msgid "Missing block ID"
+msgstr ""
+
+#. translators: %d: number of uploaded files
+#: includes/class-agency-rest-api.php:691
+#, php-format
+msgid "%d file(s) uploaded"
+msgstr ""
+
+#: includes/class-agency-rest-api.php:698
+#: includes/class-agency-rest-api.php:973
+#: includes/class-agency-rest-api.php:1245
+#: includes/models/class-agency-asset.php:69
+msgid "No file provided"
+msgstr ""
+
+#: includes/class-agency-rest-api.php:729
+msgid "No asset provided"
+msgstr ""
+
+#: includes/class-agency-rest-api.php:741
+msgid "No block provided"
+msgstr ""
+
+#: includes/class-agency-rest-api.php:799
+msgid "Failed to update settings."
+msgstr ""
+
+#: includes/class-agency-rest-api.php:816
+#: includes/class-agency-rest-api.php:852
+msgid "Invalid URL"
+msgstr ""
+
+#: includes/class-agency-rest-api.php:887
+msgid "Missing client_id"
+msgstr ""
+
+#: includes/class-agency-rest-api.php:939
+#: includes/class-agency-rest-api.php:1021
+#: includes/class-agency-rest-api.php:1134
+msgid "Missing project ID"
+msgstr ""
+
+#: includes/class-agency-rest-api.php:969
+msgid "Deposit block not found or wrong type"
+msgstr ""
+
+#: includes/class-agency-rest-api.php:1018
+msgid "Missing preset name"
+msgstr ""
+
+#: includes/class-agency-rest-api.php:1119
+msgid "Error while creating the preset"
+msgstr ""
+
+#: includes/class-agency-rest-api.php:1139
+msgid "Preset not found"
+msgstr ""
+
+#: includes/class-agency-rest-api.php:1144
+msgid "Invalid preset data"
+msgstr ""
+
+#: includes/class-agency-rest-api.php:1290
+msgid "Empty slide"
+msgstr ""
+
+#: includes/class-agency-rest-api.php:1297
+msgid "Version 1"
+msgstr ""
+
+#: includes/class-agency-rest-api.php:1307
+#: templates/client-view.php:782
+#: templates/client-view.php:787
+msgid "Error during creation"
+msgstr ""
+
+#: includes/class-agency-rewrite-rules.php:181
+msgid "Template not found"
+msgstr ""
+
+#: includes/class-agency-rewrite-rules.php:196
+#: includes/class-agency-rewrite-rules.php:214
+msgid "Invalid or expired access link."
+msgstr ""
+
+#: includes/class-agency-rewrite-rules.php:206
+msgid "Invalid access link. Missing parameters."
+msgstr ""
+
+#: includes/class-agency-rewrite-rules.php:277
+msgid "Access denied. You do not have permission to edit clients."
+msgstr ""
+
+#: includes/class-agency-rewrite-rules.php:319
+msgid "Access denied. You do not have permission to access the dashboard."
+msgstr ""
+
+#: includes/class-agency-roles.php:19
+msgid "Agency Manager"
+msgstr ""
+
+#: includes/class-agency-roles.php:33
+msgid "Agency Client"
+msgstr ""
+
+#: includes/class-agency-security.php:38
+msgid "The requested client space does not exist."
+msgstr ""
+
+#: includes/class-agency-security.php:51
+msgid "No access link detected. Please use the link provided by your agency."
+msgstr ""
+
+#: includes/class-agency-security.php:53
+msgid "Your session has expired or your link is no longer valid. Please request a new access link."
+msgstr ""
+
+#: includes/class-agency-shortcodes.php:41
+msgid "⚠️ This shortcode is deprecated. Use the direct access links generated in the admin."
+msgstr ""
+
+#. translators: %s: login URL
+#: includes/class-agency-shortcodes.php:42
+#, php-format
+msgid "For the team: <a href=\"%s\">Log in here</a>"
+msgstr ""
+
+#: includes/class-agency-shortcodes.php:64
+msgid "Client ID required"
+msgstr ""
+
+#: includes/class-agency-shortcodes.php:87
+msgid "Project ID required"
+msgstr ""
+
+#: includes/class-agency-shortcodes.php:116
+msgid "Block ID required"
+msgstr ""
+
+#: includes/class-agency-shortcodes.php:122
+msgid "Storyboard not found"
+msgstr ""
+
+#: includes/class-agency-themes.php:21
+msgid "Light"
+msgstr ""
+
+#: includes/class-agency-themes.php:22
+msgid "Clean, professional, timeless."
+msgstr ""
+
+#: includes/class-agency-themes.php:40
+msgid "Dark"
+msgstr ""
+
+#: includes/class-agency-themes.php:41
+msgid "Modern, futuristic, vibrant."
+msgstr ""
+
+#: includes/class-agency-themes.php:59
+msgid "Neutral light"
+msgstr ""
+
+#: includes/class-agency-themes.php:60
+msgid "SaaS, indigo, versatile."
+msgstr ""
+
+#: includes/class-agency-themes.php:78
+msgid "Aurora"
+msgstr ""
+
+#: includes/class-agency-themes.php:79
+msgid "Deep blue with violet accents, night gradients."
+msgstr ""
+
+#: includes/class-agency-themes.php:97
+msgid "Sunset"
+msgstr ""
+
+#: includes/class-agency-themes.php:98
+msgid "Warm coral and orange, creative energy."
+msgstr ""
+
+#: includes/class-agency-themes.php:116
+msgid "Midnight"
+msgstr ""
+
+#: includes/class-agency-themes.php:117
+msgid "Deep night, indigo gradients, high contrast."
+msgstr ""
+
+#: includes/class-agency-themes.php:142
+msgid "Charcoal"
+msgstr ""
+
+#: includes/class-agency-themes.php:143
+msgid "Deep charcoal, violet highlights, muted mood."
+msgstr ""
+
+#: includes/frontend/class-agency-frontend.php:105
+msgid "Loading..."
+msgstr ""
+
+#: includes/frontend/class-agency-frontend.php:106
+msgid "An error occurred"
+msgstr ""
+
+#: includes/frontend/class-agency-frontend.php:107
+msgid "Operation successful"
+msgstr ""
+
+#: includes/models/class-agency-asset.php:140
+msgid "Embedded video"
+msgstr ""
+
+#: includes/models/class-agency-block.php:92
+msgid "Invalid block type"
+msgstr ""
+
+#: includes/models/class-agency-block.php:304
+msgid "Text"
+msgstr ""
+
+#: includes/models/class-agency-block.php:305
+#: templates/block-view-script.php:147
+msgid "Script"
+msgstr ""
+
+#: includes/models/class-agency-block.php:306
+msgid "Storyboard"
+msgstr ""
+
+#: includes/models/class-agency-block.php:307
+msgid "Versioned media"
+msgstr ""
+
+#: includes/models/class-agency-block.php:308
+msgid "Video"
+msgstr ""
+
+#: includes/models/class-agency-block.php:309
+msgid "YouTube video"
+msgstr ""
+
+#: includes/models/class-agency-block.php:310
+msgid "Dropbox video"
+msgstr ""
+
+#: includes/models/class-agency-block.php:311
+msgid "PDF document"
+msgstr ""
+
+#: includes/models/class-agency-block.php:312
+#: templates/block-view-storyboard.php:357
+msgid "Voice-over"
+msgstr ""
+
+#: includes/models/class-agency-block.php:313
+msgid "Image gallery"
+msgstr ""
+
+#: includes/models/class-agency-block.php:314
+#: templates/block-view-script.php:273
+#: templates/block-view-storyboard.php:168
+#: templates/block-view-video.php:178
+#: templates/block-view-video.php:184
+#: templates/block-view-video.php:976
+msgid "Embed"
+msgstr ""
+
+#: includes/models/class-agency-block.php:315
+msgid "Link"
+msgstr ""
+
+#: includes/models/class-agency-block.php:316
+msgid "Separator"
+msgstr ""
+
+#: includes/models/class-agency-block.php:317
+#: templates/project-view.php:223
+msgid "Progress bar"
+msgstr ""
+
+#: includes/models/class-agency-block.php:318
+msgid "File deposit"
+msgstr ""
+
+#: includes/models/class-agency-block.php:319
+#: templates/block-view-code.php:283
+msgid "Code"
+msgstr ""
+
+#: includes/models/class-agency-external-link.php:72
+msgid "A link must be attached to a block or a project"
+msgstr ""
+
+#: includes/models/class-agency-external-link.php:77
+msgid "A link cannot be attached to both a block and a project"
+msgstr ""
+
+#: includes/models/class-agency-external-link.php:86
+#: templates/block-view-code.php:347
+#: templates/block-view-script.php:431
+#: templates/block-view-script.php:438
+#: templates/block-view-versioned.php:652
+#: templates/block-view-versioned.php:659
+#: templates/block-view-video.php:281
+#: templates/block-view-video.php:290
+#: templates/project-view.php:545
+#: templates/project-view.php:552
+msgid "Error while creating the link"
+msgstr ""
+
+#: templates/access-denied.php:111
+msgid "Please use your link to access your space."
+msgstr ""
+
+#: templates/access-denied.php:119
+msgid "Back to home"
+msgstr ""
+
+#: templates/admin/dashboard.php:47
+msgid "+ New Client"
+msgstr ""
+
+#: templates/admin/dashboard.php:56
+#: templates/dashboard.php:112
+msgid "No clients yet."
+msgstr ""
+
+#. translators: %d: number of projects
+#: templates/admin/dashboard.php:78
+#: templates/dashboard.php:152
+#, php-format
+msgid "%d project"
+msgid_plural "%d projects"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/admin/dashboard.php:82
+msgid "Direct access active"
+msgstr ""
+
+#: templates/admin/dashboard.php:84
+msgid "No access link"
+msgstr ""
+
+#: templates/admin/dashboard.php:91
+#: templates/block-view-code.php:82
+#: templates/block-view-script.php:84
+#: templates/block-view-storyboard.php:127
+#: templates/block-view-versioned.php:86
+#: templates/block-view-video.php:620
+#: templates/block-view.php:98
+#: templates/client-view.php:382
+#: templates/dashboard.php:176
+#: templates/project-view.php:157
+#: templates/project-view.php:787
+#: templates/project-view.php:879
+msgid "Edit"
+msgstr ""
+
+#: templates/admin/dashboard.php:99
+msgid "Private link"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:16
+msgid "Error: client ID not found. Please save the client first."
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:29
+msgid "Client Access"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:34
+#: templates/edit-client.php:155
+#: assets/js/edit-client.js:170
+msgid "Access token active"
+msgstr ""
+
+#. translators: %s: date
+#: templates/admin/meta-boxes/access.php:36
+#: templates/edit-client.php:160
+#, php-format
+msgid "Generated on %s"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:42
+#: templates/edit-client.php:167
+#: assets/js/edit-client.js:211
+msgid "No active access token"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:50
+msgid "Generate Access Link"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:55
+msgid "Regenerate Token"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:60
+msgid "Revoke Access"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:67
+#: templates/admin/meta-boxes/access.php:82
+msgid "Client access link:"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:72
+#: templates/admin/meta-boxes/access.php:87
+#: templates/block-view-code.php:128
+#: templates/block-view-code.php:136
+#: templates/edit-client.php:91
+#: templates/edit-client.php:186
+msgid "Copy"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:76
+#: templates/admin/meta-boxes/access.php:91
+msgid "Share this link with your client so they can access their space directly without a password."
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:77
+#: templates/admin/meta-boxes/access.php:92
+#: templates/edit-client.php:188
+msgid "⚠️ Never share this link publicly!"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:101
+#: templates/dashboard.php:161
+#: templates/edit-client.php:142
+msgid "Active"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:102
+#: templates/dashboard.php:161
+#: templates/edit-client.php:143
+msgid "Inactive"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:104
+msgid "An inactive client will no longer be able to log in."
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:109
+msgid "Creation Date"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:117
+#: templates/edit-client.php:201
+msgid "Statistics"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:140
+#: templates/admin/settings.php:140
+#: templates/edit-client.php:209
+msgid "Blocks"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:144
+#: templates/block-view-code.php:160
+#: templates/block-view-link.php:152
+#: templates/block-view-script.php:193
+#: templates/block-view-storyboard.php:378
+#: templates/block-view-versioned.php:238
+#: templates/block-view-video.php:750
+#: templates/block-view-video.php:868
+#: templates/edit-client.php:213
+msgid "Comments"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:191
+msgid "Generating..."
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:210
+#: templates/admin/meta-boxes/access.php:260
+#: templates/admin/meta-boxes/access.php:283
+#: assets/js/edit-client.js:194
+#: assets/js/edit-client.js:218
+#: assets/js/edit-client.js:241
+msgid "Error: "
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:215
+msgid "AJAX error: "
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:229
+#: templates/block-view-code.php:129
+msgid "Copied!"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:238
+msgid "Are you sure you want to regenerate the token? The old access link will become invalid."
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:260
+#: templates/admin/meta-boxes/access.php:283
+#: assets/js/edit-client.js:194
+#: assets/js/edit-client.js:218
+#: assets/js/edit-client.js:241
+msgid "Failed"
+msgstr ""
+
+#: templates/admin/meta-boxes/access.php:269
+msgid "Are you sure you want to revoke access? The client will no longer be able to access their space."
+msgstr ""
+
+#: templates/admin/meta-boxes/branding.php:19
+msgid "Logo (URL)"
+msgstr ""
+
+#: templates/admin/meta-boxes/branding.php:21
+#: templates/admin/meta-boxes/branding.php:53
+#: templates/admin/settings.php:251
+#: templates/admin/settings.php:487
+msgid "Choose a logo"
+msgstr ""
+
+#: templates/admin/meta-boxes/branding.php:22
+msgid "Logo displayed in the client space header."
+msgstr ""
+
+#: templates/admin/meta-boxes/branding.php:32
+msgid "Primary Color"
+msgstr ""
+
+#: templates/admin/meta-boxes/branding.php:35
+msgid "Main color used in the client interface (header, buttons)."
+msgstr ""
+
+#: templates/admin/meta-boxes/branding.php:39
+msgid "Secondary Color"
+msgstr ""
+
+#: templates/admin/meta-boxes/branding.php:42
+msgid "Secondary color (header text, accents)."
+msgstr ""
+
+#: templates/admin/meta-boxes/branding.php:55
+#: templates/admin/new-client.php:139
+#: templates/admin/settings.php:488
+msgid "Use this logo"
+msgstr ""
+
+#: templates/admin/meta-boxes/client-details.php:19
+msgid "Client Name"
+msgstr ""
+
+#: templates/admin/meta-boxes/client-details.php:21
+msgid "Your client's name (used to generate the slug)."
+msgstr ""
+
+#: templates/admin/meta-boxes/client-details.php:26
+msgid "Client URL"
+msgstr ""
+
+#: templates/admin/meta-boxes/client-details.php:28
+msgid "Client portal access URL (read-only)."
+msgstr ""
+
+#: templates/admin/meta-boxes/client-details.php:34
+#: templates/edit-client.php:84
+msgid "Generated automatically from the name."
+msgstr ""
+
+#: templates/admin/meta-boxes/client-details.php:43
+#: templates/admin/new-client.php:57
+msgid "Access URL:"
+msgstr ""
+
+#: templates/admin/meta-boxes/client-details.php:48
+#: templates/admin/new-client.php:62
+msgid "Copy URL"
+msgstr ""
+
+#: templates/admin/meta-boxes/client-details.php:55
+#: templates/edit-client.php:223
+msgid "Danger Zone"
+msgstr ""
+
+#: templates/admin/meta-boxes/client-details.php:56
+#: templates/edit-client.php:225
+msgid "This action cannot be undone. It permanently deletes the client and all of its projects, blocks, comments and associated files."
+msgstr ""
+
+#: templates/admin/meta-boxes/client-details.php:59
+#: templates/edit-client.php:228
+#: assets/js/edit-client.js:242
+#: assets/js/edit-client.js:246
+msgid "Permanently delete the client"
+msgstr ""
+
+#: templates/admin/new-client.php:42
+#: templates/admin/new-client.php:56
+#: assets/js/dashboard.js:111
+msgid "Client created successfully!"
+msgstr ""
+
+#: templates/admin/new-client.php:45
+#: assets/js/dashboard.js:116
+msgid "Error while creating the client."
+msgstr ""
+
+#: templates/admin/new-client.php:52
+msgid "Create a New Client"
+msgstr ""
+
+#: templates/admin/new-client.php:71
+msgid "Client Name *"
+msgstr ""
+
+#: templates/admin/new-client.php:73
+msgid "Your client's name (e.g. \"ABC Company\")."
+msgstr ""
+
+#: templates/admin/new-client.php:77
+msgid "Client Logo"
+msgstr ""
+
+#: templates/admin/new-client.php:79
+#: templates/admin/new-client.php:137
+msgid "Select a logo"
+msgstr ""
+
+#: templates/admin/new-client.php:80
+#: templates/block-view-code.php:83
+#: templates/block-view-code.php:176
+#: templates/block-view-file-deposit.php:188
+#: templates/block-view-file-deposit.php:221
+#: templates/block-view-link.php:170
+#: templates/block-view-script.php:85
+#: templates/block-view-script.php:211
+#: templates/block-view-storyboard.php:128
+#: templates/block-view-storyboard.php:393
+#: templates/block-view-versioned.php:87
+#: templates/block-view-versioned.php:219
+#: templates/block-view-versioned.php:252
+#: templates/block-view-video.php:621
+#: templates/block-view-video.php:718
+#: templates/block-view-video.php:836
+#: templates/block-view-video.php:883
+#: templates/block-view.php:142
+#: templates/block-view.php:174
+#: templates/client-view.php:385
+#: templates/project-view.php:158
+#: templates/project-view.php:790
+#: templates/project-view.php:808
+#: templates/project-view.php:882
+#: templates/project-view.php:1003
+msgid "Delete"
+msgstr ""
+
+#: templates/admin/new-client.php:81
+msgid "Client logo displayed in the header. Leave empty to use the client name."
+msgstr ""
+
+#: templates/admin/new-client.php:90
+msgid "Primary Color *"
+msgstr ""
+
+#: templates/admin/new-client.php:93
+msgid "Client's main color."
+msgstr ""
+
+#: templates/admin/new-client.php:99
+msgid "Secondary Color *"
+msgstr ""
+
+#: templates/admin/new-client.php:102
+msgid "Client's secondary color."
+msgstr ""
+
+#: templates/admin/new-client.php:108
+msgid "Next steps:"
+msgstr ""
+
+#: templates/admin/new-client.php:110
+msgid "Create a WordPress user with the \"Agency Client\" role"
+msgstr ""
+
+#: templates/admin/new-client.php:111
+msgid "Associate the user with this client"
+msgstr ""
+
+#: templates/admin/new-client.php:112
+msgid "Share the access URL with the client"
+msgstr ""
+
+#: templates/admin/new-client.php:117
+msgid "Create Client"
+msgstr ""
+
+#: templates/admin/settings.php:99
+msgid "Settings saved."
+msgstr ""
+
+#: templates/admin/settings.php:130
+msgid "Agency Settings"
+msgstr ""
+
+#: templates/admin/settings.php:134
+msgid "General"
+msgstr ""
+
+#: templates/admin/settings.php:143
+msgid "Emails"
+msgstr ""
+
+#: templates/admin/settings.php:154
+msgid "Portal theme"
+msgstr ""
+
+#: templates/admin/settings.php:155
+msgid "Choose a theme to apply a consistent set of styles. You can then customize individual values."
+msgstr ""
+
+#: templates/admin/settings.php:206
+msgid "Custom"
+msgstr ""
+
+#: templates/admin/settings.php:207
+msgid "Values below."
+msgstr ""
+
+#: templates/admin/settings.php:247
+msgid "Global Branding"
+msgstr ""
+
+#: templates/admin/settings.php:249
+msgid "Global logo (URL)"
+msgstr ""
+
+#: templates/admin/settings.php:252
+msgid "Logo displayed in the header (global)."
+msgstr ""
+
+#: templates/admin/settings.php:262
+msgid "Interface font (Frontend)"
+msgstr ""
+
+#: templates/admin/settings.php:265
+msgid "Default (theme)"
+msgstr ""
+
+#: templates/admin/settings.php:277
+msgid "Font used on client, project and block pages."
+msgstr ""
+
+#: templates/admin/settings.php:280
+msgid "Card Style"
+msgstr ""
+
+#: templates/admin/settings.php:283
+msgid "Border width (px)"
+msgstr ""
+
+#: templates/admin/settings.php:285
+msgid "Border width of project and block cards."
+msgstr ""
+
+#: templates/admin/settings.php:289
+msgid "Border color"
+msgstr ""
+
+#: templates/admin/settings.php:292
+msgid "Card border color."
+msgstr ""
+
+#: templates/admin/settings.php:296
+msgid "Corner radius (px)"
+msgstr ""
+
+#: templates/admin/settings.php:298
+msgid "Card corner radius (border-radius). Default value: 25."
+msgstr ""
+
+#: templates/admin/settings.php:301
+msgid "Background colors"
+msgstr ""
+
+#: templates/admin/settings.php:304
+msgid "Background color (Light Mode)"
+msgstr ""
+
+#: templates/admin/settings.php:307
+msgid "Page background color in light mode (default: #f8f9fa)."
+msgstr ""
+
+#: templates/admin/settings.php:311
+msgid "Background color (Dark Mode)"
+msgstr ""
+
+#: templates/admin/settings.php:314
+msgid "Page background color in dark mode (default: #0b0f14)."
+msgstr ""
+
+#: templates/admin/settings.php:318
+msgid "Sidebar color"
+msgstr ""
+
+#: templates/admin/settings.php:321
+msgid "Background color of the manager sidebar. Left empty, it uses the dark background color. Gradient themes set it automatically."
+msgstr ""
+
+#: templates/admin/settings.php:325
+msgid "Default Block Texts"
+msgstr ""
+
+#: templates/admin/settings.php:326
+msgid "These texts are automatically inserted into a block's content when it is created. You can use basic HTML."
+msgstr ""
+
+#: templates/admin/settings.php:329
+msgid "Script — default text"
+msgstr ""
+
+#: templates/admin/settings.php:334
+msgid "Video — default text"
+msgstr ""
+
+#: templates/admin/settings.php:339
+msgid "Versioned media — default text"
+msgstr ""
+
+#: templates/admin/settings.php:344
+msgid "Storyboard — default text"
+msgstr ""
+
+#: templates/admin/settings.php:356
+msgid "Email template"
+msgstr ""
+
+#: templates/admin/settings.php:358
+msgid "This HTML template is used for all emails sent by Agency (comment notifications and manual client notifications). Use the tokens below; they will be replaced when the email is sent."
+msgstr ""
+
+#: templates/admin/settings.php:364
+msgid "HTML code"
+msgstr ""
+
+#: templates/admin/settings.php:369
+msgid "Reset template"
+msgstr ""
+
+#: templates/admin/settings.php:374
+msgid "Preview"
+msgstr ""
+
+#: templates/admin/settings.php:379
+msgid "Available tokens"
+msgstr ""
+
+#: templates/admin/settings.php:394
+msgid "File Uploads"
+msgstr ""
+
+#: templates/admin/settings.php:397
+msgid "Maximum file size (MB)"
+msgstr ""
+
+#: templates/admin/settings.php:399
+msgid "Maximum size allowed for uploaded files."
+msgstr ""
+
+#: templates/admin/settings.php:403
+msgid "Allowed file types"
+msgstr ""
+
+#: templates/admin/settings.php:405
+msgid "Allowed file extensions, comma-separated (e.g. jpg,png,pdf)."
+msgstr ""
+
+#: templates/admin/settings.php:408
+msgid "Project Labels"
+msgstr ""
+
+#: templates/admin/settings.php:410
+msgid "Available labels"
+msgstr ""
+
+#: templates/admin/settings.php:411
+msgid "One label per line"
+msgstr ""
+
+#: templates/admin/settings.php:412
+msgid "Enter one label per line. These labels will be available when creating or editing a project."
+msgstr ""
+
+#: templates/admin/settings.php:415
+msgid "Developer Mode"
+msgstr ""
+
+#: templates/admin/settings.php:419
+msgid "Enable developer mode"
+msgstr ""
+
+#: templates/admin/settings.php:421
+msgid "Enables the Debug tab in the Agency menu for administrators."
+msgstr ""
+
+#: templates/admin/settings.php:426
+msgid "System Information"
+msgstr ""
+
+#: templates/admin/settings.php:431
+msgid "Plugin Version"
+msgstr ""
+
+#: templates/admin/settings.php:435
+msgid "Database Version"
+msgstr ""
+
+#: templates/admin/settings.php:439
+msgid "Upload Folder"
+msgstr ""
+
+#: templates/admin/settings.php:443
+msgid "Writable"
+msgstr ""
+
+#: templates/admin/settings.php:445
+msgid "Not writable"
+msgstr ""
+
+#: templates/admin/settings.php:450
+msgid "Installation Date"
+msgstr ""
+
+#: templates/admin/settings.php:459
+#: templates/block-view-file-deposit.php:111
+msgid "Save settings"
+msgstr ""
+
+#: templates/admin/settings.php:465
+msgid "Tools"
+msgstr ""
+
+#: templates/admin/settings.php:469
+msgid "Regenerate Permalinks"
+msgstr ""
+
+#: templates/admin/settings.php:475
+msgid "Deleting the plugin will erase all data (clients, projects, blocks, comments). This action cannot be undone."
+msgstr ""
+
+#: templates/block-view-code.php:17
+#: templates/block-view-file-deposit.php:21
+#: templates/block-view-link.php:17
+#: templates/block-view-script.php:22
+#: templates/block-view-storyboard.php:17
+#: templates/block-view-versioned.php:22
+#: templates/block-view-video.php:563
+#: templates/block-view.php:18
+msgid "Content not found"
+msgstr ""
+
+#: templates/block-view-code.php:91
+#: templates/block-view-script.php:93
+#: templates/block-view-storyboard.php:136
+#: templates/block-view-versioned.php:95
+#: templates/block-view-video.php:629
+#: templates/project-view.php:166
+msgid "Add a link"
+msgstr ""
+
+#: templates/block-view-code.php:104
+#: templates/block-view-file-deposit.php:77
+#: templates/block-view-link.php:73
+#: templates/block-view-script.php:117
+#: templates/block-view-storyboard.php:152
+#: templates/block-view-versioned.php:111
+#: templates/block-view-video.php:648
+#: templates/block-view.php:104
+#: templates/dashboard.php:186
+msgid "Copy link"
+msgstr ""
+
+#: templates/block-view-code.php:107
+#: templates/block-view-code.php:271
+msgid "Edit code"
+msgstr ""
+
+#: templates/block-view-code.php:130
+#: templates/block-view-file-deposit.php:262
+#: templates/block-view-storyboard.php:894
+#: templates/block-view-storyboard.php:968
+#: templates/block-view-storyboard.php:973
+#: templates/block-view-storyboard.php:999
+#: templates/block-view-storyboard.php:1002
+#: templates/block-view-video.php:420
+#: assets/js/frontend.js:1094
+msgid "Error"
+msgstr ""
+
+#: templates/block-view-code.php:131
+msgid "Copy code"
+msgstr ""
+
+#: templates/block-view-code.php:143
+msgid "No code yet."
+msgstr ""
+
+#: templates/block-view-code.php:145
+msgid "Add code"
+msgstr ""
+
+#: templates/block-view-code.php:150
+msgid "No code available."
+msgstr ""
+
+#: templates/block-view-code.php:164
+#: templates/block-view-link.php:156
+#: templates/block-view-script.php:197
+#: templates/block-view.php:160
+msgid "No comments yet."
+msgstr ""
+
+#: templates/block-view-code.php:170
+#: templates/block-view-link.php:162
+#: templates/block-view-script.php:203
+#: templates/block-view.php:166
+msgid "ago"
+msgstr ""
+
+#: templates/block-view-code.php:186
+#: templates/block-view-link.php:180
+#: templates/block-view-script.php:222
+#: templates/block-view.php:185
+msgid "Add a comment"
+msgstr ""
+
+#: templates/block-view-code.php:189
+#: templates/block-view-link.php:182
+#: templates/block-view-script.php:224
+#: templates/block-view.php:187
+msgid "Your comment..."
+msgstr ""
+
+#: templates/block-view-code.php:191
+#: templates/block-view-link.php:184
+#: templates/block-view-script.php:226
+#: templates/block-view-storyboard.php:406
+#: templates/block-view-versioned.php:262
+#: templates/block-view-video.php:779
+#: templates/block-view-video.php:899
+#: templates/block-view.php:189
+#: templates/partials/notify-client-button.php:72
+msgid "Send"
+msgstr ""
+
+#: templates/block-view-code.php:212
+#: templates/block-view-script.php:283
+#: templates/block-view-storyboard.php:457
+#: templates/block-view-versioned.php:353
+#: templates/block-view-video.php:986
+#: templates/project-view.php:244
+msgid "Add an external link"
+msgstr ""
+
+#: templates/block-view-code.php:217
+#: templates/block-view-code.php:247
+#: templates/block-view-script.php:288
+#: templates/block-view-script.php:336
+#: templates/block-view-storyboard.php:462
+#: templates/block-view-storyboard.php:491
+#: templates/block-view-versioned.php:358
+#: templates/block-view-versioned.php:390
+#: templates/block-view-video.php:991
+#: templates/block-view-video.php:1039
+#: templates/project-view.php:249
+#: templates/project-view.php:297
+msgid "Emoji"
+msgstr ""
+
+#: templates/block-view-code.php:222
+#: templates/block-view-code.php:252
+#: templates/block-view-script.php:296
+#: templates/block-view-script.php:344
+#: templates/block-view-storyboard.php:467
+#: templates/block-view-storyboard.php:496
+#: templates/block-view-versioned.php:365
+#: templates/block-view-versioned.php:397
+#: templates/block-view-video.php:999
+#: templates/block-view-video.php:1047
+#: templates/project-view.php:257
+#: templates/project-view.php:305
+msgid "Link text"
+msgstr ""
+
+#: templates/block-view-code.php:223
+msgid "e.g. Documentation"
+msgstr ""
+
+#: templates/block-view-code.php:226
+#: templates/block-view-code.php:256
+#: templates/block-view-script.php:306
+#: templates/block-view-script.php:353
+#: templates/block-view-storyboard.php:471
+#: templates/block-view-storyboard.php:500
+#: templates/block-view-versioned.php:369
+#: templates/block-view-versioned.php:401
+#: templates/block-view-video.php:1009
+#: templates/block-view-video.php:1056
+#: templates/project-view.php:267
+#: templates/project-view.php:314
+msgid "URL"
+msgstr ""
+
+#: templates/block-view-code.php:227
+#: templates/block-view-code.php:257
+#: templates/block-view-link.php:93
+#: templates/block-view-script.php:311
+#: templates/block-view-script.php:358
+#: templates/block-view-storyboard.php:472
+#: templates/block-view-storyboard.php:501
+#: templates/block-view-versioned.php:370
+#: templates/block-view-versioned.php:402
+#: templates/block-view-video.php:1014
+#: templates/block-view-video.php:1061
+#: templates/project-view.php:272
+#: templates/project-view.php:319
+msgid "https://..."
+msgstr ""
+
+#: templates/block-view-code.php:231
+#: templates/block-view-code.php:261
+#: templates/block-view-code.php:289
+#: templates/block-view-script.php:269
+#: templates/block-view-script.php:317
+#: templates/block-view-script.php:364
+#: templates/block-view-storyboard.php:476
+#: templates/block-view-storyboard.php:505
+#: templates/block-view-versioned.php:309
+#: templates/block-view-versioned.php:343
+#: templates/block-view-versioned.php:374
+#: templates/block-view-versioned.php:406
+#: templates/block-view-video.php:931
+#: templates/block-view-video.php:973
+#: templates/block-view-video.php:1020
+#: templates/block-view-video.php:1067
+#: templates/client-view.php:199
+#: templates/client-view.php:286
+#: templates/dashboard.php:271
+#: templates/partials/notify-client-button.php:71
+#: templates/project-view.php:210
+#: templates/project-view.php:234
+#: templates/project-view.php:278
+#: templates/project-view.php:325
+#: templates/project-view.php:396
+#: templates/project-view.php:446
+msgid "Cancel"
+msgstr ""
+
+#: templates/block-view-code.php:232
+#: templates/block-view-script.php:320
+#: templates/block-view-script.php:433
+#: templates/block-view-script.php:440
+#: templates/block-view-storyboard.php:477
+#: templates/block-view-storyboard.php:787
+#: templates/block-view-versioned.php:375
+#: templates/block-view-versioned.php:648
+#: templates/block-view-versioned.php:658
+#: templates/block-view-video.php:283
+#: templates/block-view-video.php:289
+#: templates/block-view-video.php:1023
+#: templates/project-view.php:281
+#: templates/project-view.php:547
+#: templates/project-view.php:554
+msgid "Add link"
+msgstr ""
+
+#: templates/block-view-code.php:241
+#: templates/block-view-script.php:330
+#: templates/block-view-storyboard.php:485
+#: templates/block-view-versioned.php:384
+#: templates/block-view-video.php:1033
+#: templates/project-view.php:291
+msgid "Edit external link"
+msgstr ""
+
+#: templates/block-view-code.php:262
+#: templates/block-view-script.php:367
+#: templates/block-view-script.php:537
+#: templates/block-view-script.php:544
+#: templates/block-view-storyboard.php:506
+#: templates/block-view-storyboard.php:832
+#: templates/block-view-versioned.php:407
+#: templates/block-view-versioned.php:746
+#: templates/block-view-versioned.php:756
+#: templates/block-view-video.php:353
+#: templates/block-view-video.php:359
+#: templates/block-view-video.php:1070
+#: templates/client-view.php:289
+#: templates/client-view.php:705
+#: templates/client-view.php:710
+#: templates/project-view.php:328
+#: templates/project-view.php:399
+#: templates/project-view.php:652
+#: templates/project-view.php:659
+#: assets/js/manager.js:635
+#: assets/js/manager.js:640
+msgid "Update"
+msgstr ""
+
+#: templates/block-view-code.php:276
+msgid "File name"
+msgstr ""
+
+#: templates/block-view-code.php:279
+msgid "app.py"
+msgstr ""
+
+#: templates/block-view-code.php:280
+msgid "The extension determines the syntax highlighting."
+msgstr ""
+
+#: templates/block-view-code.php:290
+#: templates/block-view-code.php:418
+#: templates/block-view-code.php:419
+#: templates/block-view-link.php:95
+#: templates/block-view-link.php:223
+#: templates/block-view-link.php:228
+#: templates/block-view-versioned.php:344
+#: templates/block-view-versioned.php:547
+#: templates/partials/header.php:150
+#: templates/project-view.php:235
+#: templates/project-view.php:447
+msgid "Save"
+msgstr ""
+
+#: templates/block-view-code.php:339
+#: templates/block-view-code.php:379
+#: templates/block-view-script.php:406
+#: templates/block-view-script.php:511
+#: templates/block-view-storyboard.php:778
+#: templates/block-view-storyboard.php:823
+#: templates/block-view-versioned.php:625
+#: templates/block-view-versioned.php:728
+#: templates/block-view-video.php:256
+#: templates/block-view-video.php:331
+#: templates/project-view.php:520
+#: templates/project-view.php:626
+#: templates/project-view.php:671
+msgid "Please fill in all fields"
+msgstr ""
+
+#: templates/block-view-code.php:354
+#: templates/block-view-storyboard.php:795
+msgid "Delete this link?"
+msgstr ""
+
+#: templates/block-view-code.php:411
+#: templates/block-view-link.php:211
+#: templates/block-view-script.php:660
+#: templates/block-view-versioned.php:526
+#: templates/block-view-video.php:401
+msgid "Saving..."
+msgstr ""
+
+#: templates/block-view-code.php:458
+#: templates/block-view-link.php:305
+#: templates/block-view-storyboard.php:735
+msgid "Delete this comment?"
+msgstr ""
+
+#: templates/block-view-file-deposit.php:86
+msgid "Deposit settings"
+msgstr ""
+
+#: templates/block-view-file-deposit.php:90
+msgid "Allowed extensions (comma-separated)"
+msgstr ""
+
+#: templates/block-view-file-deposit.php:100
+msgid "Maximum size (MB)"
+msgstr ""
+
+#: templates/block-view-file-deposit.php:120
+msgid "Upload a file"
+msgstr ""
+
+#. translators: 1: allowed file extensions, 2: maximum size in MB
+#: templates/block-view-file-deposit.php:124
+#, php-format
+msgid "Accepted files: <strong>%1$s</strong> — Max size: <strong>%2$d MB</strong>"
+msgstr ""
+
+#: templates/block-view-file-deposit.php:131
+msgid "Drag and drop a file here or click to choose"
+msgstr ""
+
+#: templates/block-view-file-deposit.php:139
+msgid "Uploading…"
+msgstr ""
+
+#: templates/block-view-file-deposit.php:160
+msgid "Received files"
+msgstr ""
+
+#: templates/block-view-file-deposit.php:160
+msgid "My uploads"
+msgstr ""
+
+#: templates/block-view-file-deposit.php:161
+msgid "No files uploaded yet."
+msgstr ""
+
+#. translators: %s: name of the uploader (client or site)
+#: templates/block-view-file-deposit.php:166
+#: templates/block-view-file-deposit.php:199
+#, php-format
+msgid "Files from %s"
+msgstr ""
+
+#: templates/block-view-file-deposit.php:183
+#: templates/block-view-file-deposit.php:216
+#: templates/block-view-storyboard.php:294
+#: templates/block-view-storyboard.php:327
+#: templates/block-view-storyboard.php:341
+#: templates/block-view-versioned.php:216
+#: templates/block-view-video.php:829
+#: templates/block-view.php:138
+msgid "Download"
+msgstr ""
+
+#: templates/block-view-file-deposit.php:262
+#: templates/block-view-video.php:417
+msgid "Saved"
+msgstr ""
+
+#: templates/block-view-file-deposit.php:303
+msgid "Server error"
+msgstr ""
+
+#: templates/block-view-file-deposit.php:308
+msgid "Network error"
+msgstr ""
+
+#: templates/block-view-file-deposit.php:333
+msgid "Delete this file?"
+msgstr ""
+
+#: templates/block-view-link.php:87
+msgid "Target URL"
+msgstr ""
+
+#: templates/block-view-link.php:98
+msgid "The client will be redirected to this URL when clicking."
+msgstr ""
+
+#: templates/block-view-link.php:102
+#: templates/project-view.php:355
+msgid "Background image (optional)"
+msgstr ""
+
+#: templates/block-view-link.php:108
+#: templates/client-view.php:174
+#: templates/client-view.php:252
+#: templates/project-view.php:361
+msgid "Image URL"
+msgstr ""
+
+#: templates/block-view-link.php:110
+#: templates/client-view.php:178
+#: templates/client-view.php:256
+#: templates/dashboard.php:238
+#: templates/edit-client.php:104
+#: templates/edit-client.php:127
+msgid "Choose"
+msgstr ""
+
+#: templates/block-view-link.php:131
+msgid "Open link"
+msgstr ""
+
+#: templates/block-view-link.php:137
+msgid "No URL set. Enter the URL above."
+msgstr ""
+
+#: templates/block-view-link.php:238
+#: templates/client-view.php:817
+msgid "Choose an image"
+msgstr ""
+
+#: templates/block-view-link.php:238
+#: templates/client-view.php:818
+#: templates/project-view.php:1191
+msgid "Use this image"
+msgstr ""
+
+#: templates/block-view-script.php:66
+#: templates/block-view-storyboard.php:109
+#: templates/block-view-versioned.php:68
+#: templates/block-view-video.php:602
+msgid "Add a description…"
+msgstr ""
+
+#: templates/block-view-script.php:98
+#: templates/block-view-script.php:252
+msgid "Embed Google Docs/Sheets"
+msgstr ""
+
+#: templates/block-view-script.php:103
+msgid "Remove the embedded doc"
+msgstr ""
+
+#: templates/block-view-script.php:131
+msgid "Edit document"
+msgstr ""
+
+#: templates/block-view-script.php:153
+msgid "Bold"
+msgstr ""
+
+#: templates/block-view-script.php:156
+msgid "Highlight"
+msgstr ""
+
+#: templates/block-view-script.php:159
+msgid "Highlight with comment"
+msgstr ""
+
+#: templates/block-view-script.php:167
+msgid "Enter the script content here..."
+msgstr ""
+
+#: templates/block-view-script.php:171
+#: templates/block-view-script.php:686
+#: templates/block-view-script.php:693
+#: assets/js/frontend.js:671
+#: assets/js/frontend.js:682
+msgid "Save script"
+msgstr ""
+
+#: templates/block-view-script.php:182
+msgid "No script available yet."
+msgstr ""
+
+#: templates/block-view-script.php:258
+msgid "Google Docs or Sheets URL"
+msgstr ""
+
+#: templates/block-view-script.php:263
+msgid "https://docs.google.com/document/d/... or .../spreadsheets/d/..."
+msgstr ""
+
+#: templates/block-view-script.php:264
+msgid "Paste the full URL of a Google Doc or Google Sheet."
+msgstr ""
+
+#: templates/block-view-script.php:301
+#: templates/project-view.php:262
+msgid "e.g. Google Slides presentation"
+msgstr ""
+
+#: templates/block-view-script.php:411
+#: templates/block-view-storyboard.php:780
+#: templates/block-view-versioned.php:579
+#: templates/block-view-versioned.php:630
+#: templates/block-view-video.php:261
+#: templates/client-view.php:749
+#: templates/project-view.php:525
+#: templates/project-view.php:676
+msgid "Creating..."
+msgstr ""
+
+#: templates/block-view-script.php:450
+#: templates/block-view-versioned.php:669
+#: templates/block-view-video.php:371
+#: templates/project-view.php:565
+msgid "Are you sure you want to delete this link?"
+msgstr ""
+
+#: templates/block-view-script.php:467
+#: templates/block-view-versioned.php:682
+#: templates/block-view-video.php:386
+#: templates/project-view.php:582
+msgid "Error while deleting the link"
+msgstr ""
+
+#: templates/block-view-script.php:516
+#: templates/block-view-storyboard.php:825
+#: templates/block-view-versioned.php:733
+#: templates/block-view-video.php:336
+#: templates/client-view.php:672
+#: templates/project-view.php:631
+#: assets/js/manager.js:604
+msgid "Updating..."
+msgstr ""
+
+#: templates/block-view-script.php:535
+#: templates/block-view-script.php:542
+#: templates/block-view-versioned.php:750
+#: templates/block-view-versioned.php:757
+#: templates/block-view-video.php:351
+#: templates/block-view-video.php:360
+#: templates/project-view.php:650
+#: templates/project-view.php:657
+msgid "Error while updating the link"
+msgstr ""
+
+#: templates/block-view-script.php:568
+#: templates/block-view-script.php:595
+msgid "Please select text to highlight"
+msgstr ""
+
+#: templates/block-view-script.php:574
+#: templates/block-view-script.php:601
+msgid "Please select text in the script"
+msgstr ""
+
+#: templates/block-view-script.php:606
+msgid "Comment attached to the highlighted text:"
+msgstr ""
+
+#: templates/block-view-script.php:633
+#: templates/block-view-script.php:646
+msgid "Comment:"
+msgstr ""
+
+#: templates/block-view-script.php:676
+#: assets/js/frontend.js:617
+#: assets/js/frontend.js:670
+msgid "✓ Saved"
+msgstr ""
+
+#: templates/block-view-script.php:682
+#: templates/block-view-script.php:690
+#: assets/js/frontend.js:619
+#: assets/js/frontend.js:623
+msgid "✗ Error"
+msgstr ""
+
+#: templates/block-view-script.php:777
+msgid "Please paste a valid Google Docs or Sheets URL."
+msgstr ""
+
+#: templates/block-view-script.php:787
+msgid "Remove the embedded Google Doc and return to the native editor?"
+msgstr ""
+
+#: templates/block-view-storyboard.php:144
+msgid "Add a slide"
+msgstr ""
+
+#: templates/block-view-storyboard.php:163
+msgid "Paste a Google Slides link…"
+msgstr ""
+
+#: templates/block-view-storyboard.php:164
+msgid "Google Slides URL"
+msgstr ""
+
+#: templates/block-view-storyboard.php:183
+msgid "Google Slides does not allow embedding by default. You can create a \"Link\" block to reduce the number of clicks."
+msgstr ""
+
+#: templates/block-view-storyboard.php:184
+#: templates/dashboard.php:208
+#: templates/partials/header.php:247
+#: templates/project-view.php:467
+msgid "Close"
+msgstr ""
+
+#: templates/block-view-storyboard.php:203
+msgid "Edit in Google Slides"
+msgstr ""
+
+#: templates/block-view-storyboard.php:207
+msgid "Remove the Google Slides embed"
+msgstr ""
+
+#: templates/block-view-storyboard.php:215
+msgid "View in Google Slides"
+msgstr ""
+
+#: templates/block-view-storyboard.php:234
+msgid "No slides yet."
+msgstr ""
+
+#: templates/block-view-storyboard.php:250
+#: templates/block-view-storyboard.php:417
+msgid "Insert a slide here"
+msgstr ""
+
+#: templates/block-view-storyboard.php:257
+msgid "Delete this slide"
+msgstr ""
+
+#: templates/block-view-storyboard.php:262
+msgid "Move slide"
+msgstr ""
+
+#. translators: %d: slide number
+#: templates/block-view-storyboard.php:264
+#, php-format
+msgid "Slide %d"
+msgstr ""
+
+#: templates/block-view-storyboard.php:301
+msgid "New version of this slide"
+msgstr ""
+
+#: templates/block-view-storyboard.php:302
+#: templates/block-view-versioned.php:103
+msgid "New version"
+msgstr ""
+
+#: templates/block-view-storyboard.php:306
+msgid "Delete slide"
+msgstr ""
+
+#. translators: %d: number of versions
+#: templates/block-view-storyboard.php:315
+#, php-format
+msgid "History (%d versions)"
+msgstr ""
+
+#: templates/block-view-storyboard.php:346
+#: templates/block-view-versioned.php:147
+msgid "Delete this version"
+msgstr ""
+
+#: templates/block-view-storyboard.php:363
+msgid "Enter the voice-over..."
+msgstr ""
+
+#: templates/block-view-storyboard.php:368
+msgid "Save voice-over"
+msgstr ""
+
+#: templates/block-view-storyboard.php:382
+#: templates/block-view-versioned.php:242
+#: templates/block-view-video.php:754
+#: templates/block-view-video.php:872
+msgid "No comments."
+msgstr ""
+
+#: templates/block-view-storyboard.php:404
+#: templates/block-view-versioned.php:261
+#: templates/block-view-video.php:776
+#: templates/block-view-video.php:896
+msgid "Add a comment..."
+msgstr ""
+
+#: templates/block-view-storyboard.php:443
+#: assets/js/frontend.js:747
+msgid "Uploading..."
+msgstr ""
+
+#: templates/block-view-storyboard.php:445
+msgid "files"
+msgstr ""
+
+#: templates/block-view-storyboard.php:468
+#: templates/block-view-versioned.php:366
+#: templates/block-view-video.php:1004
+msgid "e.g. Presentation"
+msgstr ""
+
+#: templates/block-view-storyboard.php:573
+msgid "Where should the new slides go?"
+msgstr ""
+
+#. translators: %d: number of existing slides
+#: templates/block-view-storyboard.php:574
+#, php-format
+msgid "There are already %d slide(s) in this storyboard."
+msgstr ""
+
+#: templates/block-view-storyboard.php:576
+msgid "Before existing slides"
+msgstr ""
+
+#: templates/block-view-storyboard.php:577
+msgid "After existing slides"
+msgstr ""
+
+#: templates/block-view-storyboard.php:697
+msgid "Delete this item?"
+msgstr ""
+
+#: templates/block-view-storyboard.php:706
+#: templates/block-view-storyboard.php:723
+#: templates/block-view-versioned.php:483
+#: templates/block-view-video.php:235
+#: templates/block-view-video.php:453
+msgid "Error while deleting"
+msgstr ""
+
+#: templates/block-view-storyboard.php:714
+msgid "Delete this slide and all its versions?"
+msgstr ""
+
+#: templates/block-view-storyboard.php:879
+msgid "Add an empty slide here?"
+msgstr ""
+
+#: templates/block-view-storyboard.php:942
+msgid "Please enter a valid Google Slides URL."
+msgstr ""
+
+#: templates/block-view-storyboard.php:983
+msgid "Remove the Google Slides embed?"
+msgstr ""
+
+#: templates/block-view-versioned.php:117
+msgid "Versions"
+msgstr ""
+
+#: templates/block-view-versioned.php:119
+msgid "No versions yet. Add a first version."
+msgstr ""
+
+#: templates/block-view-versioned.php:129
+#: templates/block-view-versioned.php:164
+#: templates/block-view-versioned.php:297
+#: templates/block-view-versioned.php:331
+msgid "Draft"
+msgstr ""
+
+#: templates/block-view-versioned.php:130
+#: templates/block-view-versioned.php:165
+#: templates/block-view-versioned.php:299
+#: templates/block-view-versioned.php:333
+msgid "Approved"
+msgstr ""
+
+#: templates/block-view-versioned.php:131
+#: templates/block-view-versioned.php:166
+msgid "Pending"
+msgstr ""
+
+#: templates/block-view-versioned.php:132
+#: templates/block-view-versioned.php:167
+msgid "Rejected"
+msgstr ""
+
+#: templates/block-view-versioned.php:133
+#: templates/block-view-versioned.php:168
+msgid "In Review"
+msgstr ""
+
+#: templates/block-view-versioned.php:134
+#: templates/block-view-versioned.php:169
+#: templates/block-view-versioned.php:300
+#: templates/block-view-versioned.php:334
+#: templates/client-view.php:118
+msgid "Archived"
+msgstr ""
+
+#: templates/block-view-versioned.php:178
+msgid "Version"
+msgstr ""
+
+#: templates/block-view-versioned.php:184
+msgid "Date"
+msgstr ""
+
+#: templates/block-view-versioned.php:190
+#: templates/block-view-video.php:727
+#: templates/block-view-video.php:845
+msgid "Notes"
+msgstr ""
+
+#: templates/block-view-versioned.php:205
+msgid "Open PDF"
+msgstr ""
+
+#: templates/block-view-versioned.php:224
+msgid "Agency note"
+msgstr ""
+
+#: templates/block-view-versioned.php:226
+msgid "Enter an internal note..."
+msgstr ""
+
+#: templates/block-view-versioned.php:229
+msgid "Save note"
+msgstr ""
+
+#: templates/block-view-versioned.php:282
+msgid "Add a version"
+msgstr ""
+
+#: templates/block-view-versioned.php:287
+msgid "File (JPEG/PNG/SVG/PDF)"
+msgstr ""
+
+#: templates/block-view-versioned.php:291
+#: templates/block-view-versioned.php:325
+msgid "Version name"
+msgstr ""
+
+#: templates/block-view-versioned.php:292
+#: templates/block-view-versioned.php:326
+msgid "e.g. V2 - Color adjustments"
+msgstr ""
+
+#: templates/block-view-versioned.php:298
+#: templates/block-view-versioned.php:332
+msgid "In review"
+msgstr ""
+
+#: templates/block-view-versioned.php:304
+#: templates/block-view-versioned.php:338
+msgid "Notes (optional)"
+msgstr ""
+
+#: templates/block-view-versioned.php:305
+#: templates/block-view-versioned.php:339
+msgid "Internal notes or context for this version"
+msgstr ""
+
+#: templates/block-view-versioned.php:310
+#: templates/block-view-versioned.php:591
+#: templates/block-view-versioned.php:601
+msgid "Add version"
+msgstr ""
+
+#: templates/block-view-versioned.php:319
+msgid "Edit version"
+msgstr ""
+
+#: templates/block-view-versioned.php:470
+msgid "Are you sure you want to delete this version? All associated comments will also be deleted."
+msgstr ""
+
+#: templates/block-view-versioned.php:545
+#: templates/client-view.php:704
+#: templates/client-view.php:709
+#: assets/js/manager.js:634
+msgid "Error while updating"
+msgstr ""
+
+#: templates/block-view-versioned.php:568
+#: templates/block-view-video.php:71
+msgid "Please select a file"
+msgstr ""
+
+#. translators: %d: file size in MB
+#: templates/block-view-video.php:63
+#, php-format
+msgid "Warning: this file is %d MB. The recommended limit is 512 MB. If the upload fails, contact your administrator."
+msgstr ""
+
+#: templates/block-view-video.php:80
+#: templates/block-view-video.php:1080
+msgid "Importing..."
+msgstr ""
+
+#: templates/block-view-video.php:95
+#: templates/block-view-video.php:101
+#: templates/block-view-video.php:115
+#: templates/block-view-video.php:122
+#: templates/block-view-video.php:934
+msgid "Import"
+msgstr ""
+
+#: templates/block-view-video.php:96
+msgid "The file exceeds the 512 MB limit. Please contact the administrator if needed."
+msgstr ""
+
+#: templates/block-view-video.php:102
+msgid "The upload timed out. The file may be too large. Try a smaller file."
+msgstr ""
+
+#: templates/block-view-video.php:126
+msgid "The upload failed. The file may be too large. Try a smaller file."
+msgstr ""
+
+#: templates/block-view-video.php:149
+msgid "Please enter a URL"
+msgstr ""
+
+#: templates/block-view-video.php:154
+msgid "Embedding..."
+msgstr ""
+
+#: templates/block-view-video.php:176
+#: templates/block-view-video.php:185
+msgid "Error while embedding"
+msgstr ""
+
+#: templates/block-view-video.php:193
+msgid "Are you sure you want to delete this embedded video?"
+msgstr ""
+
+#: templates/block-view-video.php:414
+#: templates/block-view-video.php:429
+#: templates/block-view-video.php:739
+#: templates/block-view-video.php:857
+msgid "Save notes"
+msgstr ""
+
+#: templates/block-view-video.php:430
+msgid "Error while saving"
+msgstr ""
+
+#: templates/block-view-video.php:438
+msgid "Are you sure you want to delete this video?"
+msgstr ""
+
+#: templates/block-view-video.php:637
+#: templates/block-view-video.php:920
+msgid "Import a video"
+msgstr ""
+
+#: templates/block-view-video.php:640
+#: templates/block-view-video.php:944
+msgid "Embed a video"
+msgstr ""
+
+#: templates/block-view-video.php:657
+msgid "Embedded videos"
+msgstr ""
+
+#: templates/block-view-video.php:703
+msgid "URL not recognized. Use YouTube, Vimeo, Google Drive or Dropbox."
+msgstr ""
+
+#: templates/block-view-video.php:733
+#: templates/block-view-video.php:851
+msgid "Add notes..."
+msgstr ""
+
+#: templates/block-view-video.php:803
+msgid "Imported videos"
+msgstr ""
+
+#: templates/block-view-video.php:813
+msgid "Your browser does not support video playback."
+msgstr ""
+
+#: templates/block-view-video.php:925
+msgid "Video file (MP4, MOV, AVI)"
+msgstr ""
+
+#: templates/block-view-video.php:950
+msgid "Video URL"
+msgstr ""
+
+#: templates/block-view-video.php:955
+msgid "YouTube, Vimeo, Google Drive or Dropbox"
+msgstr ""
+
+#: templates/block-view-video.php:958
+msgid "Supported formats: YouTube, Vimeo, Google Drive, Dropbox"
+msgstr ""
+
+#: templates/block-view-video.php:963
+msgid "Title (optional)"
+msgstr ""
+
+#: templates/block-view-video.php:968
+msgid "e.g. Final presentation"
+msgstr ""
+
+#: templates/block-view-video.php:1081
+msgid "Please wait."
+msgstr ""
+
+#: templates/block-view.php:101
+msgid "Add files"
+msgstr ""
+
+#: templates/block-view.php:122
+msgid "Files"
+msgstr ""
+
+#: templates/block-view.php:156
+msgid "Comments & Suggestions"
+msgstr ""
+
+#: templates/client-view.php:39
+msgid "Your Projects"
+msgstr ""
+
+#: templates/client-view.php:97
+msgid "Client page title"
+msgstr ""
+
+#: templates/client-view.php:113
+#: templates/client-view.php:132
+msgid "All"
+msgstr ""
+
+#: templates/client-view.php:121
+msgid "Search a project..."
+msgstr ""
+
+#: templates/client-view.php:124
+msgid "+ Add a Project"
+msgstr ""
+
+#: templates/client-view.php:145
+msgid "New Project"
+msgstr ""
+
+#: templates/client-view.php:150
+#: templates/client-view.php:217
+#: assets/js/emoji-picker.js:316
+msgid "Project icon"
+msgstr ""
+
+#: templates/client-view.php:163
+msgid "e.g. Marketing Campaign 2024"
+msgstr ""
+
+#: templates/client-view.php:168
+#: templates/client-view.php:246
+msgid "Cover image (optional)"
+msgstr ""
+
+#: templates/client-view.php:185
+#: templates/client-view.php:265
+msgid "Labels"
+msgstr ""
+
+#: templates/client-view.php:202
+#: templates/client-view.php:783
+#: templates/client-view.php:788
+msgid "Create project"
+msgstr ""
+
+#: templates/client-view.php:212
+msgid "Edit Project"
+msgstr ""
+
+#: templates/client-view.php:236
+msgid "Client email (optional)"
+msgstr ""
+
+#: templates/client-view.php:241
+#: templates/partials/notify-client-button.php:50
+msgid "client@example.com"
+msgstr ""
+
+#: templates/client-view.php:242
+msgid "Used for the \"Notify client\" button."
+msgstr ""
+
+#: templates/client-view.php:259
+msgid "Remove image"
+msgstr ""
+
+#: templates/client-view.php:279
+msgid "Archive this project"
+msgstr ""
+
+#: templates/client-view.php:281
+msgid "An archived project is hidden from the main view but remains accessible."
+msgstr ""
+
+#: templates/client-view.php:300
+msgid "No projects yet."
+msgstr ""
+
+#. translators: %d: project ID
+#: templates/client-view.php:305
+#: templates/partials/footer.php:36
+#: templates/partials/sidebar.php:132
+#, php-format
+msgid "Project #%d"
+msgstr ""
+
+#. translators: %d: number of blocks
+#: templates/client-view.php:343
+#, php-format
+msgid "%d block"
+msgid_plural "%d blocks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/client-view.php:399
+msgid "Archived Projects"
+msgstr ""
+
+#: templates/client-view.php:401
+msgid "No archived projects."
+msgstr ""
+
+#: templates/client-view.php:667
+#: templates/client-view.php:744
+msgid "Please enter a project name"
+msgstr ""
+
+#: templates/dashboard.php:44
+msgid "Good morning"
+msgstr ""
+
+#: templates/dashboard.php:46
+msgid "Good afternoon"
+msgstr ""
+
+#: templates/dashboard.php:48
+msgid "Good evening"
+msgstr ""
+
+#: templates/dashboard.php:52
+msgid "Have a great week! It all starts now. 💪"
+msgstr ""
+
+#: templates/dashboard.php:53
+msgid "A new week, new projects."
+msgstr ""
+
+#: templates/dashboard.php:54
+msgid "Tuesday is a day for creating."
+msgstr ""
+
+#: templates/dashboard.php:55
+msgid "Wednesday already! The week is moving."
+msgstr ""
+
+#: templates/dashboard.php:56
+msgid "Thursday — a few more sprints before the weekend."
+msgstr ""
+
+#: templates/dashboard.php:57
+msgid "Friday! Finish the week in style. ✨"
+msgstr ""
+
+#: templates/dashboard.php:58
+msgid "Have a great weekend! Get some rest. 🎉"
+msgstr ""
+
+#. translators: 1: greeting, 2: user first name
+#: templates/dashboard.php:79
+#, php-format
+msgid "%1$s, %2$s!"
+msgstr ""
+
+#: templates/dashboard.php:92
+msgid "+ New client"
+msgstr ""
+
+#. translators: %d: number of clients
+#: templates/dashboard.php:101
+#, php-format
+msgid "%d client"
+msgid_plural "%d clients"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/dashboard.php:114
+msgid "+ Create your first client"
+msgstr ""
+
+#: templates/dashboard.php:164
+msgid "Access link active"
+msgstr ""
+
+#: templates/dashboard.php:224
+msgid "e.g. ABC Company"
+msgstr ""
+
+#: templates/dashboard.php:230
+#: templates/edit-client.php:101
+msgid "Logo"
+msgstr ""
+
+#: templates/dashboard.php:251
+#: templates/edit-client.php:110
+msgid "Accent color"
+msgstr ""
+
+#: templates/dashboard.php:274
+#: assets/js/dashboard.js:22
+#: assets/js/dashboard.js:117
+#: assets/js/dashboard.js:125
+msgid "Create client"
+msgstr ""
+
+#: templates/edit-client.php:74
+msgid "Client details"
+msgstr ""
+
+#: templates/edit-client.php:88
+msgid "Portal URL"
+msgstr ""
+
+#: templates/edit-client.php:98
+msgid "Logo & Colors"
+msgstr ""
+
+#: templates/edit-client.php:115
+msgid "The client's single color — used for buttons, the header, filters and active highlights."
+msgstr ""
+
+#: templates/edit-client.php:121
+#: templates/edit-client.php:129
+msgid "Background image"
+msgstr ""
+
+#: templates/edit-client.php:124
+msgid "Cover image"
+msgstr ""
+
+#: templates/edit-client.php:130
+msgid "Displayed behind the client portal header."
+msgstr ""
+
+#: templates/edit-client.php:145
+msgid "An inactive client can no longer access their space."
+msgstr ""
+
+#: templates/edit-client.php:150
+msgid "Access link"
+msgstr ""
+
+#: templates/edit-client.php:173
+msgid "Generate an access link"
+msgstr ""
+
+#: templates/edit-client.php:176
+msgid "Regenerate token"
+msgstr ""
+
+#: templates/edit-client.php:179
+msgid "Revoke access"
+msgstr ""
+
+#: templates/edit-client.php:185
+#: templates/project-view.php:414
+#: templates/project-view.php:462
+#: assets/js/manager.js:343
+#: assets/js/manager.js:476
+msgid "Loading…"
+msgstr ""
+
+#: templates/edit-client.php:188
+msgid "Share it only with the client concerned."
+msgstr ""
+
+#: templates/partials/footer.php:33
+msgid "Latest projects"
+msgstr ""
+
+#: templates/partials/header.php:146
+msgid "Portal preview"
+msgstr ""
+
+#: templates/partials/header.php:168
+msgid "WP Admin"
+msgstr ""
+
+#: templates/partials/header.php:178
+msgid "Previous page"
+msgstr ""
+
+#: templates/partials/header.php:203
+msgid "Navigation"
+msgstr ""
+
+#: templates/partials/header.php:246
+msgid "Close session"
+msgstr ""
+
+#: templates/partials/header.php:274
+msgid "Are you sure you want to close your session?"
+msgstr ""
+
+#: templates/partials/notify-client-button.php:29
+#: templates/partials/notify-client-button.php:41
+msgid "Notify client"
+msgstr ""
+
+#: templates/partials/notify-client-button.php:47
+msgid "Client email"
+msgstr ""
+
+#: templates/partials/notify-client-button.php:53
+msgid "Name"
+msgstr ""
+
+#: templates/partials/notify-client-button.php:58
+msgid "Subject"
+msgstr ""
+
+#: templates/partials/notify-client-button.php:63
+msgid "Message"
+msgstr ""
+
+#: templates/partials/notify-client-button.php:65
+msgid "Your message…"
+msgstr ""
+
+#: templates/partials/notify-client-button.php:67
+msgid "A secure link to this block will be added automatically."
+msgstr ""
+
+#: templates/partials/sidebar.php:37
+msgid "Manager navigation"
+msgstr ""
+
+#: templates/partials/sidebar.php:42
+#: assets/js/manager.js:102
+msgid "Collapse menu"
+msgstr ""
+
+#. translators: %s: client name
+#: templates/partials/sidebar.php:78
+#: templates/partials/sidebar.php:86
+#, php-format
+msgid "Edit %s"
+msgstr ""
+
+#. translators: %s: client name
+#: templates/partials/sidebar.php:98
+#, php-format
+msgid "Back to %s portal"
+msgstr ""
+
+#. translators: %s: client name
+#: templates/partials/sidebar.php:99
+msgid "Back to portal"
+msgstr ""
+
+#: templates/partials/sidebar.php:104
+msgid "Back to project"
+msgstr ""
+
+#: templates/partials/sidebar.php:109
+msgid "Back to project list"
+msgstr ""
+
+#: templates/partials/sidebar.php:152
+msgid "Show blocks"
+msgstr ""
+
+#. translators: %d: block ID
+#: templates/partials/sidebar.php:166
+#, php-format
+msgid "Block #%d"
+msgstr ""
+
+#: templates/partials/sidebar.php:202
+#: templates/partials/sidebar.php:212
+msgid "Log out"
+msgstr ""
+
+#: templates/project-view.php:99
+msgid "Change cover"
+msgstr ""
+
+#: templates/project-view.php:99
+msgid "Add a cover"
+msgstr ""
+
+#: templates/project-view.php:103
+msgid "Remove cover"
+msgstr ""
+
+#: templates/project-view.php:111
+#: templates/project-view.php:117
+msgid "Find all your project deliverables here"
+msgstr ""
+
+#: templates/project-view.php:118
+msgid "Click to edit"
+msgstr ""
+
+#: templates/project-view.php:126
+msgid "+ Add a block"
+msgstr ""
+
+#: templates/project-view.php:131
+msgid "Add a progress bar"
+msgstr ""
+
+#: templates/project-view.php:134
+msgid "Add a separator"
+msgstr ""
+
+#: templates/project-view.php:139
+#: templates/project-view.php:425
+msgid "Save a layout"
+msgstr ""
+
+#: templates/project-view.php:144
+#: templates/project-view.php:456
+msgid "Import a layout"
+msgstr ""
+
+#: templates/project-view.php:177
+msgid "New Block"
+msgstr ""
+
+#: templates/project-view.php:183
+msgid "Block type"
+msgstr ""
+
+#: templates/project-view.php:186
+msgid "-- Choose a type --"
+msgstr ""
+
+#: templates/project-view.php:199
+#: templates/project-view.php:346
+msgid "Block title"
+msgstr ""
+
+#: templates/project-view.php:204
+msgid "e.g. Final script"
+msgstr ""
+
+#: templates/project-view.php:213
+#: templates/project-view.php:686
+msgid "Create block"
+msgstr ""
+
+#: templates/project-view.php:227
+msgid "Define the steps and their progress."
+msgstr ""
+
+#: templates/project-view.php:230
+msgid "Add a step"
+msgstr ""
+
+#: templates/project-view.php:338
+msgid "Edit Block"
+msgstr ""
+
+#: templates/project-view.php:363
+msgid "Media Library"
+msgstr ""
+
+#: templates/project-view.php:367
+msgid "Project assets"
+msgstr ""
+
+#: templates/project-view.php:376
+msgid "Allow media download"
+msgstr ""
+
+#: templates/project-view.php:383
+msgid "Allow client comments"
+msgstr ""
+
+#: templates/project-view.php:390
+msgid "Receive notifications"
+msgstr ""
+
+#: templates/project-view.php:409
+msgid "Choose an image from the project"
+msgstr ""
+
+#: templates/project-view.php:416
+msgid "No images found in this project."
+msgstr ""
+
+#: templates/project-view.php:430
+msgid "Layout name"
+msgstr ""
+
+#: templates/project-view.php:431
+msgid "e.g. Standard layout"
+msgstr ""
+
+#: templates/project-view.php:434
+msgid "Include in the layout:"
+msgstr ""
+
+#: templates/project-view.php:435
+msgid "Blocks (titles + types)"
+msgstr ""
+
+#: templates/project-view.php:436
+msgid "Grid layout (sizes)"
+msgstr ""
+
+#: templates/project-view.php:437
+msgid "Descriptions / content"
+msgstr ""
+
+#: templates/project-view.php:438
+msgid "Block external links"
+msgstr ""
+
+#: templates/project-view.php:439
+msgid "Separators"
+msgstr ""
+
+#: templates/project-view.php:440
+msgid "Card thumbnails"
+msgstr ""
+
+#: templates/project-view.php:441
+msgid "Project thumbnail"
+msgstr ""
+
+#: templates/project-view.php:442
+msgid "Block settings (client comments, downloads)"
+msgstr ""
+
+#: templates/project-view.php:460
+msgid "Select a layout to import. New blocks will be created in this project."
+msgstr ""
+
+#: templates/project-view.php:464
+msgid "No saved layouts."
+msgstr ""
+
+#: templates/project-view.php:687
+msgid "Error while creating the block"
+msgstr ""
+
+#: templates/project-view.php:708
+msgid "No blocks for this project."
+msgstr ""
+
+#: templates/project-view.php:767
+msgid "No steps defined"
+msgstr ""
+
+#: templates/project-view.php:871
+msgid "View details"
+msgstr ""
+
+#: templates/project-view.php:892
+msgid "Resize"
+msgstr ""
+
+#: templates/project-view.php:1001
+msgid "Step name"
+msgstr ""
+
+#: templates/project-view.php:1190
+msgid "Choose a cover image"
+msgstr ""
+
+#: templates/project-view.php:1210
+msgid "Delete the cover image?"
+msgstr ""
+
+#: assets/js/admin.js:57
+#: assets/js/frontend.js:1092
+msgid "✓ Copied!"
+msgstr ""
+
+#: assets/js/admin.js:79
+msgid ""
+"WARNING: This action cannot be undone.\n"
+"\n"
+"It permanently deletes:\n"
+"- The client\n"
+"- All of its projects\n"
+"- All blocks and comments\n"
+"- All uploaded files\n"
+"\n"
+"Continue?"
+msgstr ""
+
+#: assets/js/admin.js:118
+msgid "New comment on your project"
+msgstr ""
+
+#: assets/js/admin.js:119
+msgid "Hello Marie,"
+msgstr ""
+
+#: assets/js/admin.js:120
+msgid "Here is a preview of your email's content."
+msgstr ""
+
+#: assets/js/admin.js:125
+msgid "Great work, I love the new version!"
+msgstr ""
+
+#: assets/js/admin.js:126
+msgid "Summer 2026 Campaign"
+msgstr ""
+
+#: assets/js/admin.js:128
+msgid "My Agency"
+msgstr ""
+
+#: assets/js/dashboard.js:91
+msgid "Creating…"
+msgstr ""
+
+#: assets/js/dashboard.js:123
+msgid "Server error. Check the logs."
+msgstr ""
+
+#: assets/js/dashboard.js:145
+#: assets/js/dashboard.js:169
+msgid "Link copied to clipboard!"
+msgstr ""
+
+#: assets/js/dashboard.js:153
+msgid "Legacy token — go to Edit client to regenerate it."
+msgstr ""
+
+#: assets/js/dashboard.js:155
+msgid "Unable to retrieve the access link."
+msgstr ""
+
+#: assets/js/dashboard.js:158
+msgid "Server error while retrieving the link."
+msgstr ""
+
+#: assets/js/edit-client.js:41
+msgid "URL copied!"
+msgstr ""
+
+#: assets/js/edit-client.js:49
+msgid "Link copied!"
+msgstr ""
+
+#: assets/js/edit-client.js:120
+msgid "Changes saved!"
+msgstr ""
+
+#: assets/js/edit-client.js:151
+msgid "Link expired — click \"Regenerate\""
+msgstr ""
+
+#: assets/js/edit-client.js:173
+msgid "Access link generated!"
+msgstr ""
+
+#: assets/js/edit-client.js:175
+msgid "Error while generating."
+msgstr ""
+
+#: assets/js/edit-client.js:182
+msgid "Regenerate the token? The old access link will become invalid."
+msgstr ""
+
+#: assets/js/edit-client.js:192
+msgid "Token regenerated!"
+msgstr ""
+
+#: assets/js/edit-client.js:201
+msgid "Revoke access? The client will no longer be able to access their space."
+msgstr ""
+
+#: assets/js/edit-client.js:216
+msgid "Access revoked."
+msgstr ""
+
+#: assets/js/edit-client.js:225
+msgid "Permanently delete this client? This action cannot be undone and will delete all of its projects, blocks and files."
+msgstr ""
+
+#: assets/js/edit-client.js:236
+msgid "Client deleted. Redirecting…"
+msgstr ""
+
+#: assets/js/emoji-picker.js:349
+#: assets/js/emoji-picker.js:382
+msgid "Type a keyword to find an emoji"
+msgstr ""
+
+#: assets/js/emoji-picker.js:404
+msgid "No emoji found"
+msgstr ""
+
+#: assets/js/frontend.js:681
+msgid "✗ Error while saving"
+msgstr ""
+
+#: assets/js/frontend.js:973
+msgid "Please enter the client's email address."
+msgstr ""
+
+#: assets/js/frontend.js:1005
+#: assets/js/frontend.js:1008
+msgid "Sending failed."
+msgstr ""
+
+#: assets/js/frontend.js:1027
+msgid "Are you sure you want to close this session?"
+msgstr ""
+
+#: assets/js/frontend.js:1043
+msgid "Error while logging out"
+msgstr ""
+
+#: assets/js/manager.js:102
+msgid "Expand menu"
+msgstr ""
+
+#: assets/js/manager.js:394
+msgid "Error while loading images."
+msgstr ""
+
+#: assets/js/manager.js:450
+msgid "Layout saved!"
+msgstr ""
+
+#: assets/js/manager.js:452
+#: assets/js/manager.js:457
+msgid "Error while saving."
+msgstr ""
+
+#: assets/js/manager.js:517
+msgid "Error while loading."
+msgstr ""
+
+#: assets/js/manager.js:523
+msgid "Import this layout? New blocks will be created in the project."
+msgstr ""
+
+#: assets/js/manager.js:535
+#: assets/js/manager.js:538
+msgid "Error while importing."
+msgstr ""
+
+#: assets/js/manager.js:543
+msgid "Delete this layout?"
+msgstr ""

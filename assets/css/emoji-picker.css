@@ -1,0 +1,175 @@
+/**
+ * Agency Emoji Picker Component
+ * Simple et moderne pour sélection d'emojis
+ */
+
+.agency-emoji-picker {
+    display: inline-block;
+    position: relative;
+}
+
+.agency-emoji-display {
+    font-size: 32px;
+    cursor: pointer;
+    padding: 8px;
+    border: 2px solid var(--agency-border-color);
+    border-radius: var(--agency-radius-small);
+    background: var(--agency-light-bg);
+    transition: var(--agency-transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+}
+
+.agency-emoji-display:hover {
+    border-color: var(--agency-primary-color);
+    transform: scale(1.05);
+}
+
+.agency-emoji-popup {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    background: var(--agency-secondary-color);
+    border: 1px solid var(--agency-border-color);
+    border-radius: var(--agency-radius-small);
+    box-shadow: var(--agency-shadow-strong);
+    padding: 15px;
+    z-index: 1000;
+    min-width: 320px;
+    max-width: 380px;
+}
+
+.agency-emoji-popup.active {
+    display: block;
+}
+
+.agency-emoji-search {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--agency-border-color);
+    border-radius: var(--agency-radius-small);
+    font-size: 14px;
+    color: var(--agency-text-color);
+    background: var(--agency-light-bg);
+    margin-bottom: 10px;
+    transition: var(--agency-transition);
+}
+
+.agency-emoji-search:focus {
+    outline: none;
+    border-color: var(--agency-primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+}
+
+.agency-emoji-search::placeholder {
+    color: var(--agency-text-muted);
+}
+
+.agency-emoji-grid-container {
+    max-height: 320px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.agency-emoji-grid-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.agency-emoji-grid-container::-webkit-scrollbar-track {
+    background: var(--agency-light-bg);
+    border-radius: 4px;
+}
+
+.agency-emoji-grid-container::-webkit-scrollbar-thumb {
+    background: var(--agency-border-color);
+    border-radius: 4px;
+}
+
+.agency-emoji-grid-container::-webkit-scrollbar-thumb:hover {
+    background: var(--agency-text-muted);
+}
+
+.agency-emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+}
+
+.agency-emoji-placeholder {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 20px 10px;
+    color: var(--agency-text-muted);
+    font-size: 13px;
+}
+
+.agency-emoji-option {
+    font-size: 28px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    text-align: center;
+    transition: var(--agency-transition);
+    border: 2px solid transparent;
+}
+
+.agency-emoji-option:hover {
+    background: var(--agency-light-bg);
+    transform: scale(1.15);
+}
+
+.agency-emoji-option.selected {
+    border-color: var(--agency-primary-color);
+    background: var(--agency-light-bg);
+}
+
+.agency-emoji-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--agency-text-color);
+}
+
+/* Dark Theme */
+.agency-theme-dark .agency-emoji-popup {
+    background: #111827;
+}
+
+.agency-theme-dark .agency-emoji-display {
+    background: #0b0f14;
+}
+
+.agency-theme-dark .agency-emoji-search {
+    background: #0b0f14;
+    border-color: #374151;
+}
+
+.agency-theme-dark .agency-emoji-grid-container::-webkit-scrollbar-track {
+    background: #0b0f14;
+}
+
+.agency-theme-dark .agency-emoji-grid-container::-webkit-scrollbar-thumb {
+    background: #374151;
+}
+
+.agency-theme-dark .agency-emoji-grid-container::-webkit-scrollbar-thumb:hover {
+    background: #4b5563;
+}
+
+.agency-theme-dark .agency-emoji-option:hover {
+    background: #1f2937;
+}
+
+.agency-theme-dark .agency-emoji-option.selected {
+    background: #1f2937;
+}
+
+/* Modal + formulaires : squelette déplacé dans assets/css/ui.css
+   (primitives partagées, chargées sur toutes les pages) */
+

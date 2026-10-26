@@ -1,0 +1,556 @@
+/**
+ * Agency Frontend Styles
+ * Style moderne et épuré pour l'interface client
+ */
+
+/* Rendu emoji SVG (Twemoji via AgencyEmoji). Les conteneurs ci-dessous
+ * voient leur emoji Unicode remplacé par un <img.agency-emoji-img> au
+ * chargement. Fallback natif via la pile de polices système si JS échoue. */
+.agency-emoji-display,
+.agency-emoji-option,
+.emoji-display,
+.link-emoji {
+    font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+}
+
+.agency-emoji-img {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    vertical-align: -0.15em;
+    object-fit: contain;
+}
+
+/* Dans le picker, agrandir les SVGs pour qu'ils remplissent la cellule */
+.agency-emoji-display .agency-emoji-img {
+    width: 1.4em;
+    height: 1.4em;
+    vertical-align: middle;
+}
+.agency-emoji-option .agency-emoji-img {
+    width: 1.6em;
+    height: 1.6em;
+    vertical-align: middle;
+}
+
+/* Variables CSS : centralisées dans assets/css/tokens.css (handle agency-tokens) */
+
+/* Fix horizontal scroll on mobile caused by blur elements */
+body {
+    width: 100%;
+    position: relative;
+}
+
+/* =======================================================
+   MODE SOMBRE — Variables de couleurs injectées dynamiquement par PHP.
+   Voir Agency_Frontend::load_global_branding()
+   ======================================================= */
+
+.agency-theme-dark .project-description,
+.agency-theme-dark .block-text-content,
+.agency-theme-dark .comment-content,
+.agency-theme-dark .asset-name,
+.agency-theme-dark .media-filename {
+    color: var(--agency-text-color);
+}
+
+
+
+.agency-theme-dark a {
+    color: #ffffff;
+}
+
+.agency-theme-dark a:hover {
+    color: #ffffff90;
+}
+
+/* Reset & Base */
+.agency-wrapper {
+    color: var(--agency-text-color);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--agency-light-bg);
+}
+
+.agency-wrapper * {
+    box-sizing: border-box;
+}
+
+/* Container */
+.agency-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+}
+
+/* ========================================
+   MODERN FIXED HEADER
+   ======================================== */
+.agency-header-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--agency-header-height);
+    background: var(--agency-header-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: var(--agency-shadow);
+    z-index: 99990;
+    transition: var(--agency-transition);
+}
+
+.agency-header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 30px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.agency-header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.agency-header-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    transition: var(--agency-transition);
+}
+
+.agency-header-logo:hover {
+    transform: scale(1.05);
+}
+
+.agency-header-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+}
+
+.agency-header-center img {
+    pointer-events: auto;
+}
+
+.agency-header-right {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.agency-header-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.breadcrumb-item {
+    color: var(--agency-text-color);
+    text-decoration: none;
+    transition: var(--agency-transition);
+    white-space: nowrap;
+}
+
+.breadcrumb-link:hover {
+    color: var(--agency-primary-color);
+}
+
+.breadcrumb-current {
+    font-weight: 600;
+}
+
+.breadcrumb-separator {
+    color: var(--agency-text-muted);
+    opacity: 0.5;
+}
+
+.agency-header-user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-display-name {
+    font-size: 14px;
+    color: var(--agency-text-muted);
+}
+
+.agency-header-logout {
+    font-size: 14px;
+    color: var(--agency-text-color);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: var(--agency-radius-small);
+    background: var(--agency-light-bg);
+    border: 1px solid var(--agency-border-color);
+    transition: var(--agency-transition);
+}
+
+.agency-header-logout:hover {
+    background: var(--agency-primary-color);
+    color: #ffffff;
+    border-color: var(--agency-primary-color);
+}
+
+/* Spacer to compensate for fixed header */
+.agency-header-spacer {
+    height: var(--agency-header-height);
+}
+
+/* Responsive Header */
+@media (max-width: 768px) {
+    .agency-header-container {
+        padding: 0 15px;
+    }
+
+    .agency-header-breadcrumb {
+        display: none;
+    }
+
+    .user-display-name {
+        display: none;
+    }
+
+    .agency-header-right {
+        gap: 10px;
+    }
+}
+
+/* Main */
+.agency-main {
+    flex: 1;
+    padding: 40px 0;
+    background: var(--agency-light-bg);
+    position: relative;
+    z-index: 1; /* Restored */
+}
+
+.agency-title {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    padding: 30px 0px 30px 0px;
+    color: var(--agency-text-color);
+    text-align: center;
+}
+
+.agency-title-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.agency-title[contenteditable="true"] {
+    outline: none;
+    cursor: text;
+}
+
+.agency-title[contenteditable="true"]:focus {
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.agency-title.is-saving {
+    opacity: 0.7;
+}
+
+.agency-title-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.agency-title-status {
+    font-size: 13px;
+    color: var(--agency-text-muted);
+}
+
+.agency-title-status.success {
+    color: #16a34a;
+}
+
+.agency-title-status.error {
+    color: var(--agency-danger);
+}
+
+.agency-subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--agency-text-muted);
+    margin-top: -20px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.agency-subtitle-editable {
+    cursor: text;
+    outline: none;
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-left: -6px;
+    transition: background 0.2s;
+}
+
+.agency-subtitle-editable:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.agency-subtitle-editable:focus {
+    background: rgba(0, 0, 0, 0.06);
+    box-shadow: 0 0 0 2px var(--agency-primary-color);
+}
+
+.agency-theme-dark .agency-subtitle-editable:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.agency-theme-dark .agency-subtitle-editable:focus {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 2px var(--agency-primary-color);
+}
+
+/* Buttons + icônes : primitives déplacées dans assets/css/ui.css */
+
+/* Lazy loading backgrounds */
+[data-bg-lazy] {
+    background-color: var(--agency-light-bg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+[data-bg-lazy].bg-loaded {
+    animation: agency-fade-in 0.3s ease;
+}
+
+@keyframes agency-fade-in {
+    from { opacity: 0.7; }
+    to { opacity: 1; }
+}
+
+/* Actions */
+.agency-actions {
+    margin-bottom: 30px;
+    display: flex;
+    gap: 10px;
+}
+
+.agency-form-inline {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.agency-image-preview {
+    margin-top: 10px;
+}
+
+.agency-image-preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    border: 1px solid var(--agency-border-color);
+}
+
+/* Projects Grid */
+
+
+/* ============================================================
+   Règles rapatriées depuis _overrides.css (dissolution du patch layer)
+   ============================================================ */
+
+/* ========================================
+   v0.9.11 — MOBILE HEADER ENHANCEMENTS
+   ======================================== */
+/* Flèche retour — cachée sur desktop */
+.agency-back-arrow {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: currentColor;
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: background 0.2s;
+}
+
+.agency-back-arrow:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.agency-theme-dark .agency-back-arrow:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.agency-header-edit-client {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 11px;
+    border-radius: var(--agency-radius-small);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: currentColor;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background 0.15s, border-color 0.15s;
+    opacity: 0.85;
+}
+
+.agency-header-edit-client:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.6);
+    opacity: 1;
+}
+
+/* Liste de projets dans le menu mobile — cachée par défaut */
+.agency-mobile-projects {
+    display: none;
+    width: 100%;
+}
+
+.agency-mobile-projects-label {
+    font-size: 0.75em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--agency-text-muted);
+    margin: 0 0 6px;
+    padding: 0 12px;
+}
+
+.agency-mobile-projects ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.agency-mobile-projects ul li a {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: var(--agency-radius-small);
+    color: var(--agency-text-color);
+    text-decoration: none;
+    font-size: 0.95em;
+    transition: background 0.2s;
+    min-height: 44px;
+}
+
+.agency-mobile-projects ul li a:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.agency-theme-dark .agency-mobile-projects ul li a:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Fix overlap with WP Admin Bar — portail agency : header et sidebar restent à top:0 */
+body.admin-bar .agency-header-fixed {
+    top: 32px;
+}
+
+@media screen and (max-width: 782px) {
+    body.admin-bar .agency-header-fixed {
+        top: 46px;
+    }
+}
+
+/* Pages avec cover (projet/client) : header reste à top:0 même avec l'admin bar */
+body.admin-bar .agency-wrapper:has(.agency-client-cover) .agency-header-fixed,
+body.admin-bar .agency-wrapper:has(.agency-project-cover) .agency-header-fixed {
+    top: 0;
+}
+
+.agency-theme-dark .agency-header-fixed {
+    border-bottom-color: var(--agency-border-color);
+}
+
+/* --- 25. Logout button: consistent in dark mode --- */
+.agency-theme-dark .agency-header-logout {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--agency-border-color);
+    color: var(--agency-text-color);
+}
+
+.agency-theme-dark .agency-header-logout:hover {
+    background: var(--agency-primary-color);
+    color: #ffffff;
+    border-color: var(--agency-primary-color);
+}
+
+@media (max-width: 768px) and (min-width: 783px) {
+    body.admin-bar .agency-header-right {
+        top: calc(var(--agency-header-height) + 32px);
+    }
+}
+
+/* Fix 8 — project-view: subtitle immediately follows title */
+body.agency-project-view .agency-title {
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+}
+
+/* Radius bouton : intégré à .agency-btn dans assets/css/ui.css */
+/* ============================================================
+ * Header en mode édition client (header_mode = 'edit')
+ * ============================================================ */
+.agency-header-mode-edit .agency-header-edit-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--agency-text-color);
+    margin-left: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 280px;
+}
+
+.agency-header-mode-edit .agency-header-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.agency-header-mode-edit .agency-header-actions .agency-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+@media (max-width: 600px) {
+    .agency-header-mode-edit .agency-header-edit-title { display: none; }
+    .agency-header-mode-edit .agency-header-actions .agency-btn { padding: 8px 12px; font-size: 12px; }
+}
+
+/* ============================================================
+ * Mode client (token authentifié).
+ * Sélection via body.agency-client-mode (ajouté côté PHP).
+ * Note : le header doit rester identique à la vue projet ; on ne
+ * surcharge donc plus la bordure du header ni le bouton « Fermer »
+ * (le bouton garde le style standard .agency-header-logout).
+ * ============================================================ */
+body.agency-client-mode .admin-only {
+    display: none !important;
+}

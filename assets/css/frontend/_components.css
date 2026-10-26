@@ -1,0 +1,878 @@
+/* ========================================
+   DARK THEME — new components
+   ======================================== */
+
+.agency-theme-dark .agency-label-filter,
+.agency-theme-dark .agency-label-toggle {
+    background: #111827;
+    border-color: #374151;
+    color: var(--agency-text-color);
+}
+
+.agency-theme-dark .agency-label-filter.active,
+.agency-theme-dark .agency-label-toggle.selected {
+    background: var(--agency-primary-color);
+    border-color: var(--agency-primary-color);
+    color: #ffffff;
+}
+
+.agency-theme-dark .agency-separator-block .separator-inner::before,
+.agency-theme-dark .agency-separator-block .separator-inner::after {
+    background: #374151;
+}
+
+.agency-theme-dark .agency-link-manager-panel {
+    background: #111827;
+    border-color: #374151;
+}
+
+.agency-theme-dark .agency-link-display {
+    background: #111827;
+    border-color: #374151;
+}
+
+.agency-theme-dark .version-history-list {
+    background: #111827;
+}
+
+.agency-theme-dark .suggest-slide-form {
+    background: #111827;
+}
+
+.agency-theme-dark .suggest-text-input {
+    background: #0b0f14;
+    border-color: #374151;
+    color: var(--agency-text-color);
+}
+
+.agency-theme-dark .storyboard-insert-btn {
+    background: #111827;
+    border-color: #374151;
+}
+
+/* ========================================
+   PROJECT COVER ACTIONS
+   ======================================== */
+
+.project-cover-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0 8px 0;
+}
+
+/* Danger button variant : déplacé dans assets/css/ui.css */
+
+/* ========================================
+   BLOCK DESCRIPTIONS (script, versioned)
+   ======================================== */
+
+.script-description,
+.block-description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--agency-text-muted);
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    background: var(--agency-light-bg);
+    border-radius: var(--agency-radius);
+
+    min-height: 36px;
+}
+
+.script-description[contenteditable="true"],
+.block-description[contenteditable="true"] {
+    cursor: text;
+    outline: none;
+    border-left-color: var(--agency-primary-color);
+    transition: var(--agency-transition);
+}
+.script-description[contenteditable="true"]:focus,
+.block-description[contenteditable="true"]:focus {
+    background: var(--agency-bg-color, #fff);
+    box-shadow: 0 0 0 2px rgba(var(--agency-primary-rgb, 0,0,0), 0.1);
+}
+.script-description:empty::before,
+.block-description:empty::before {
+    content: attr(data-placeholder);
+    color: var(--agency-text-muted);
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Dark theme */
+.agency-theme-dark .script-description,
+.agency-theme-dark .block-description {
+    background: #0b0f14;
+    border-left-color: #374151;
+}
+.agency-theme-dark .project-cover-actions .agency-btn-secondary {
+    border-color: #374151;
+    color: var(--agency-text-color);
+}
+
+/* ========================================
+   PROJECT ASSETS PICKER
+   ======================================== */
+
+.agency-modal-content--wide {
+    max-width: 760px;
+}
+
+.project-assets-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.project-assets-picker-item {
+    cursor: pointer;
+    border-radius: var(--agency-radius);
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+    aspect-ratio: 1;
+    background: var(--agency-light-bg);
+}
+
+.project-assets-picker-item:hover {
+    border-color: var(--agency-primary-color);
+    transform: scale(1.03);
+}
+
+.project-assets-picker-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.project-assets-picker-loading {
+    color: var(--agency-text-muted);
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+}
+
+/* ========================================
+   BLOCK PRESETS
+   ======================================== */
+
+.agency-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--agency-text-color);
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+
+.agency-checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--agency-primary-color, #0073aa);
+}
+
+.presets-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+.presets-list-loading {
+    color: var(--agency-text-muted);
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+}
+
+.preset-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1px solid var(--agency-border-color);
+    border-radius: 8px;
+    background: var(--agency-bg-secondary, #f8f9fa);
+}
+
+.preset-card-thumb {
+    width: 56px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.preset-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.preset-card-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--agency-text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.preset-card-date {
+    font-size: 12px;
+    color: var(--agency-text-muted);
+}
+
+.preset-card-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.google-doc-section {
+    margin-top: 24px;
+}
+
+.google-doc-iframe {
+    width: 100%;
+    height: 80vh;
+    min-height: 500px;
+    border: 1px solid var(--agency-border-color);
+    border-radius: var(--agency-radius);
+}
+
+.google-doc-cta {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+
+/* ========================================
+   FILE DEPOSIT BLOCK
+   ======================================== */
+
+.file-deposit-settings {
+    background: var(--agency-light-bg);
+    border: 1px solid var(--agency-border-color);
+    border-radius: var(--agency-radius);
+    padding: 20px 24px;
+    margin: 24px 0;
+}
+
+.file-deposit-settings h3 {
+    margin: 0 0 16px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.file-deposit-settings-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+}
+
+.file-deposit-settings-form .agency-form-group {
+    flex: 1;
+    min-width: 180px;
+    margin: 0;
+}
+
+.file-deposit-upload {
+    margin: 24px 0;
+}
+
+.file-deposit-upload h3 {
+    margin: 0 0 8px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.file-deposit-constraints {
+    font-size: 13px;
+    color: var(--agency-text-muted);
+    margin: 0 0 12px;
+}
+
+.file-deposit-zone {
+    border: 2px dashed var(--agency-border-color);
+    border-radius: var(--agency-radius);
+    padding: 32px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.file-deposit-zone:hover,
+.file-deposit-zone.is-dragover {
+    border-color: var(--agency-primary-color);
+    background: var(--agency-light-bg);
+}
+
+.file-deposit-zone-icon {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.file-deposit-zone p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--agency-text-muted);
+}
+
+.file-deposit-input-hidden {
+    display: none;
+}
+
+.file-deposit-progress-bar {
+    background: var(--agency-border-color);
+    border-radius: 4px;
+    height: 6px;
+    overflow: hidden;
+    margin: 12px 0 4px;
+}
+
+.file-deposit-progress-fill {
+    background: var(--agency-primary-color);
+    height: 100%;
+    width: 0;
+    transition: width 0.2s ease;
+}
+
+.file-deposit-progress-label {
+    font-size: 12px;
+    color: var(--agency-text-muted);
+}
+
+.file-deposit-error {
+    color: var(--agency-danger);
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+.file-deposit-list {
+    margin-top: 32px;
+}
+
+.file-deposit-list h3 {
+    margin: 0 0 16px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.file-deposit-empty {
+    color: var(--agency-text-muted);
+    font-size: 14px;
+}
+
+.file-deposit-items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.file-deposit-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--agency-secondary-color);
+    border: 1px solid var(--agency-border-color);
+    border-radius: var(--agency-radius);
+    padding: 12px 16px;
+}
+
+.file-deposit-item-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.file-deposit-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.file-deposit-item-name {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-deposit-item-meta {
+    display: block;
+    font-size: 12px;
+    color: var(--agency-text-muted);
+    margin-top: 2px;
+}
+
+.file-deposit-item-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* === File Deposit — Dark Mode === */
+.agency-theme-dark .file-deposit-settings,
+.agency-theme-dark .file-deposit-upload,
+.agency-theme-dark .file-deposit-list {
+    color: var(--agency-text-color);
+}
+
+.agency-theme-dark .file-deposit-zone {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.agency-theme-dark .file-deposit-zone:hover,
+.agency-theme-dark .file-deposit-zone.is-dragover {
+    border-color: var(--agency-primary-color);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.agency-theme-dark .file-deposit-item {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.agency-theme-dark .file-deposit-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.agency-theme-dark .file-deposit-item-name {
+    color: var(--agency-text-color);
+}
+
+.agency-theme-dark .file-deposit-item-meta {
+    color: var(--agency-text-muted);
+}
+
+.agency-theme-dark .file-deposit-item-icon {
+    color: var(--agency-text-muted);
+}
+
+.agency-theme-dark .file-deposit-settings h3,
+.agency-theme-dark .file-deposit-upload h3,
+.agency-theme-dark .file-deposit-list h3 {
+    color: var(--agency-text-color);
+}
+
+.agency-theme-dark .file-deposit-constraints {
+    color: var(--agency-text-muted);
+}
+
+.agency-theme-dark .file-deposit-progress-bar {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.agency-theme-dark .file-deposit-empty {
+    color: var(--agency-text-muted);
+}
+
+/* ========================================
+   v0.9.4 — PDF PREVIEW (Versioned Media)
+   ======================================== */
+
+.versioned-pdf-preview {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pdf-preview-frame {
+    width: 100%;
+    height: 600px;
+    border: 1px solid var(--agency-border-color, #e0e0e0);
+    border-radius: var(--agency-radius-small);
+    background: #fff;
+}
+
+.pdf-download-fallback {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: var(--agency-secondary-color, #fff);
+    border: 1px solid var(--agency-border-color, #e0e0e0);
+    border-radius: var(--agency-radius-small);
+    font-size: 14px;
+}
+
+.pdf-download-fallback .file-icon {
+    font-size: 20px;
+}
+
+.pdf-download-fallback .file-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ========================================
+   v0.9.4 — UPLOAD PROGRESS OVERLAY
+   ======================================== */
+
+/* Overlay fourni par le squelette .agency-modal (assets/css/ui.css) */
+.agency-upload-modal {
+    padding: 40px 48px;
+    max-width: 420px;
+    text-align: center;
+}
+
+.agency-upload-modal h3 {
+    margin: 0 0 16px;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--agency-text-color, #333);
+}
+
+.upload-progress-info {
+    font-size: 14px;
+    color: var(--agency-text-muted, #6b7280);
+    margin-bottom: 16px;
+}
+
+.upload-progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background: var(--agency-border-color, #e0e0e0);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.upload-progress-bar-fill {
+    height: 100%;
+    background: var(--agency-primary-color, #000);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+/* ========================================
+   v0.9.4 — STORYBOARD SLIDE DELETE BUTTON
+   ======================================== */
+
+.storyboard-item {
+    position: relative;
+}
+
+.storyboard-slide-delete {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 5;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.35);
+    color: #fff;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s, background 0.2s;
+}
+
+.storyboard-item:hover .storyboard-slide-delete {
+    opacity: 1;
+}
+
+.storyboard-slide-delete:hover {
+    background: var(--agency-danger);
+}
+
+/* ========================================
+   v0.9.4 — HAMBURGER MENU (mobile)
+   ======================================== */
+
+.agency-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.agency-hamburger:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.agency-hamburger span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--agency-text-color, #333);
+    border-radius: 1px;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+.agency-hamburger.is-active span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.agency-hamburger.is-active span:nth-child(2) {
+    opacity: 0;
+}
+
+.agency-hamburger.is-active span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ========================================
+   v0.9.4 — MOBILE RESPONSIVE OVERRIDES
+   ======================================== */
+
+@media (max-width: 768px) {
+    /* Show hamburger on mobile */
+    .agency-hamburger {
+        display: flex;
+    }
+
+    /* Ensure dropdown isn't clipped and header is fixed */
+    .agency-header-fixed {
+        overflow: visible;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 99990;
+    }
+
+    /* Fix project card overflow on mobile */
+    .block-title-small,
+    .agency-project-card .block-title,
+    .agency-project-card h3 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+    }
+
+    .agency-project-card {
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    /* Header layout */
+    .agency-header-container {
+        flex-wrap: nowrap;
+        position: relative;
+        padding: 0 12px;
+    }
+
+    .agency-header-left {
+        flex: 1;
+        min-width: 0;
+    }
+
+    /* Hide right section by default on mobile */
+    .agency-header-right {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--agency-header-bg, rgba(255,255,255,0.95));
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        flex-direction: column;
+        padding: 16px 20px;
+        gap: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        border-top: 1px solid var(--agency-border-color, #e0e0e0);
+        z-index: 99991;
+        overflow-y: auto;
+        max-height: 80vh;
+    }
+
+    .agency-header-right.is-open {
+        display: flex;
+    }
+
+    /* Breadcrumb vertical on mobile menu */
+    .agency-header-breadcrumb {
+        flex-direction: column;
+        gap: 8px;
+        font-size: 0.9em;
+    }
+
+    .breadcrumb-separator {
+        display: none;
+    }
+
+    .breadcrumb-item {
+        padding: 6px 0;
+    }
+
+    /* User section in mobile menu */
+    .agency-header-user {
+        padding-top: 8px;
+        border-top: 1px solid var(--agency-border-color, #e0e0e0);
+    }
+
+    /* Reduced paddings on mobile */
+    .agency-main {
+        padding-top: 16px;
+    }
+
+    .agency-container {
+        padding: 0 12px;
+    }
+
+    /* Prevent horizontal overflow on mobile */
+    .agency-wrapper {
+        overflow-x: hidden;
+    }
+
+    .agency-wrapper,
+    .agency-main,
+    .agency-container,
+    .agency-block-view {
+        max-width: 100%;
+    }
+
+    .agency-block {
+        min-width: 0;
+    }
+
+    .block-header-full {
+        padding: 16px;
+    }
+
+    /* Storyboard items stacking */
+    .storyboard-item {
+        flex-direction: column;
+    }
+
+    .storyboard-media,
+    .storyboard-comments {
+        width: 100%;
+    }
+
+    /* Upload overlay mobile */
+    .agency-upload-modal {
+        padding: 28px 24px;
+        max-width: 90%;
+    }
+
+    /* PDF preview smaller on mobile */
+    .pdf-preview-frame {
+        height: 350px;
+    }
+
+    /* Slide delete always visible on mobile (no hover) */
+    .storyboard-slide-delete {
+        opacity: 1;
+    }
+}
+
+/* Dark theme adjustments for new elements */
+.agency-theme-dark .agency-hamburger span {
+    background: var(--agency-text-color, #e4e4e7);
+}
+
+.agency-theme-dark .agency-hamburger:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.agency-theme-dark .agency-upload-modal {
+    background: var(--agency-card-bg, #16191f);
+}
+
+.agency-theme-dark .storyboard-slide-delete {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.agency-theme-dark .pdf-preview-frame {
+    background: #1a1a2e;
+    border-color: var(--agency-border-color);
+}
+
+/* ============================================================
+   Règles rapatriées depuis _overrides.css (dissolution du patch layer)
+   ============================================================ */
+
+/* === Storyboard Upload Position Modal (v0.9.11) ===
+   Overlay et boîte fournis par le squelette .agency-modal (assets/css/ui.css) */
+.agency-position-modal .agency-modal-content {
+    max-width: 400px;
+    text-align: center;
+}
+
+.agency-position-modal .agency-modal-title {
+    font-weight: 700;
+    font-size: 1.1em;
+    margin: 0 0 8px;
+}
+
+.agency-position-modal .agency-modal-sub {
+    color: var(--agency-text-muted);
+    font-size: 0.9em;
+    margin: 0 0 24px;
+}
+
+.agency-position-modal .agency-modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.agency-resize-tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 1000;
+    transform: translate(-50%, -100%);
+    margin-top: -10px;
+}
+
+/* Popin « Notifier le client » — retour d'état */
+.notify-client-feedback {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.notify-client-feedback.is-error {
+    background: #fdecea;
+    color: #b3261e;
+    border: 1px solid #f5c6c2;
+}
+
+.notify-client-feedback.is-success {
+    background: #e8f5e9;
+    color: #1b5e20;
+    border: 1px solid #c3e6cb;
+}

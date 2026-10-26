@@ -1,0 +1,362 @@
+/* ========================================
+   SIDEBAR MANAGER — Navigation latérale
+   ======================================== */
+
+/* Tokens --agency-sidebar-* : centralisés dans assets/css/tokens.css,
+   surchargés dynamiquement par Agency_Frontend::load_global_branding() */
+
+.agency-manager-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    box-sizing: border-box;
+    padding-top: var(--agency-header-height);
+    width: var(--agency-sidebar-width-open);
+    background: var(--agency-sidebar-bg);
+    z-index: 99980;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Pages sans cover : le header descend sous l'admin bar, la sidebar suit */
+body.admin-bar .agency-manager-sidebar {
+    padding-top: calc(var(--agency-header-height) + 32px);
+}
+@media screen and (max-width: 782px) {
+    body.admin-bar .agency-manager-sidebar {
+        padding-top: calc(var(--agency-header-height) + 46px);
+    }
+}
+/* Pages avec cover : le header reste à top:0 même avec l'admin bar */
+body.admin-bar .agency-wrapper:has(.agency-client-cover) .agency-manager-sidebar,
+body.admin-bar .agency-wrapper:has(.agency-project-cover) .agency-manager-sidebar {
+    padding-top: var(--agency-header-height);
+}
+
+.agency-sidebar-closed .agency-manager-sidebar {
+    width: var(--agency-sidebar-width-closed);
+}
+
+/* Bouton toggle (chevron, positionné en fixed sur le bord droit de la sidebar) */
+.agency-sidebar-toggle {
+    position: fixed;
+    left: calc(var(--agency-sidebar-width-open) - 12px);
+    top: 50vh;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--agency-sidebar-bg);
+    border: 1.5px solid var(--agency-sidebar-border);
+    color: var(--agency-sidebar-text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99981;
+    padding: 0;
+    flex-shrink: 0;
+    transition: left 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.15s,
+                transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.agency-sidebar-toggle:hover {
+    background: var(--agency-sidebar-accent);
+    color: var(--agency-sidebar-text-hover);
+}
+.agency-sidebar-closed .agency-sidebar-toggle {
+    left: calc(var(--agency-sidebar-width-closed) - 12px);
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* Conteneur interne scrollable */
+.agency-sidebar-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--agency-sidebar-accent) transparent;
+}
+.agency-sidebar-inner::-webkit-scrollbar { width: 4px; }
+.agency-sidebar-inner::-webkit-scrollbar-track { background: transparent; }
+.agency-sidebar-inner::-webkit-scrollbar-thumb {
+    background: var(--agency-sidebar-accent);
+    border-radius: 2px;
+}
+
+/* Zones top / middle / bottom */
+.agency-sidebar-top,
+.agency-sidebar-bottom {
+    flex-shrink: 0;
+    padding: 8px 0;
+}
+.agency-sidebar-top {
+    border-bottom: 1px solid var(--agency-sidebar-border);
+}
+.agency-sidebar-bottom {
+    border-top: 1px solid var(--agency-sidebar-border);
+    margin-top: auto;
+}
+.agency-sidebar-middle {
+    flex: 1;
+    padding: 8px 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Éléments de navigation */
+.agency-sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+    color: var(--agency-sidebar-text);
+    text-decoration: none;
+    white-space: nowrap;
+    min-height: 40px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 0.15s, color 0.15s;
+}
+.agency-sidebar-item:hover {
+    background: var(--agency-sidebar-accent);
+    color: var(--agency-sidebar-text-hover);
+    text-decoration: none;
+}
+.agency-sidebar-item--active {
+    background: var(--agency-sidebar-active-bg);
+    color: var(--agency-sidebar-text-hover);
+}
+.agency-sidebar-item--back {
+    color: var(--agency-sidebar-muted);
+    font-size: 12px;
+    border-bottom: 1px solid var(--agency-sidebar-border);
+    margin-bottom: 4px;
+}
+.agency-sidebar-item--logout {
+    color: rgba(255, 160, 160, 0.8);
+}
+.agency-sidebar-item--logout:hover {
+    color: #ffaaaa;
+    background: rgba(255, 80, 80, 0.12);
+}
+
+/* Icône */
+.agency-sidebar-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    font-size: 16px;
+    line-height: 1;
+}
+.agency-sidebar-icon svg {
+    display: block;
+}
+
+/* Label — masqué en mode réduit */
+.agency-sidebar-label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex: 1;
+    max-width: 170px;
+    opacity: 1;
+    transition: opacity 0.15s, max-width 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.agency-sidebar-closed .agency-sidebar-label {
+    opacity: 0;
+    max-width: 0;
+    pointer-events: none;
+}
+
+/* En-tête de section */
+.agency-sidebar-section {
+    padding: 4px 0;
+}
+.agency-sidebar-section-label {
+    display: block;
+    padding: 6px 14px 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--agency-sidebar-muted);
+    overflow: hidden;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+}
+.agency-sidebar-closed .agency-sidebar-section-label {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Décalage du contenu principal selon l'état de la sidebar */
+.agency-has-sidebar.agency-sidebar-open .agency-main {
+    margin-left: var(--agency-sidebar-width-open);
+    transition: margin-left 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.agency-has-sidebar.agency-sidebar-closed .agency-main {
+    margin-left: var(--agency-sidebar-width-closed);
+    transition: margin-left 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Mobile — overlay sans pousser le contenu */
+@media (max-width: 768px) {
+    .agency-manager-sidebar {
+        width: var(--agency-sidebar-width-closed);
+        z-index: 99995;
+    }
+    .agency-sidebar-open .agency-manager-sidebar {
+        width: var(--agency-sidebar-width-open);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.4);
+    }
+    .agency-has-sidebar.agency-sidebar-open .agency-main,
+    .agency-has-sidebar.agency-sidebar-closed .agency-main {
+        margin-left: var(--agency-sidebar-width-closed);
+    }
+}
+
+/* Tooltip CSS sur les icônes en mode réduit */
+.agency-sidebar-closed .agency-sidebar-item[title]:hover::after {
+    content: attr(title);
+    position: fixed;
+    left: calc(var(--agency-sidebar-width-closed) + 8px);
+    background: #2d2d2d;
+    color: #ffffff;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 99999;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Fix 4 : header-left reste à droite de la sidebar ── */
+.agency-has-sidebar.agency-sidebar-open .agency-header-left {
+    padding-left: var(--agency-sidebar-width-open);
+    transition: padding-left 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.agency-has-sidebar.agency-sidebar-closed .agency-header-left {
+    padding-left: var(--agency-sidebar-width-closed);
+    transition: padding-left 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@media (max-width: 768px) {
+    .agency-has-sidebar .agency-header-left {
+        padding-left: 0;
+    }
+}
+
+/* ── Fix 5 : nom de projet cliquable dans la sidebar ── */
+a.agency-sidebar-section-label--link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    display: block;
+}
+a.agency-sidebar-section-label--link:hover {
+    color: var(--agency-sidebar-text-hover);
+    text-decoration: none;
+}
+
+/* ── Fix 7 : bouton "Modifier le client" sur le portail ── */
+.agency-portal-manager-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+}
+/* ── Sidebar v2 : badge portail, groupes projets, toggles blocs ── */
+
+/* Badge "Portail {client}" en haut de la sidebar */
+.agency-sidebar-portal-badge {
+    display: block;
+    padding: 4px 12px 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--agency-sidebar-text);
+    opacity: 0.45;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.agency-sidebar-closed .agency-sidebar-portal-badge {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Conteneur de groupe projet (lien + toggle + sous-blocs) */
+.agency-sidebar-project-group {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ligne projet : lien + bouton toggle côte à côte */
+.agency-sidebar-project-row {
+    display: flex;
+    align-items: center;
+}
+.agency-sidebar-project-row .agency-sidebar-item {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Bouton toggle chevron */
+.agency-sidebar-project-toggle {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--agency-sidebar-text);
+    opacity: 0.5;
+    border-radius: 4px;
+    margin-right: 4px;
+    transition: opacity 0.15s, transform 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0;
+}
+.agency-sidebar-project-toggle:hover {
+    opacity: 1;
+    background: var(--agency-sidebar-accent);
+}
+.agency-sidebar-project-group.is-open > .agency-sidebar-project-row .agency-sidebar-project-toggle {
+    opacity: 0.8;
+    transform: rotate(90deg);
+}
+.agency-sidebar-closed .agency-sidebar-project-toggle {
+    display: none;
+}
+
+/* Sous-liste de blocs */
+.agency-sidebar-blocks {
+    display: none;
+    padding-left: 8px;
+    border-left: 1px solid var(--agency-sidebar-border);
+    margin-left: 16px;
+    margin-bottom: 4px;
+}
+.agency-sidebar-project-group.is-open > .agency-sidebar-blocks {
+    display: block;
+}
+.agency-sidebar-closed .agency-sidebar-blocks {
+    display: none !important;
+}
+
+/* Items blocs légèrement plus petits */
+.agency-sidebar-blocks .agency-sidebar-item {
+    font-size: 12px;
+    padding: 5px 8px;
+}

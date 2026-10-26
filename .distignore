@@ -1,0 +1,14 @@
+# Exclus de l'archive publiée sur WordPress.org
+/.git
+/.github
+/.wordpress-org
+/design
+/node_modules
+/vendor
+.gitignore
+.distignore
+.DS_Store
+README.md
+CONTRIBUTING.md
+*.zip
+*.log

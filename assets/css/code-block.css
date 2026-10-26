@@ -1,0 +1,184 @@
+/**
+ * Agency Code Block Styles
+ */
+
+/* ---- Wrapper ---- */
+.agency-code-block-wrapper {
+    position: relative;
+    border-radius: var(--agency-radius-small);
+    overflow: hidden;
+    background: #1e1e2e;
+    box-shadow: var(--agency-shadow-strong);
+    margin: 0 0 24px;
+    max-width: 100%;
+}
+
+/* ---- File name label ---- */
+.agency-code-block-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #16161e;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    color: #7580b8;
+    letter-spacing: 0.3px;
+}
+
+.agency-code-block-label svg {
+    opacity: 0.5;
+    flex-shrink: 0;
+}
+
+/* ---- Prism overrides to match palenight feel ---- */
+.agency-code-block-wrapper pre[class*="language-"],
+.agency-code-block-wrapper code[class*="language-"] {
+    background: #1e1e2e;
+    color: #bfc7d5;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Courier New', monospace;
+    font-size: 13.5px;
+    line-height: 1.7;
+    tab-size: 4;
+}
+
+.agency-code-block-wrapper pre[class*="language-"] {
+    margin: 0;
+    padding: 20px 20px 20px 0;
+    border-radius: 0;
+    overflow-x: auto;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Line numbers column */
+.agency-code-block-wrapper .line-numbers .line-numbers-rows {
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+    background: #191927;
+    padding: 20px 0;
+    top: 0;
+}
+
+.agency-code-block-wrapper .line-numbers-rows > span::before {
+    color: #4c5374;
+}
+
+/* ---- Copy button ---- */
+.agency-code-copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.78);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    line-height: 1;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.12s ease;
+    z-index: 5;
+    backdrop-filter: blur(6px);
+}
+
+.agency-code-block-wrapper:has(.agency-code-block-label) .agency-code-copy-btn {
+    top: 40px;
+}
+
+.agency-code-copy-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.22);
+}
+
+.agency-code-copy-btn:active {
+    transform: scale(0.96);
+}
+
+.agency-code-copy-btn:focus-visible {
+    outline: 2px solid rgba(166, 227, 161, 0.6);
+    outline-offset: 2px;
+}
+
+/* Icon swap: copy icon by default, check on .copied */
+.agency-code-copy-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    position: relative;
+}
+
+.agency-code-copy-icon .icon-copy,
+.agency-code-copy-icon .icon-check {
+    position: absolute;
+    inset: 0;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.agency-code-copy-icon .icon-check {
+    opacity: 0;
+    transform: scale(0.6);
+}
+
+.agency-code-copy-btn.copied {
+    background: rgba(166, 227, 161, 0.22);
+    color: #a6e3a1;
+    border-color: rgba(166, 227, 161, 0.55);
+}
+
+.agency-code-copy-btn.copied .icon-copy {
+    opacity: 0;
+    transform: scale(0.6);
+}
+
+.agency-code-copy-btn.copied .icon-check {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.agency-code-copy-btn.copy-error {
+    background: rgba(243, 139, 168, 0.18);
+    color: #f38ba8;
+    border-color: rgba(243, 139, 168, 0.5);
+}
+
+/* ---- Empty state (manager view, no code yet) ---- */
+.agency-code-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    gap: 12px;
+    color: var(--agency-text-muted);
+    text-align: center;
+    border: 2px dashed var(--agency-border-color);
+    border-radius: var(--agency-radius-small);
+    background: var(--agency-light-bg);
+}
+
+/* ---- Modal textarea ---- */
+#code-block-content {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    resize: vertical;
+    min-height: 280px;
+    background: #1e1e2e;
+    color: #bfc7d5;
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+#code-block-content:focus {
+    outline: none;
+    border-color: var(--agency-primary-color);
+    box-shadow: 0 0 0 2px rgba(var(--agency-primary-color), 0.15);
+}
