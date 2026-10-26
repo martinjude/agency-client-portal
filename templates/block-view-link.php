@@ -60,117 +60,81 @@ $back_url = home_url("/client/{$client->slug}/project/{$project->slug}");
 
                 <?php include AGENCY_PLUGIN_DIR . 'templates/partials/block-head.php'; ?>
 
-                <div class="block-columns">
-                    <!-- Left column: link content -->
-                    <div class="block-column-main">
+                <div class="block-header-full agency-bv-bar">
+                    <?php if ($subtitle || $is_manager): ?>
+                    <p class="block-description<?php echo $is_manager ? ' agency-block-subtitle--editable' : ''; ?>"
+                       <?php if ($is_manager): ?>contenteditable="true" data-block-id="<?php echo esc_attr($block->id); ?>"<?php endif; ?>>
+                        <?php echo esc_html($subtitle); ?>
+                    </p>
+                    <?php endif; ?>
+                    <?php if ($link_url): ?>
+                    <div class="agency-actions">
+                        <a href="<?php echo esc_url($link_url); ?>" class="agency-btn" target="_blank" rel="noopener noreferrer">
+                            <?php Agency_Icons::render_ui('external', 16); ?> <?php esc_html_e('Open link', 'agency-client-portal'); ?>
+                        </a>
+                    </div>
+                    <?php endif; ?>
+                </div>
+
+                <div class="agency-bp-grid">
+                    <div class="agency-bp-main">
 
                         <?php if ($is_manager): ?>
-                        <!-- Manager: URL config + background image -->
-                        <div class="agency-link-manager-panel">
-                            <div class="agency-form-group">
-                                <label class="agency-form-label" for="link-block-url"><?php esc_html_e('Target URL', 'agency-client-portal'); ?></label>
-                                <div class="agency-form-inline">
-                                    <input type="url"
-                                           id="link-block-url"
-                                           class="agency-form-input"
-                                           value="<?php echo esc_attr($link_url); ?>"
-                                           placeholder="<?php esc_attr_e('https://...', 'agency-client-portal'); ?>">
-                                    <button type="button" class="agency-btn agency-btn-primary" id="save-link-url-btn">
-                                        <?php esc_html_e('Save', 'agency-client-portal'); ?>
-                                    </button>
-                                </div>
-                                <p class="agency-form-hint"><?php esc_html_e('The client will be redirected to this URL when clicking.', 'agency-client-portal'); ?></p>
-                            </div>
+                        <!-- Manager : URL cible + image de fond -->
+                        <section class="agency-bp-card agency-link-manager-panel">
+                            <header class="agency-bp-card__head agency-bp-card__head--rule">
+                                <h3 class="agency-bp-card__title"><?php esc_html_e('Destination', 'agency-client-portal'); ?></h3>
+                            </header>
 
-                            <div class="agency-form-group">
-                                <label class="agency-form-label" for="link-block-bg"><?php esc_html_e('Background image (optional)', 'agency-client-portal'); ?></label>
+                            <label class="agency-bp-label" for="link-block-url"><?php esc_html_e('Target URL', 'agency-client-portal'); ?></label>
+                            <div class="agency-form-inline">
+                                <input type="url" id="link-block-url" class="agency-form-input"
+                                       value="<?php echo esc_attr($link_url); ?>"
+                                       placeholder="<?php esc_attr_e('https://...', 'agency-client-portal'); ?>">
+                                <button type="button" class="agency-btn agency-btn-primary" id="save-link-url-btn">
+                                    <?php esc_html_e('Save', 'agency-client-portal'); ?>
+                                </button>
+                            </div>
+                            <p class="agency-bp-hint agency-bp-hint--icon">
+                                <?php Agency_Icons::render('lock', 14); ?>
+                                <?php esc_html_e('The client will be redirected to this URL when clicking.', 'agency-client-portal'); ?>
+                            </p>
+
+                            <div class="agency-bp-notes">
+                                <label class="agency-bp-label" for="link-block-bg"><?php esc_html_e('Background image (optional)', 'agency-client-portal'); ?></label>
                                 <div class="agency-form-inline">
-                                    <input type="url"
-                                           id="link-block-bg"
-                                           class="agency-form-input"
+                                    <input type="url" id="link-block-bg" class="agency-form-input"
                                            value="<?php echo esc_attr($bg_image_url); ?>"
                                            placeholder="<?php esc_attr_e('Image URL', 'agency-client-portal'); ?>">
-                                    <button type="button" class="agency-btn agency-btn-secondary" id="link-bg-choose-btn">
-                                        <?php esc_html_e('Choose', 'agency-client-portal'); ?>
+                                    <button type="button" class="agency-btn" id="link-bg-choose-btn">
+                                        <?php Agency_Icons::render('image', 16); ?> <?php esc_html_e('Choose', 'agency-client-portal'); ?>
                                     </button>
                                     <?php if ($bg_image_url): ?>
-                                    <button type="button" class="agency-btn agency-btn-danger" id="link-bg-clear-btn"><?php Agency_Icons::render('x', 14); ?></button>
+                                    <button type="button" class="agency-btn-icon agency-btn-icon--danger" id="link-bg-clear-btn" aria-label="<?php esc_attr_e('Remove', 'agency-client-portal'); ?>"><?php Agency_Icons::render_ui('x', 16); ?></button>
                                     <?php endif; ?>
                                 </div>
                             </div>
-                        </div>
-                        <?php endif; ?>
-
-                        <!-- Link display (visible to all) -->
-                        <?php if ($link_url): ?>
-                        <div class="agency-link-display<?php echo $bg_image_url ? ' has-block-bg' : ''; ?>"
-                             <?php if ($bg_image_url): ?>style="background-image: url('<?php echo esc_url($bg_image_url); ?>'); background-size: cover; background-position: center;"<?php endif; ?>>
-                            <div class="agency-link-display-inner">
-                                <span class="link-icon"><?php Agency_Icons::render('link', 16); ?></span>
-                                <p class="link-label"><?php echo esc_html($block->title); ?></p>
-                                <a href="<?php echo esc_url($link_url); ?>"
-                                   class="agency-btn agency-btn-primary agency-link-open-btn"
-                                   target="_blank"
-                                   rel="noopener noreferrer">
-                                    <?php esc_html_e('Open link', 'agency-client-portal'); ?> →
-                                </a>
-                            </div>
-                        </div>
-                        <?php elseif ($is_manager): ?>
-                        <div class="agency-link-empty">
-                            <p><?php esc_html_e('No URL set. Enter the URL above.', 'agency-client-portal'); ?></p>
-                        </div>
+                        </section>
                         <?php endif; ?>
 
                         <?php if (!empty($block->content)): ?>
-                        <div class="block-content-text" style="margin-top: 24px;">
+                        <div class="block-content-text">
                             <?php echo wp_kses_post($block->content); ?>
                         </div>
                         <?php endif; ?>
 
+                        <?php if (!$is_manager): ?>
+                        <?php include AGENCY_PLUGIN_DIR . 'templates/partials/link-preview-card.php'; ?>
+                        <?php endif; ?>
+
                     </div>
 
-                    <!-- Right column: Comments -->
-                    <div class="block-column-right">
-                        <div class="block-comments">
-                            <h3><?php esc_html_e('Comments', 'agency-client-portal'); ?></h3>
-
-                            <div class="comments-list" id="comments-list">
-                                <?php if (empty($comments)): ?>
-                                    <p class="no-comments"><?php esc_html_e('No comments yet.', 'agency-client-portal'); ?></p>
-                                <?php else: ?>
-                                    <?php foreach ($comments as $comment): ?>
-                                        <div class="comment-item" data-comment-id="<?php echo esc_attr($comment->id); ?>">
-                                            <div class="comment-header">
-                                                <span class="comment-author"><?php echo esc_html($comment->user->display_name); ?></span>
-                                                <span class="comment-date"><?php echo esc_html(Agency_Template::time_ago($comment->created_at)); ?></span>
-                                            </div>
-                                            <div class="comment-content">
-                                                <?php echo wp_kses_post($comment->content); ?>
-                                            </div>
-                                            <?php if ($is_manager || get_current_user_id() === (int)$comment->user_id): ?>
-                                                <div class="comment-actions">
-                                                    <button class="agency-btn-text delete-comment" data-comment-id="<?php echo esc_attr($comment->id); ?>">
-                                                        <?php esc_html_e('Delete', 'agency-client-portal'); ?>
-                                                    </button>
-                                                </div>
-                                            <?php endif; ?>
-                                        </div>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </div>
-
-                            <div class="comment-form">
-                                <h4><?php esc_html_e('Add a comment', 'agency-client-portal'); ?></h4>
-                                <form id="new-comment-form">
-                                    <textarea name="comment_content" id="comment-content" rows="4" placeholder="<?php esc_attr_e('Your comment...', 'agency-client-portal'); ?>" required></textarea>
-                                    <button type="submit" class="agency-btn agency-btn-primary">
-                                        <?php esc_html_e('Send', 'agency-client-portal'); ?>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                    <aside class="agency-bp-aside">
+                        <?php if ($is_manager): ?>
+                        <?php include AGENCY_PLUGIN_DIR . 'templates/partials/link-preview-card.php'; ?>
+                        <?php endif; ?>
+                        <?php $cm_comments = $comments; include AGENCY_PLUGIN_DIR . 'templates/partials/block-comments.php'; ?>
+                    </aside>
                 </div>
 
             </div>
@@ -255,47 +219,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     <?php endif; ?>
-
-    // Comments: submit
-    var commentForm = document.getElementById('new-comment-form');
-    if (commentForm) {
-        commentForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            var content = document.getElementById('comment-content').value.trim();
-            if (!content) return;
-            var submitBtn = commentForm.querySelector('button[type=submit]');
-            submitBtn.disabled = true;
-
-            fetch(agencyData.rest_url + 'comments', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': agencyData.nonce },
-                body: JSON.stringify({ block_id: <?php echo intval($block->id); ?>, content: content })
-            })
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                if (data.success) {
-                    window.location.reload();
-                } else {
-                    submitBtn.disabled = false;
-                }
-            })
-            .catch(function() { submitBtn.disabled = false; });
-        });
-    }
-
-    // Comments: delete
-    document.querySelectorAll('.delete-comment').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            if (!confirm(<?php echo wp_json_encode(__('Delete this comment?', 'agency-client-portal')); ?>)) return;
-            var id = btn.getAttribute('data-comment-id');
-            fetch(agencyData.rest_url + 'comments/' + id, {
-                method: 'DELETE',
-                headers: { 'X-WP-Nonce': agencyData.nonce }
-            })
-            .then(function(r) { return r.json(); })
-            .then(function(data) { if (data.success) window.location.reload(); });
-        });
-    });
 });
 <?php wp_print_inline_script_tag(ob_get_clean()); ?>
 

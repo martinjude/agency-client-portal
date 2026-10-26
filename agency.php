@@ -3,7 +3,7 @@
  * Plugin Name: Agency Client Portal
  * Plugin URI: https://github.com/martinjude/agency-client-portal
  * Description: Client portal for creative agencies and freelances.
- * Version: 2.0.0
+ * Version: 2.0.1
  * Author: Martin Jude
  * Author URI: https://martinjude.fr
  * Text Domain: agency-client-portal
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Définir les constantes du plugin
-define('AGENCY_VERSION', '2.0.0');
+define('AGENCY_VERSION', '2.0.1');
 define('AGENCY_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('AGENCY_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('AGENCY_PLUGIN_FILE', __FILE__);

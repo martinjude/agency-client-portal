@@ -125,42 +125,76 @@ $external_links = Agency_External_Link::get_by_block($block_id);
                     ></iframe>
                 </div>
                 <?php else: ?>
-                <div class="block-two-column-layout<?php echo !Agency_Block::client_can_comment_allowed($block) ? ' no-comments' : ''; ?>">
-                    <!-- Left Column: Script Content (2/3) -->
-                    <div class="block-column-left">
-
-                        <div class="script-editor-section">
-                            <h3><?php esc_html_e('Script', 'agency-client-portal'); ?></h3>
+                <?php $can_comment = Agency_Block::client_can_comment_allowed($block); ?>
+                <div class="agency-bp-grid<?php echo !$can_comment ? ' agency-bp-grid--solo' : ''; ?>">
+                    <!-- Colonne principale : contenu du script -->
+                    <div class="agency-bp-main">
+                        <section class="agency-bp-card script-editor-section">
+                            <header class="agency-bp-card__head">
+                                <h3 class="agency-bp-card__title"><?php esc_html_e('Script', 'agency-client-portal'); ?></h3>
+                                <?php if ($is_manager): ?>
+                                <span class="script-save-status is-saved" data-label-saved="<?php esc_attr_e('Saved', 'agency-client-portal'); ?>" data-label-dirty="<?php esc_attr_e('Unsaved changes', 'agency-client-portal'); ?>" data-label-error="<?php esc_attr_e('Error', 'agency-client-portal'); ?>"><?php Agency_Icons::render_ui('check', 14); ?><span class="script-save-status__text"><?php esc_html_e('Saved', 'agency-client-portal'); ?></span></span>
+                                <?php endif; ?>
+                            </header>
 
                             <?php if ($is_manager): ?>
-                                <!-- Rich text editor for manager -->
+                                <!-- Éditeur riche (manager) -->
                                 <div class="script-editor-wrapper">
-                                    <div class="script-toolbar">
-                                        <button type="button" class="toolbar-btn" data-command="bold" title="<?php esc_attr_e('Bold', 'agency-client-portal'); ?>">
-                                            <strong>B</strong>
-                                        </button>
-                                        <button type="button" class="toolbar-btn" data-command="highlight" title="<?php esc_attr_e('Highlight', 'agency-client-portal'); ?>">
-                                            <span style="background: yellow; padding: 2px 4px;">H</span>
-                                        </button>
-                                        <button type="button" class="toolbar-btn" data-command="highlight-comment" title="<?php esc_attr_e('Highlight with comment', 'agency-client-portal'); ?>">
-                                            <?php Agency_Icons::render('comment', 16); ?>
-                                        </button>
+                                    <div class="script-toolbar" role="toolbar">
+                                        <select class="script-tool-select" data-command="fontName" aria-label="<?php esc_attr_e('Font', 'agency-client-portal'); ?>">
+                                            <option value="Inter">Inter</option>
+                                            <option value="Georgia">Georgia</option>
+                                            <option value="Courier New">Courier New</option>
+                                        </select>
+                                        <select class="script-tool-select script-tool-select--size" data-command="fontSize" aria-label="<?php esc_attr_e('Size', 'agency-client-portal'); ?>">
+                                            <?php foreach (array(12, 14, 16, 18, 20, 24) as $agency_px): ?>
+                                            <option value="<?php echo intval($agency_px); ?>"<?php selected($agency_px, 16); ?>><?php echo intval($agency_px); ?> px</option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <span class="script-toolbar__sep"></span>
+                                        <button type="button" class="toolbar-btn" data-command="bold" title="<?php esc_attr_e('Bold', 'agency-client-portal'); ?>"><strong>B</strong></button>
+                                        <button type="button" class="toolbar-btn" data-command="italic" title="<?php esc_attr_e('Italic', 'agency-client-portal'); ?>"><em>I</em></button>
+                                        <button type="button" class="toolbar-btn" data-command="underline" title="<?php esc_attr_e('Underline', 'agency-client-portal'); ?>"><u>U</u></button>
+                                        <div class="script-color">
+                                            <button type="button" class="toolbar-btn script-color__btn" data-command="color-toggle" title="<?php esc_attr_e('Text colour', 'agency-client-portal'); ?>" aria-haspopup="true" aria-expanded="false">
+                                                <span class="script-color__dot" style="background: var(--ag-client);"></span>
+                                                <?php Agency_Icons::render_ui('chevron-down', 12); ?>
+                                            </button>
+                                            <div class="script-color__pop" hidden>
+                                                <div class="script-color__grid">
+                                                    <?php foreach (array('#FFFFFF', '#A1A1AA', '#71717A', '#52525B', '#7C83FD', '#4ADE80', '#FBBF24', '#F87171', '#60A5FA', '#34D399', '#F59E0B', '#EF4444', '#A78BFA', '#22D3EE', '#FB923C', '#EC4899') as $agency_sw): ?>
+                                                    <button type="button" class="script-color__swatch" data-color="<?php echo esc_attr($agency_sw); ?>" style="background: <?php echo esc_attr($agency_sw); ?>;" aria-label="<?php echo esc_attr($agency_sw); ?>"></button>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                                <div class="script-color__custom">
+                                                    <span><?php esc_html_e('Custom', 'agency-client-portal'); ?></span>
+                                                    <input type="text" class="script-color__hex" value="<?php echo esc_attr(Agency_Template::client_color($client)); ?>" maxlength="7" aria-label="<?php esc_attr_e('Hex colour', 'agency-client-portal'); ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="script-toolbar__sep"></span>
+                                        <button type="button" class="toolbar-btn" data-command="justifyLeft" title="<?php esc_attr_e('Align left', 'agency-client-portal'); ?>"><svg class="agency-icon" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 5h14M3 10h9M3 15h12"/></svg></button>
+                                        <button type="button" class="toolbar-btn" data-command="insertUnorderedList" title="<?php esc_attr_e('List', 'agency-client-portal'); ?>"><?php Agency_Icons::render_ui('list', 16); ?></button>
+                                        <button type="button" class="toolbar-btn" data-command="createLink" title="<?php esc_attr_e('Link', 'agency-client-portal'); ?>"><?php Agency_Icons::render('link', 16); ?></button>
+                                        <span class="script-toolbar__sep"></span>
+                                        <button type="button" class="toolbar-btn" data-command="highlight" title="<?php esc_attr_e('Highlight', 'agency-client-portal'); ?>"><span class="script-tool-hl">H</span></button>
+                                        <button type="button" class="toolbar-btn" data-command="highlight-comment" title="<?php esc_attr_e('Highlight with comment', 'agency-client-portal'); ?>"><?php Agency_Icons::render('comment', 16); ?></button>
                                     </div>
                                     <div
                                         id="script-content"
                                         class="script-editor"
                                         contenteditable="true"
-                                        placeholder="<?php esc_attr_e('Enter the script content here...', 'agency-client-portal'); ?>"
+                                        data-placeholder="<?php esc_attr_e('Enter the script content here...', 'agency-client-portal'); ?>"
                                     ><?php echo wp_kses_post($_bv_script_content); ?></div>
                                     <div class="script-actions">
-                                        <button class="agency-btn agency-btn-primary" id="save-script-btn">
-                                            <?php Agency_Icons::render('save', 16); ?> <?php esc_html_e('Save script', 'agency-client-portal'); ?>
+                                        <span class="script-count"></span>
+                                        <button class="agency-btn agency-btn-primary" id="save-script-btn" type="button">
+                                            <?php esc_html_e('Save', 'agency-client-portal'); ?>
                                         </button>
-                                        <span class="script-save-status"></span>
                                     </div>
                                 </div>
                             <?php else: ?>
-                                <!-- Read-only view for clients -->
+                                <!-- Lecture seule (client) -->
                                 <div class="script-content-display">
                                     <?php if ($_bv_script_content): ?>
                                         <?php echo wp_kses_post($_bv_script_content); ?>
@@ -169,53 +203,14 @@ $external_links = Agency_External_Link::get_by_block($block_id);
                                     <?php endif; ?>
                                 </div>
                             <?php endif; ?>
-                        </div>
+                        </section>
                     </div>
-                    
-                        <?php if (Agency_Block::client_can_comment_allowed($block)) : ?>
-                        <!-- Right Column: Comments (1/3) -->
-                        <div class="block-column-right">
-                            <div class="block-comments">
-                                <h3><?php esc_html_e('Comments', 'agency-client-portal'); ?></h3>
-                                
-                                <div class="comments-list" id="comments-list">
-                                    <?php if (empty($comments)): ?>
-                                        <p class="no-comments"><?php esc_html_e('No comments yet.', 'agency-client-portal'); ?></p>
-                                    <?php else: ?>
-                                        <?php foreach ($comments as $comment): ?>
-                                            <div class="comment-item" data-comment-id="<?php echo esc_attr($comment->id); ?>">
-                                                <div class="comment-header">
-                                                    <span class="comment-author"><?php echo esc_html($comment->user->display_name); ?></span>
-                                                    <span class="comment-date"><?php echo esc_html(Agency_Template::time_ago($comment->created_at)); ?></span>
-                                                </div>
-                                                <div class="comment-content">
-                                                    <?php echo wp_kses_post($comment->content); ?>
-                                                </div>
-                                                <?php if ($is_manager || get_current_user_id() === (int)$comment->user_id): ?>
-                                                    <div class="comment-actions">
-                                                        <button class="agency-btn-text delete-comment" data-comment-id="<?php echo esc_attr($comment->id); ?>">
-                                                            <?php esc_html_e('Delete', 'agency-client-portal'); ?>
-                                                        </button>
-                                                    </div>
-                                                <?php endif; ?>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </div>
-                                
-                                <!-- Comment Form -->
-                                <div class="comment-form">
-                                    <h4><?php esc_html_e('Add a comment', 'agency-client-portal'); ?></h4>
-                                    <form id="new-comment-form">
-                                        <textarea name="comment_content" id="comment-content" rows="4" placeholder="<?php esc_attr_e('Your comment...', 'agency-client-portal'); ?>" required></textarea>
-                                        <button type="submit" class="agency-btn agency-btn-primary">
-                                            <?php esc_html_e('Send', 'agency-client-portal'); ?>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <?php endif; ?>
+
+                    <?php if ($can_comment): ?>
+                    <aside class="agency-bp-aside">
+                        <?php $cm_comments = $comments; include AGENCY_PLUGIN_DIR . 'templates/partials/block-comments.php'; ?>
+                    </aside>
+                    <?php endif; ?>
                 </div>
                 <?php endif; /* google_doc_embed */ ?>
             </div>
@@ -527,101 +522,165 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Script toolbar functionality
+    // Barre d'outils de l'éditeur de script
     var scriptContent = document.getElementById('script-content');
-    var toolbarButtons = document.querySelectorAll('.script-toolbar .toolbar-btn');
+    var toolbar = document.querySelector('.script-toolbar');
+    var saveScriptBtn = document.getElementById('save-script-btn');
+    var saveStatus = document.querySelector('.script-save-status');
+    var saveStatusText = saveStatus ? saveStatus.querySelector('.script-save-status__text') : null;
+    var countEl = document.querySelector('.script-count');
+    var savedRange = null;
 
-    if (scriptContent && toolbarButtons.length > 0) {
-        toolbarButtons.forEach(function(btn) {
+    function setStatus(state) {
+        if (!saveStatus) return;
+        saveStatus.classList.remove('is-saved', 'is-dirty', 'is-error');
+        saveStatus.classList.add('is-' + state);
+        saveStatusText.textContent = saveStatus.getAttribute('data-label-' + (state === 'saved' ? 'saved' : state));
+    }
+
+    function updateCount() {
+        if (!countEl || !scriptContent) return;
+        var text = scriptContent.innerText.trim();
+        var words = text ? text.split(/\s+/).length : 0;
+        var seqs = scriptContent.querySelectorAll('h1, h2, h3, h4').length;
+        var parts = [];
+        if (seqs) parts.push(seqs + ' ' + (seqs > 1 ? <?php echo wp_json_encode(__('sequences', 'agency-client-portal')); ?> : <?php echo wp_json_encode(__('sequence', 'agency-client-portal')); ?>));
+        parts.push(words + ' ' + (words === 1 ? <?php echo wp_json_encode(__('word', 'agency-client-portal')); ?> : <?php echo wp_json_encode(__('words', 'agency-client-portal')); ?>));
+        countEl.textContent = parts.join(' · ');
+    }
+
+    // Conserve la sélection quand le focus passe sur la barre d'outils
+    document.addEventListener('selectionchange', function() {
+        var sel = window.getSelection();
+        if (sel.rangeCount && scriptContent && scriptContent.contains(sel.anchorNode)) {
+            savedRange = sel.getRangeAt(0).cloneRange();
+        }
+    });
+
+    function restoreSelection() {
+        if (!scriptContent) return;
+        scriptContent.focus();
+        if (savedRange) {
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(savedRange);
+        }
+    }
+
+    function exec(command, value) {
+        restoreSelection();
+        document.execCommand('styleWithCSS', false, true);
+        document.execCommand(command, false, value || null);
+        setStatus('dirty');
+    }
+
+    function applyFontSize(px) {
+        restoreSelection();
+        document.execCommand('fontSize', false, '7');
+        scriptContent.querySelectorAll('font[size="7"]').forEach(function(f) {
+            var span = document.createElement('span');
+            span.style.fontSize = px + 'px';
+            while (f.firstChild) span.appendChild(f.firstChild);
+            f.parentNode.replaceChild(span, f);
+        });
+        setStatus('dirty');
+    }
+
+    function highlightSelection(withComment) {
+        var selection = window.getSelection();
+        if (!selection.rangeCount) return;
+        var range = selection.getRangeAt(0);
+        if (range.toString().trim() === '' || !scriptContent.contains(range.commonAncestorContainer)) {
+            alert(<?php echo wp_json_encode(__('Please select text in the script', 'agency-client-portal')); ?>);
+            return;
+        }
+        var span = document.createElement('span');
+        if (withComment) {
+            var commentText = prompt(<?php echo wp_json_encode(__('Comment attached to the highlighted text:', 'agency-client-portal')); ?>, '');
+            if (!commentText || commentText.trim() === '') return;
+            span.setAttribute('data-comment', commentText);
+            span.setAttribute('data-highlight-id', 'highlight-' + Date.now());
+            span.setAttribute('title', commentText);
+            span.className = 'script-highlight-comment';
+            span.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert(<?php echo wp_json_encode(__('Comment:', 'agency-client-portal')); ?> + this.getAttribute('data-comment'));
+            });
+        } else {
+            span.className = 'script-highlight';
+        }
+        range.surroundContents(span);
+        selection.removeAllRanges();
+        setStatus('dirty');
+    }
+
+    if (scriptContent && toolbar) {
+        // Empêche la barre de voler la sélection
+        toolbar.addEventListener('mousedown', function(e) {
+            if (e.target.closest('select, input')) return;
+            e.preventDefault();
+        });
+
+        toolbar.querySelectorAll('.toolbar-btn').forEach(function(btn) {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 var command = this.getAttribute('data-command');
-
-                if (command === 'bold') {
-                    document.execCommand('bold', false, null);
+                if (command === 'color-toggle') {
+                    var pop = toolbar.querySelector('.script-color__pop');
+                    pop.hidden = !pop.hidden;
+                    this.setAttribute('aria-expanded', pop.hidden ? 'false' : 'true');
+                } else if (command === 'createLink') {
+                    var url = prompt(<?php echo wp_json_encode(__('Link URL:', 'agency-client-portal')); ?>, 'https://');
+                    if (url && /^https?:\/\//i.test(url)) exec('createLink', url);
                 } else if (command === 'highlight') {
-                    // Get selected text
-                    var selection = window.getSelection();
-                    if (!selection.rangeCount) return;
-
-                    var range = selection.getRangeAt(0);
-                    if (range.toString().trim() === '') {
-                        alert(<?php echo wp_json_encode(__('Please select text to highlight', 'agency-client-portal')); ?>);
-                        return;
-                    }
-
-                    // Check if selection is inside script content
-                    if (!scriptContent.contains(range.commonAncestorContainer)) {
-                        alert(<?php echo wp_json_encode(__('Please select text in the script', 'agency-client-portal')); ?>);
-                        return;
-                    }
-
-                    // Create highlight span
-                    var span = document.createElement('span');
-                    span.style.backgroundColor = 'yellow';
-                    span.style.padding = '2px 0';
-                    range.surroundContents(span);
-
-                    // Clear selection
-                    selection.removeAllRanges();
+                    highlightSelection(false);
                 } else if (command === 'highlight-comment') {
-                    // Get selected text
-                    var selection = window.getSelection();
-                    if (!selection.rangeCount) return;
-
-                    var range = selection.getRangeAt(0);
-                    var selectedText = range.toString().trim();
-
-                    if (selectedText === '') {
-                        alert(<?php echo wp_json_encode(__('Please select text to highlight', 'agency-client-portal')); ?>);
-                        return;
-                    }
-
-                    // Check if selection is inside script content
-                    if (!scriptContent.contains(range.commonAncestorContainer)) {
-                        alert(<?php echo wp_json_encode(__('Please select text in the script', 'agency-client-portal')); ?>);
-                        return;
-                    }
-
-                    // Prompt for comment
-                    var commentText = prompt(<?php echo wp_json_encode(__('Comment attached to the highlighted text:', 'agency-client-portal')); ?>, '');
-                    if (!commentText || commentText.trim() === '') {
-                        return;
-                    }
-
-                    // Create unique ID for this highlight
-                    var highlightId = 'highlight-' + Date.now();
-
-                    // Create highlight span with comment data
-                    var span = document.createElement('span');
-                    span.style.backgroundColor = '#fbbf24';
-                    span.style.padding = '2px 0';
-                    span.style.position = 'relative';
-                    span.style.cursor = 'help';
-                    span.setAttribute('data-comment', commentText);
-                    span.setAttribute('data-highlight-id', highlightId);
-                    span.setAttribute('title', commentText);
-                    span.className = 'script-highlight-comment';
-
-                    range.surroundContents(span);
-
-                    // Clear selection
-                    selection.removeAllRanges();
-
-                    // Add click handler to show comment
-                    span.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        alert(<?php echo wp_json_encode(__('Comment:', 'agency-client-portal')); ?> + this.getAttribute('data-comment'));
-                    });
+                    highlightSelection(true);
+                } else {
+                    exec(command);
                 }
             });
         });
-    }
 
-    // Make existing highlighted-comment spans clickable
-    if (scriptContent) {
-        var existingHighlights = scriptContent.querySelectorAll('.script-highlight-comment');
-        existingHighlights.forEach(function(span) {
+        toolbar.querySelectorAll('.script-tool-select').forEach(function(sel) {
+            sel.addEventListener('change', function() {
+                if (this.getAttribute('data-command') === 'fontSize') {
+                    applyFontSize(this.value);
+                } else {
+                    exec(this.getAttribute('data-command'), this.value);
+                }
+            });
+        });
+
+        function applyColor(color) {
+            exec('foreColor', color);
+            toolbar.querySelector('.script-color__dot').style.background = color;
+            toolbar.querySelector('.script-color__hex').value = color;
+        }
+
+        toolbar.querySelectorAll('.script-color__swatch').forEach(function(sw) {
+            sw.addEventListener('click', function() { applyColor(this.getAttribute('data-color')); });
+        });
+
+        toolbar.querySelector('.script-color__hex').addEventListener('change', function() {
+            if (/^#[0-9a-f]{6}$/i.test(this.value)) applyColor(this.value);
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.script-color')) {
+                var pop = toolbar.querySelector('.script-color__pop');
+                if (pop) pop.hidden = true;
+            }
+        });
+
+        scriptContent.addEventListener('input', function() {
+            setStatus('dirty');
+            updateCount();
+        });
+        updateCount();
+
+        // Rend cliquables les surlignages commentés déjà enregistrés
+        scriptContent.querySelectorAll('.script-highlight-comment').forEach(function(span) {
             span.addEventListener('click', function(e) {
                 e.preventDefault();
                 alert(<?php echo wp_json_encode(__('Comment:', 'agency-client-portal')); ?> + this.getAttribute('data-comment'));
@@ -629,17 +688,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Save script button (saves to settings.script_content)
-    var saveScriptBtn = document.getElementById('save-script-btn');
-    var saveStatus = document.querySelector('.script-save-status');
-
+    // Sauvegarde du script (settings.script_content)
     if (saveScriptBtn && scriptContent) {
         saveScriptBtn.addEventListener('click', function() {
-            var content = scriptContent.innerHTML;
-
             saveScriptBtn.disabled = true;
-            saveScriptBtn.textContent = <?php echo wp_json_encode(__('Saving...', 'agency-client-portal')); ?>;
-            saveStatus.textContent = '';
 
             fetch('<?php echo esc_url(rest_url('agency/v1/blocks/' . intval($block->id))); ?>', {
                 method: 'PUT',
@@ -648,31 +700,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     'X-WP-Nonce': '<?php echo esc_js(wp_create_nonce('wp_rest')); ?>'
                 },
                 body: JSON.stringify({
-                    settings: { script_content: content }
+                    settings: { script_content: scriptContent.innerHTML }
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    saveStatus.textContent = <?php echo wp_json_encode(__('✓ Saved', 'agency-client-portal')); ?>;
-                    saveStatus.style.color = '#10b981';
-                    setTimeout(function() {
-                        saveStatus.textContent = '';
-                    }, 3000);
-                } else {
-                    saveStatus.textContent = <?php echo wp_json_encode(__('✗ Error', 'agency-client-portal')); ?>;
-                    saveStatus.style.color = '#ef4444';
-                }
-                saveScriptBtn.disabled = false;
-                saveScriptBtn.innerHTML = agencyData.icons.save + ' ' + <?php echo wp_json_encode(__('Save script', 'agency-client-portal')); ?>;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                saveStatus.textContent = <?php echo wp_json_encode(__('✗ Error', 'agency-client-portal')); ?>;
-                saveStatus.style.color = '#ef4444';
-                saveScriptBtn.disabled = false;
-                saveScriptBtn.innerHTML = agencyData.icons.save + ' ' + <?php echo wp_json_encode(__('Save script', 'agency-client-portal')); ?>;
-            });
+            .then(function(response) { return response.json(); })
+            .then(function(data) { setStatus(data.success ? 'saved' : 'error'); })
+            .catch(function() { setStatus('error'); })
+            .finally(function() { saveScriptBtn.disabled = false; });
         });
     }
 

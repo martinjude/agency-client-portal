@@ -304,22 +304,26 @@
             // Supprimer commentaire
             $(document).on('click', '.delete-comment', this.deleteComment.bind(this));
 
+            // Réponses aux commentaires (panneau partagé des pages de bloc)
+            $(document).on('click', '[data-cm-reply]', this.toggleReplyForm.bind(this));
+            $(document).on('click', '[data-cm-reply-cancel]', this.toggleReplyForm.bind(this));
+            $(document).on('submit', '.agency-cm__reply-form', this.submitReply.bind(this));
+
             // Block-view pages (storyboard, video, script, code, link) ont leurs propres
             // handlers inline — on n'attache ces events que sur les pages hors block-view
             // pour éviter le double déclenchement.
             const isBlockView = !!document.querySelector('.agency-block-view');
-            if (!isBlockView) {
-                // Nouveau commentaire
-                $('#new-comment-form').on('submit', this.submitComment.bind(this));
 
+            // Nouveaux commentaires (panneau partagé block-comments.php) : un seul handler, sur toutes les pages
+            $(document).on('submit', '#new-comment-form', this.submitComment.bind(this));
+            $(document).on('submit', '.new-asset-comment-form', this.submitAssetComment.bind(this));
+
+            if (!isBlockView) {
                 // Supprimer asset
                 $(document).on('click', '.delete-asset', this.deleteAsset.bind(this));
 
                 // Script editor - save button
                 $('#save-script-btn').on('click', this.saveScript.bind(this));
-
-                // Asset comment forms
-                $(document).on('submit', '.new-asset-comment-form', this.submitAssetComment.bind(this));
 
                 // Upload asset button
                 $('#upload-asset-btn').on('click', this.uploadAsset.bind(this));
@@ -361,6 +365,58 @@
             });
         },
         
+        // Affiche / masque le formulaire de réponse d'un commentaire
+        toggleReplyForm: function(e) {
+            e.preventDefault();
+            const $item = $(e.currentTarget).closest('.agency-cm__item');
+            const $form = $item.find('.agency-cm__reply-form').first();
+            const open = $form.prop('hidden');
+            $form.prop('hidden', !open);
+            if (open) {
+                $form.find('textarea').trigger('focus');
+            }
+        },
+
+        submitReply: function(e) {
+            e.preventDefault();
+
+            const $form = $(e.currentTarget);
+            const content = $form.find('textarea').val().trim();
+            if (!content) {
+                return;
+            }
+
+            const payload = {
+                block_id: $form.data('block-id'),
+                parent_id: $form.data('parent-id'),
+                content: content
+            };
+            if ($form.data('asset-id')) {
+                payload.asset_id = $form.data('asset-id');
+            }
+
+            $form.find('button').prop('disabled', true);
+
+            $.ajax({
+                url: agencyData.rest_url + 'comments',
+                method: 'POST',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-WP-Nonce', agencyData.nonce);
+                },
+                data: JSON.stringify(payload),
+                contentType: 'application/json',
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    }
+                },
+                error: function() {
+                    $form.find('button').prop('disabled', false);
+                    AgencyUI.toast(agencyData.strings.error, { type: 'error' });
+                }
+            });
+        },
+
         submitComment: function(e) {
             e.preventDefault();
             

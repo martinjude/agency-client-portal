@@ -145,23 +145,25 @@ $has_google_slides = !empty($google_slides_embed_url);
                         </div>
                     <?php endif; ?>
                     
-                    <?php if ($is_manager && !$has_google_slides): ?>
-                    <div class="agency-google-slides-setup">
-                        <div class="agency-google-slides-input-row">
-                            <input type="url"
-                                   id="agency-google-slides-input"
-                                   class="agency-input"
-                                   placeholder="<?php esc_attr_e('Paste a Google Slides link…', 'agency-client-portal'); ?>"
-                                   aria-label="<?php esc_attr_e('Google Slides URL', 'agency-client-portal'); ?>">
-                            <button class="agency-btn agency-btn-secondary"
-                                    id="agency-google-slides-save"
-                                    data-block-id="<?php echo esc_attr($block->id); ?>">
-                                <?php Agency_Icons::render('link', 16); ?> <?php esc_html_e('Embed', 'agency-client-portal'); ?>
-                            </button>
-                        </div>
-                    </div>
-                    <?php endif; ?>
                 </div>
+
+                <?php if ($is_manager && !$has_google_slides): ?>
+                <section class="agency-bp-card agency-google-slides-setup">
+                    <label class="agency-bp-label" for="agency-google-slides-input"><?php esc_html_e('Google Slides integration', 'agency-client-portal'); ?></label>
+                    <div class="agency-google-slides-input-row">
+                        <input type="url"
+                               id="agency-google-slides-input"
+                               class="agency-input"
+                               placeholder="<?php esc_attr_e('Paste a Google Slides link…', 'agency-client-portal'); ?>"
+                               aria-label="<?php esc_attr_e('Google Slides URL', 'agency-client-portal'); ?>">
+                        <button type="button" class="agency-btn"
+                                id="agency-google-slides-save"
+                                data-block-id="<?php echo esc_attr($block->id); ?>">
+                            <?php Agency_Icons::render('link', 16); ?> <?php esc_html_e('Embed', 'agency-client-portal'); ?>
+                        </button>
+                    </div>
+                </section>
+                <?php endif; ?>
 
                 <!-- Storyboard slides -->
                 <?php if ($has_google_slides): ?>
@@ -242,71 +244,74 @@ if (localStorage.getItem('agency_google_slides_info_dismissed') === '1') {
                         </div>
                         <?php endif; ?>
 
-                        <div class="storyboard-item<?php echo !Agency_Block::client_can_comment_allowed($block) ? ' no-comments' : ''; ?>" data-asset-id="<?php echo esc_attr($asset->id); ?>" data-root-id="<?php echo esc_attr($asset->id); ?>">
+                        <?php
+                        $sb_can_comment = Agency_Block::client_can_comment_allowed($block);
+                        $latest_media_url = $preview_only_for_token_client ? Agency_Asset::get_preview_url($latest->id) : Agency_Asset::get_url($latest->id);
+                        ?>
+                        <div class="agency-bp-grid storyboard-item<?php echo !$sb_can_comment ? ' agency-bp-grid--solo no-comments' : ''; ?>" data-asset-id="<?php echo esc_attr($asset->id); ?>" data-root-id="<?php echo esc_attr($asset->id); ?>">
+                            <div class="agency-bp-main">
+                                <section class="agency-bp-card">
+                                    <header class="agency-bp-card__head storyboard-slide-header">
+                                        <div class="agency-bp-card__tools">
+                                            <?php if ($is_manager): ?>
+                                                <span class="storyboard-drag-handle" title="<?php esc_attr_e('Move slide', 'agency-client-portal'); ?>"><?php Agency_Icons::render('grip', 16); ?></span>
+                                            <?php endif; ?>
+                                            <span class="storyboard-slide-num agency-bp-label"><?php echo esc_html(sprintf(/* translators: %d: slide number */ __('Slide %d', 'agency-client-portal'), $slide_idx + 1)); ?></span>
+                                        </div>
+                                        <div class="agency-bp-card__tools media-actions">
+                                            <?php if ($can_download_media): ?>
+                                            <a href="<?php echo esc_url(Agency_Asset::get_download_url($latest->id)); ?>" class="agency-btn-icon agency-btn-icon--sm" target="_blank"
+                                               title="<?php esc_attr_e('Download', 'agency-client-portal'); ?>" aria-label="<?php esc_attr_e('Download', 'agency-client-portal'); ?>"><?php Agency_Icons::render('download', 16); ?></a>
+                                            <?php endif; ?>
+                                            <?php if ($is_manager): ?>
+                                            <button type="button" class="agency-btn-icon agency-btn-icon--sm delete-asset" data-asset-id="<?php echo esc_attr($asset->id); ?>"
+                                                    title="<?php esc_attr_e('Delete slide', 'agency-client-portal'); ?>" aria-label="<?php esc_attr_e('Delete slide', 'agency-client-portal'); ?>"><?php Agency_Icons::render('trash', 16); ?></button>
+                                            <?php endif; ?>
+                                        </div>
+                                    </header>
 
-                            <?php if ($is_manager): ?>
-                                <button class="storyboard-slide-delete" data-asset-id="<?php echo esc_attr($asset->id); ?>" title="<?php esc_attr_e('Delete this slide', 'agency-client-portal'); ?>">&times;</button>
-                            <?php endif; ?>
-
-                            <div class="storyboard-slide-header">
-                                <?php if ($is_manager): ?>
-                                    <span class="storyboard-drag-handle" title="<?php esc_attr_e('Move slide', 'agency-client-portal'); ?>"><?php Agency_Icons::render('grip', 16); ?></span>
-                                <?php endif; ?>
-                                <span class="storyboard-slide-num"><?php echo esc_html(sprintf(/* translators: %d: slide number */ __('Slide %d', 'agency-client-portal'), $slide_idx + 1)); ?></span>
-                                <?php if ($version_count > 1): ?>
-                                    <span class="version-badge">V<?php echo esc_html($latest_vnum); ?></span>
-                                <?php endif; ?>
-                            </div>
-
-                            <!-- Left: Media + actions -->
-                            <?php $latest_media_url = $preview_only_for_token_client ? Agency_Asset::get_preview_url($latest->id) : Agency_Asset::get_url($latest->id); ?>
-                            <div class="storyboard-media">
-                                <?php if ($latest->file_type === 'image'): ?>
-                                    <img src="<?php echo esc_url($latest_media_url); ?>"
-                                         alt="<?php echo esc_attr($latest->original_filename); ?>"
-                                         class="storyboard-image"
-                                         loading="lazy">
-                                <?php elseif ($latest->file_type === 'video'): ?>
-                                    <video controls class="storyboard-video" <?php if ($preview_only_for_token_client): ?>controlsList="nodownload noplaybackrate" disablepictureinpicture oncontextmenu="return false;"<?php endif; ?>>
-                                        <source src="<?php echo esc_url($latest_media_url); ?>">
-                                    </video>
-                                <?php else: ?>
-                                    <div class="storyboard-file-icon">
-                                        <span class="file-icon"><?php Agency_Icons::render('file', 16); ?></span>
-                                        <span class="file-name"><?php echo esc_html($latest->original_filename); ?></span>
-                                    </div>
-                                <?php endif; ?>
-
-                                <div class="storyboard-media-info">
-                                    <div class="media-actions">
-                                                     <?php if ($can_download_media): ?>
-                                                     <a href="<?php echo esc_url(Agency_Asset::get_download_url($latest->id)); ?>"
-                                                         class="agency-btn-icon" target="_blank"
-                                                         title="<?php esc_attr_e('Download', 'agency-client-portal'); ?>"><?php Agency_Icons::render('arrow-down', 16); ?></a>
-                                                     <?php endif; ?>
-                                        <?php if ($is_manager): ?>
-                                            <!-- New version upload trigger -->
-                                            <button class="agency-btn agency-btn-sm agency-btn-secondary new-version-btn"
-                                                    data-root-id="<?php echo esc_attr($asset->id); ?>"
-                                                    data-version-num="<?php echo esc_attr($latest_vnum + 1); ?>"
-                                                    title="<?php esc_attr_e('New version of this slide', 'agency-client-portal'); ?>">
-                                                <?php Agency_Icons::render('upload', 14); ?> <?php esc_html_e('New version', 'agency-client-portal'); ?>
-                                            </button>
-                                            <button class="agency-btn-icon delete-asset"
-                                                    data-asset-id="<?php echo esc_attr($asset->id); ?>"
-                                                    title="<?php esc_attr_e('Delete slide', 'agency-client-portal'); ?>"><?php Agency_Icons::render('trash', 16); ?></button>
+                                    <div class="storyboard-media">
+                                        <span class="storyboard-pill storyboard-pill--plan"><?php echo esc_html(sprintf(/* translators: %d: shot number */ __('Shot %d', 'agency-client-portal'), $slide_idx + 1)); ?></span>
+                                        <?php if ($version_count > 1): ?>
+                                            <span class="storyboard-pill storyboard-pill--version version-badge">V<?php echo esc_html($latest_vnum); ?></span>
+                                        <?php endif; ?>
+                                        <?php if ($latest->file_type === 'image'): ?>
+                                            <img src="<?php echo esc_url($latest_media_url); ?>"
+                                                 alt="<?php echo esc_attr($latest->original_filename); ?>"
+                                                 class="storyboard-image"
+                                                 loading="lazy">
+                                        <?php elseif ($latest->file_type === 'video'): ?>
+                                            <video controls class="storyboard-video" <?php if ($preview_only_for_token_client): ?>controlsList="nodownload noplaybackrate" disablepictureinpicture oncontextmenu="return false;"<?php endif; ?>>
+                                                <source src="<?php echo esc_url($latest_media_url); ?>">
+                                            </video>
+                                        <?php else: ?>
+                                            <div class="storyboard-file-icon">
+                                                <span class="file-icon"><?php Agency_Icons::render('file', 16); ?></span>
+                                                <span class="file-name"><?php echo esc_html($latest->original_filename); ?></span>
+                                            </div>
                                         <?php endif; ?>
                                     </div>
-                                </div>
 
-                                <!-- Version history (collapsible) -->
-                                <?php if ($version_count > 1): ?>
-                                <div class="version-history">
-                                    <button class="version-history-toggle" type="button" data-root-id="<?php echo esc_attr($asset->id); ?>">
-                                        <?php echo esc_html(sprintf(/* translators: %d: number of versions */ __('History (%d versions)', 'agency-client-portal'), $version_count)); ?> ▾
-                                    </button>
+                                    <div class="agency-bp-tags storyboard-actions">
+                                        <?php if ($is_manager): ?>
+                                        <button type="button" class="agency-btn new-version-btn"
+                                                data-root-id="<?php echo esc_attr($asset->id); ?>"
+                                                data-version-num="<?php echo esc_attr($latest_vnum + 1); ?>"
+                                                title="<?php esc_attr_e('New version of this slide', 'agency-client-portal'); ?>">
+                                            <?php Agency_Icons::render('upload', 16); ?> <?php esc_html_e('New version', 'agency-client-portal'); ?>
+                                        </button>
+                                        <?php endif; ?>
+                                        <?php if ($version_count > 1): ?>
+                                        <button class="agency-btn version-history-toggle" type="button" data-root-id="<?php echo esc_attr($asset->id); ?>">
+                                            <?php Agency_Icons::render('file', 16); ?>
+                                            <?php echo esc_html(sprintf(/* translators: %d: number of versions */ _n('History · %d version', 'History · %d versions', $version_count, 'agency-client-portal'), $version_count)); ?>
+                                        </button>
+                                        <?php endif; ?>
+                                        <span class="agency-bp-tags__meta"><?php echo esc_html(sprintf(/* translators: %s: relative time */ __('Updated %s', 'agency-client-portal'), Agency_Template::time_ago(!empty($latest->created_at) ? $latest->created_at : ''))); ?></span>
+                                    </div>
+
+                                    <?php if ($version_count > 1): ?>
                                     <div class="version-history-list" id="version-history-<?php echo esc_attr($asset->id); ?>" style="display:none;">
-                                        <!-- V1 = root asset -->
                                         <div class="version-item">
                                             <span class="version-label">V1</span>
                                             <?php if ($asset->file_type === 'image'): ?>
@@ -315,7 +320,7 @@ if (localStorage.getItem('agency_google_slides_info_dismissed') === '1') {
                                                 <span class="version-filename"><?php echo esc_html($asset->original_filename); ?></span>
                                             <?php endif; ?>
                                             <?php if ($can_download_media): ?>
-                                            <a href="<?php echo esc_url(Agency_Asset::get_download_url($asset->id)); ?>" target="_blank" class="agency-btn-icon" title="<?php esc_attr_e('Download', 'agency-client-portal'); ?>"><?php Agency_Icons::render('arrow-down', 16); ?></a>
+                                            <a href="<?php echo esc_url(Agency_Asset::get_download_url($asset->id)); ?>" target="_blank" class="agency-btn-icon agency-btn-icon--sm" title="<?php esc_attr_e('Download', 'agency-client-portal'); ?>"><?php Agency_Icons::render('download', 16); ?></a>
                                             <?php endif; ?>
                                         </div>
                                         <?php foreach (array_reverse($children) as $ver):
@@ -329,77 +334,48 @@ if (localStorage.getItem('agency_google_slides_info_dismissed') === '1') {
                                                 <span class="version-filename"><?php echo esc_html($ver->original_filename); ?></span>
                                             <?php endif; ?>
                                             <?php if ($can_download_media): ?>
-                                            <a href="<?php echo esc_url(Agency_Asset::get_download_url($ver->id)); ?>" target="_blank" class="agency-btn-icon" title="<?php esc_attr_e('Download', 'agency-client-portal'); ?>"><?php Agency_Icons::render('arrow-down', 16); ?></a>
+                                            <a href="<?php echo esc_url(Agency_Asset::get_download_url($ver->id)); ?>" target="_blank" class="agency-btn-icon agency-btn-icon--sm" title="<?php esc_attr_e('Download', 'agency-client-portal'); ?>"><?php Agency_Icons::render('download', 16); ?></a>
                                             <?php endif; ?>
                                             <?php if ($is_manager): ?>
-                                            <button class="agency-btn-icon delete-asset"
+                                            <button type="button" class="agency-btn-icon agency-btn-icon--sm delete-asset"
                                                     data-asset-id="<?php echo esc_attr($ver->id); ?>"
                                                     title="<?php esc_attr_e('Delete this version', 'agency-client-portal'); ?>"><?php Agency_Icons::render('trash', 16); ?></button>
                                             <?php endif; ?>
                                         </div>
                                         <?php endforeach; ?>
                                     </div>
-                                </div>
-                                <?php endif; ?>
-
-                                <!-- Voiceover -->
-                                <div class="storyboard-voiceover">
-                                    <label for="voiceover-<?php echo esc_attr($asset->id); ?>" class="storyboard-voiceover-label">
-                                        <?php esc_html_e('Voice-over', 'agency-client-portal'); ?>
-                                    </label>
-                                    <textarea id="voiceover-<?php echo esc_attr($asset->id); ?>"
-                                              class="asset-voiceover-input"
-                                              data-asset-id="<?php echo esc_attr($asset->id); ?>"
-                                              rows="3"
-                                              placeholder="<?php esc_attr_e('Enter the voice-over...', 'agency-client-portal'); ?>"
-                                              <?php echo $is_manager ? '' : 'readonly'; ?>><?php echo isset($asset->voiceover) ? esc_textarea($asset->voiceover) : ''; ?></textarea>
-                                    <?php if ($is_manager): ?>
-                                        <button class="agency-btn agency-btn-sm agency-btn-primary save-voiceover-btn"
-                                                data-asset-id="<?php echo esc_attr($asset->id); ?>">
-                                            <?php esc_html_e('Save voice-over', 'agency-client-portal'); ?>
-                                        </button>
-                                        <span class="voiceover-save-status" data-asset-id="<?php echo esc_attr($asset->id); ?>"></span>
                                     <?php endif; ?>
-                                </div>
+
+                                    <div class="agency-bp-notes storyboard-voiceover">
+                                        <label for="voiceover-<?php echo esc_attr($asset->id); ?>" class="agency-bp-label storyboard-voiceover-label">
+                                            <?php esc_html_e('Voice-over', 'agency-client-portal'); ?>
+                                        </label>
+                                        <textarea id="voiceover-<?php echo esc_attr($asset->id); ?>"
+                                                  class="asset-voiceover-input"
+                                                  data-asset-id="<?php echo esc_attr($asset->id); ?>"
+                                                  rows="3"
+                                                  placeholder="<?php esc_attr_e('Enter the voice-over...', 'agency-client-portal'); ?>"
+                                                  <?php echo $is_manager ? '' : 'readonly'; ?>><?php echo isset($asset->voiceover) ? esc_textarea($asset->voiceover) : ''; ?></textarea>
+                                        <?php if ($is_manager): ?>
+                                        <div class="agency-bp-notes__foot">
+                                            <button type="button" class="agency-btn agency-btn-primary save-voiceover-btn" data-asset-id="<?php echo esc_attr($asset->id); ?>">
+                                                <?php esc_html_e('Save voice-over', 'agency-client-portal'); ?>
+                                            </button>
+                                            <span class="voiceover-save-status" data-asset-id="<?php echo esc_attr($asset->id); ?>"></span>
+                                        </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </section>
                             </div>
 
-                            <!-- Right: Comments -->
-                            <?php if (Agency_Block::client_can_comment_allowed($block)) : ?>
-                            <div class="storyboard-comments">
-                                <h4><?php esc_html_e('Comments', 'agency-client-portal'); ?></h4>
-
-                                <div class="asset-comments-list" data-asset-id="<?php echo esc_attr($latest->id); ?>">
-                                    <?php if (empty($asset_comments)): ?>
-                                        <p class="no-comments"><?php esc_html_e('No comments.', 'agency-client-portal'); ?></p>
-                                    <?php else: ?>
-                                        <?php foreach ($asset_comments as $comment): ?>
-                                            <div class="comment-item" data-comment-id="<?php echo esc_attr($comment->id); ?>">
-                                                <div class="comment-header">
-                                                    <span class="comment-author"><?php echo esc_html($comment->user->display_name); ?></span>
-                                                    <span class="comment-date"><?php echo esc_html(Agency_Template::time_ago($comment->created_at)); ?></span>
-                                                </div>
-                                                <div class="comment-content"><?php echo wp_kses_post($comment->content); ?></div>
-                                                <?php if ($is_manager || get_current_user_id() === (int)$comment->user_id): ?>
-                                                    <button class="comment-delete-btn delete-comment" data-comment-id="<?php echo esc_attr($comment->id); ?>">
-                                                        <?php esc_html_e('Delete', 'agency-client-portal'); ?>
-                                                    </button>
-                                                <?php endif; ?>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </div>
-
-                                <div class="asset-comment-form">
-                                    <form class="new-asset-comment-form" data-asset-id="<?php echo esc_attr($latest->id); ?>">
-                                        <textarea name="comment_content" class="asset-comment-input" rows="3"
-                                                  placeholder="<?php esc_attr_e('Add a comment...', 'agency-client-portal'); ?>" required></textarea>
-                                        <button type="submit" class="agency-btn agency-btn-primary agency-btn-sm">
-                                            <?php esc_html_e('Send', 'agency-client-portal'); ?>
-                                        </button>
-                                    </form>
-                                </div>
-
-                            </div>
+                            <?php if ($sb_can_comment): ?>
+                            <aside class="agency-bp-aside">
+                                <?php
+                                $cm_asset_id = (int) $latest->id;
+                                $cm_comments = $asset_comments;
+                                include AGENCY_PLUGIN_DIR . 'templates/partials/block-comments.php';
+                                ?>
+                            </aside>
                             <?php endif; ?>
                         </div>
 
@@ -720,43 +696,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // unique sur .save-voiceover-btn + auto-save debounced au blur). Ne pas
     // re-binder ici : le doublon provoquait 2 requêtes PUT par clic.
 
-    // ── Comment delete ───────────────────────────────────────────────────────
-    document.querySelectorAll('.delete-comment').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            if (!confirm(<?php echo wp_json_encode(__('Delete this comment?', 'agency-client-portal')); ?>)) return;
-            var id = this.getAttribute('data-comment-id');
-            fetch('<?php echo esc_url(rest_url('agency/v1/comments/')); ?>' + id, {
-                method: 'DELETE',
-                headers: { 'X-WP-Nonce': '<?php echo esc_js(wp_create_nonce('wp_rest')); ?>' }
-            })
-            .then(function(r) { return r.json(); })
-            .then(function(data) { if (data.success) window.location.reload(); });
-        });
-    });
-
-    // ── Comment submit ───────────────────────────────────────────────────────
-    document.querySelectorAll('.new-asset-comment-form').forEach(function(form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            var assetId = this.getAttribute('data-asset-id');
-            var content = this.querySelector('.asset-comment-input').value.trim();
-            if (!content) return;
-            var btn = this.querySelector('button[type=submit]');
-            btn.disabled = true;
-            fetch('<?php echo esc_url(rest_url('agency/v1/comments')); ?>', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': '<?php echo esc_js(wp_create_nonce('wp_rest')); ?>' },
-                body: JSON.stringify({ asset_id: assetId, content: content })
-            })
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                if (data.success) window.location.reload();
-                else btn.disabled = false;
-            })
-            .catch(function() { btn.disabled = false; });
-        });
-    });
-
     // ── External links ───────────────────────────────────────────────────────
     var addLinkBtn    = document.getElementById('add-external-link-btn');
     var createLinkBtn = document.getElementById('create-external-link-btn');
@@ -890,28 +829,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Comment submit (client)
-    document.querySelectorAll('.new-asset-comment-form').forEach(function(form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            var assetId = this.getAttribute('data-asset-id');
-            var content = this.querySelector('.asset-comment-input').value.trim();
-            if (!content) return;
-            var submitBtn = this.querySelector('button[type=submit]');
-            submitBtn.disabled = true;
-            fetch(agencyData.rest_url + 'comments', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': agencyData.nonce },
-                body: JSON.stringify({ asset_id: assetId, content: content })
-            })
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                if (data.success) window.location.reload();
-                else submitBtn.disabled = false;
-            })
-            .catch(function() { submitBtn.disabled = false; });
-        });
-    });
     <?php endif; ?>
 
     // Google Slides — Sauvegarder l'URL

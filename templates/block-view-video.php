@@ -504,48 +504,6 @@ window.addEventListener('pageshow', function(event) {
     }
 });
 
-// ── Commentaires sur assets vidéo ─────────────────────────────────────────
-// Doit s'exécuter après le rendu du DOM (ce script est dans <head>)
-document.addEventListener('DOMContentLoaded', function() {
-    (function() {
-        var restUrl = '<?php echo esc_url(rest_url('agency/v1/comments')); ?>';
-        var nonce   = '<?php echo esc_js(wp_create_nonce('wp_rest')); ?>';
-
-        document.querySelectorAll('.new-asset-comment-form').forEach(function(form) {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                var assetId = form.getAttribute('data-asset-id');
-                var input   = form.querySelector('.asset-comment-input');
-                var content = input ? input.value.trim() : '';
-                if (!content) return;
-
-                var btn = form.querySelector('button[type="submit"]');
-                if (btn) btn.disabled = true;
-
-                fetch(restUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-WP-Nonce': nonce
-                    },
-                    body: JSON.stringify({ asset_id: assetId, content: content })
-                })
-                .then(function(r) { return r.json(); })
-                .then(function(data) {
-                    if (data.id || data.success) {
-                        window.location.reload();
-                    } else {
-                        if (btn) btn.disabled = false;
-                    }
-                })
-                .catch(function() {
-                    if (btn) btn.disabled = false;
-                });
-            });
-        });
-    })();
-});
-
 <?php wp_print_inline_script_tag(ob_get_clean()); ?>
 
 <body <?php body_class(); ?>>
@@ -645,7 +603,7 @@ $embed_asset_ids = array();
                 <!-- Vidéos intégrées (Embeds) -->
                 <?php if (!empty($embed_urls)): ?>
                     <div class="video-embeds">
-                        <h3><?php esc_html_e('Embedded videos', 'agency-client-portal'); ?></h3>
+                        <h3 class="agency-bp-section-title"><?php esc_html_e('Embedded videos', 'agency-client-portal'); ?> <span class="agency-count"><?php echo intval(count($embed_urls)); ?></span></h3>
                         <div class="video-embed-grid">
                             <?php foreach ($embed_urls as $index => $embed): ?>
                                 <?php
@@ -656,126 +614,45 @@ $embed_asset_ids = array();
                                     isset($embed['title']) ? $embed['title'] : ''
                                 );
                                 $embed_asset_ids[] = $embed_asset->id;
-                                $embed_comments = Agency_Comment::get_by_asset($embed_asset->id);
+                                $embed_url  = $embed['url'];
+                                $embed_html = '';
+                                $embed_provider = '';
+
+                                if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/', $embed_url, $matches)) {
+                                    $embed_provider = 'YouTube';
+                                    $embed_html = '<iframe src="https://www.youtube.com/embed/' . esc_attr($matches[1]) . '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+                                } elseif (preg_match('/vimeo\.com\/([0-9]+)/', $embed_url, $matches)) {
+                                    $embed_provider = 'Vimeo';
+                                    $embed_html = '<iframe src="https://player.vimeo.com/video/' . esc_attr($matches[1]) . '" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
+                                } elseif (preg_match('/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/', $embed_url, $matches)) {
+                                    $embed_provider = 'Google Drive';
+                                    $embed_html = '<iframe src="https://drive.google.com/file/d/' . esc_attr($matches[1]) . '/preview" frameborder="0" allow="autoplay"></iframe>';
+                                } elseif (strpos($embed_url, 'dropbox.com') !== false) {
+                                    $embed_provider = 'Dropbox';
+                                    $embed_url_modified = str_replace('www.dropbox.com', 'dl.dropboxusercontent.com', $embed_url);
+                                    $embed_html = '<video controls><source src="' . esc_url($embed_url_modified) . '" type="video/mp4"></video>';
+                                } else {
+                                    $embed_html = '<p class="embed-error">' . Agency_Icons::get('alert', 15) . ' ' . esc_html__('URL not recognized. Use YouTube, Vimeo, Google Drive or Dropbox.', 'agency-client-portal') . '</p>';
+                                }
+
+                                $vi_player = '<div class="video-embed-wrapper">' . wp_kses($embed_html, array(
+                                    'iframe' => array('src' => true, 'frameborder' => true, 'allow' => true, 'allowfullscreen' => true),
+                                    'video'  => array('controls' => true),
+                                    'source' => array('src' => true, 'type' => true),
+                                    'p'      => array('class' => true),
+                                ) + Agency_Icons::allowed_html()) . '</div>';
+
+                                $vi_asset   = $embed_asset;
+                                $vi_kind    = 'embed';
+                                $vi_title   = !empty($embed['title']) ? $embed['title'] : sprintf(/* translators: %d: position of the video */ __('Video %d', 'agency-client-portal'), $index + 1);
+                                $vi_tags    = array_filter(array(__('Video', 'agency-client-portal'), $embed_provider));
+                                $vi_attrs   = 'data-embed-index="' . esc_attr($index) . '"';
+                                $vi_actions = '';
+                                if ($is_manager) {
+                                    $vi_actions = '<button type="button" class="agency-btn-icon delete-embed" data-embed-index="' . esc_attr($index) . '" title="' . esc_attr__('Delete', 'agency-client-portal') . '" aria-label="' . esc_attr__('Delete', 'agency-client-portal') . '">' . Agency_Icons::get('trash', 16) . '</button>';
+                                }
+                                include AGENCY_PLUGIN_DIR . 'templates/partials/video-item.php';
                                 ?>
-                                <div class="video-embed-item" data-embed-index="<?php echo esc_attr($index); ?>" data-asset-id="<?php echo esc_attr($embed_asset->id); ?>">
-                                    <?php if (!empty($embed['title'])): ?>
-                                        <div class="video-embed-header">
-                                            <h4 class="video-embed-title"><?php echo esc_html($embed['title']); ?></h4>
-                                        </div>
-                                    <?php endif; ?>
-                                    <div class="video-embed-wrapper">
-                                        <?php
-                                        $embed_url = $embed['url'];
-                                        $embed_html = '';
-
-                                        // YouTube
-                                        if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/', $embed_url, $matches)) {
-                                            $video_id = $matches[1];
-                                            $embed_html = '<iframe src="https://www.youtube.com/embed/' . esc_attr($video_id) . '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-                                        }
-                                        // Vimeo
-                                        elseif (preg_match('/vimeo\.com\/([0-9]+)/', $embed_url, $matches)) {
-                                            $video_id = $matches[1];
-                                            $embed_html = '<iframe src="https://player.vimeo.com/video/' . esc_attr($video_id) . '" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
-                                        }
-                                        // Google Drive
-                                        elseif (preg_match('/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/', $embed_url, $matches)) {
-                                            $file_id = $matches[1];
-                                            $embed_html = '<iframe src="https://drive.google.com/file/d/' . esc_attr($file_id) . '/preview" frameborder="0" allow="autoplay"></iframe>';
-                                        }
-                                        // Dropbox
-                                        elseif (strpos($embed_url, 'dropbox.com') !== false) {
-                                            $embed_url_modified = str_replace('www.dropbox.com', 'dl.dropboxusercontent.com', $embed_url);
-                                            $embed_html = '<video controls><source src="' . esc_url($embed_url_modified) . '" type="video/mp4"></video>';
-                                        }
-                                        // Fallback
-                                        else {
-                                            $embed_html = '<p class="embed-error">' . Agency_Icons::get('alert', 15) . ' ' . __('URL not recognized. Use YouTube, Vimeo, Google Drive or Dropbox.', 'agency-client-portal') . '</p>';
-                                        }
-
-                                        echo wp_kses($embed_html, array(
-                                            'iframe' => array('src' => true, 'frameborder' => true, 'allow' => true, 'allowfullscreen' => true),
-                                            'video'  => array('controls' => true),
-                                            'source' => array('src' => true, 'type' => true),
-                                            'p'      => array('class' => true),
-                                        ) + Agency_Icons::allowed_html());
-                                        ?>
-                                    </div>
-
-                                    <div class="video-info">
-                                        <div class="video-actions">
-                                            <?php if ($is_manager): ?>
-                                                <button class="agency-btn-icon delete-embed" data-embed-index="<?php echo esc_attr($index); ?>" title="<?php esc_attr_e('Delete', 'agency-client-portal'); ?>">
-                                                    <?php Agency_Icons::render('trash', 16); ?>
-                                                </button>
-                                            <?php endif; ?>
-                                        </div>
-
-                                        <!-- Notes -->
-                                        <div class="video-notes">
-                                            <label for="notes-<?php echo esc_attr($embed_asset->id); ?>" style="display:block; margin:8px 0 6px; font-size:13px; color:#666;">
-                                                <?php esc_html_e('Notes', 'agency-client-portal'); ?>
-                                            </label>
-                                            <textarea id="notes-<?php echo esc_attr($embed_asset->id); ?>"
-                                                      class="asset-notes-input"
-                                                      data-asset-id="<?php echo esc_attr($embed_asset->id); ?>"
-                                                      rows="3"
-                                                      placeholder="<?php esc_attr_e('Add notes...', 'agency-client-portal'); ?>"
-                                                      <?php echo $is_manager ? '' : 'readonly'; ?>><?php echo isset($embed_asset->voiceover) ? esc_textarea($embed_asset->voiceover) : ''; ?></textarea>
-                                            <?php if ($is_manager): ?>
-                                                <button class="agency-btn agency-btn-sm agency-btn-primary save-notes-btn"
-                                                        data-asset-id="<?php echo esc_attr($embed_asset->id); ?>"
-                                                        style="margin-top:6px;">
-                                                    <?php esc_html_e('Save notes', 'agency-client-portal'); ?>
-                                                </button>
-                                                <span class="notes-save-status"
-                                                      data-asset-id="<?php echo esc_attr($embed_asset->id); ?>"
-                                                      style="margin-left:8px; font-size:12px;"></span>
-                                            <?php endif; ?>
-                                        </div>
-
-                                        <!-- Commentaires -->
-                                        <?php if (Agency_Block::client_can_comment_allowed($block)) : ?>
-                                        <div class="video-comments">
-                                            <h4><?php esc_html_e('Comments', 'agency-client-portal'); ?></h4>
-
-                                            <div class="asset-comments-list" data-asset-id="<?php echo esc_attr($embed_asset->id); ?>">
-                                                <?php if (empty($embed_comments)): ?>
-                                                    <p class="no-comments"><?php esc_html_e('No comments.', 'agency-client-portal'); ?></p>
-                                                <?php else: ?>
-                                                    <?php foreach ($embed_comments as $comment): ?>
-                                                        <div class="comment-item" data-comment-id="<?php echo esc_attr($comment->id); ?>">
-                                                            <div class="comment-header">
-                                                                <span class="comment-author"><?php echo esc_html($comment->user->display_name); ?></span>
-                                                                <span class="comment-date"><?php echo esc_html(Agency_Template::time_ago($comment->created_at)); ?></span>
-                                                            </div>
-                                                            <div class="comment-content"><?php echo wp_kses_post($comment->content); ?></div>
-                                                            <?php if ($is_manager || get_current_user_id() === (int)$comment->user_id): ?>
-                                                                <button class="comment-delete-btn delete-comment" data-comment-id="<?php echo esc_attr($comment->id); ?>">×</button>
-                                                            <?php endif; ?>
-                                                        </div>
-                                                    <?php endforeach; ?>
-                                                <?php endif; ?>
-                                            </div>
-
-                                            <div class="asset-comment-form">
-                                                <form class="new-asset-comment-form" data-asset-id="<?php echo esc_attr($embed_asset->id); ?>">
-                                                    <textarea name="comment_content"
-                                                              class="asset-comment-input"
-                                                              rows="3"
-                                                              placeholder="<?php esc_attr_e('Add a comment...', 'agency-client-portal'); ?>"
-                                                              required></textarea>
-                                                    <button type="submit" class="agency-btn agency-btn-primary">
-                                                        <?php esc_html_e('Send', 'agency-client-portal'); ?>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <?php endif; ?>
-
-                                    </div>
-                                </div>
                             <?php endforeach; ?>
                         </div>
                     </div>
@@ -791,114 +668,53 @@ $embed_asset_ids = array();
                 ?>
                 <?php if (!empty($upload_assets)): ?>
                     <div class="video-uploads">
-                        <h3><?php esc_html_e('Imported videos', 'agency-client-portal'); ?></h3>
+                        <h3 class="agency-bp-section-title"><?php esc_html_e('Imported videos', 'agency-client-portal'); ?> <span class="agency-count"><?php echo intval(count($upload_assets)); ?></span></h3>
                         <div class="video-upload-grid">
                             <?php foreach ($upload_assets as $asset): ?>
-                                <?php $asset_view_url = $preview_only_for_token_client ? Agency_Asset::get_preview_url($asset->id) : Agency_Asset::get_url($asset->id); ?>
-                                <?php $asset_comments = Agency_Comment::get_by_asset($asset->id); ?>
-                                <div class="video-upload-item" data-asset-id="<?php echo esc_attr($asset->id); ?>">
-                                    <div class="video-player-wrapper">
-                                        <?php if ($asset->file_type === 'video'): ?>
-                                            <video controls class="video-player" <?php if ($preview_only_for_token_client): ?>controlsList="nodownload noplaybackrate" disablepictureinpicture oncontextmenu="return false;"<?php endif; ?>>
-                                                <source src="<?php echo esc_url($asset_view_url); ?>" type="video/mp4">
-                                                <?php esc_html_e('Your browser does not support video playback.', 'agency-client-portal'); ?>
-                                            </video>
-                                        <?php else: ?>
-                                            <div class="video-file-placeholder">
-                                                <span class="file-icon"><?php Agency_Icons::render('film', 16); ?></span>
-                                                <span class="file-name"><?php echo esc_html($asset->original_filename); ?></span>
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
+                                <?php
+                                $asset_view_url = $preview_only_for_token_client ? Agency_Asset::get_preview_url($asset->id) : Agency_Asset::get_url($asset->id);
 
-                                    <div class="video-info">
-                                        <div class="video-actions">
-                                            <?php if ($can_download_media): ?>
-                                            <a href="<?php echo esc_url(Agency_Asset::get_download_url($asset->id)); ?>"
-                                               class="agency-btn-icon"
-                                               target="_blank"
-                                               title="<?php esc_attr_e('Download', 'agency-client-portal'); ?>">
-                                                <?php Agency_Icons::render('arrow-down', 16); ?>
-                                            </a>
-                                            <?php endif; ?>
-                                            <?php if ($is_manager): ?>
-                                                <button class="agency-btn-icon delete-asset"
-                                                        data-asset-id="<?php echo esc_attr($asset->id); ?>"
-                                                        title="<?php esc_attr_e('Delete', 'agency-client-portal'); ?>">
-                                                    <?php Agency_Icons::render('trash', 16); ?>
-                                                </button>
-                                            <?php endif; ?>
+                                ob_start();
+                                ?>
+                                <div class="video-player-wrapper">
+                                    <?php if ($asset->file_type === 'video'): ?>
+                                        <video controls class="video-player" <?php if ($preview_only_for_token_client): ?>controlsList="nodownload noplaybackrate" disablepictureinpicture oncontextmenu="return false;"<?php endif; ?>>
+                                            <source src="<?php echo esc_url($asset_view_url); ?>" type="video/mp4">
+                                            <?php esc_html_e('Your browser does not support video playback.', 'agency-client-portal'); ?>
+                                        </video>
+                                    <?php else: ?>
+                                        <div class="video-file-placeholder">
+                                            <span class="file-icon"><?php Agency_Icons::render('film', 16); ?></span>
+                                            <span class="file-name"><?php echo esc_html($asset->original_filename); ?></span>
                                         </div>
-
-                                        <!-- Notes -->
-                                        <div class="video-notes">
-                                            <label for="notes-<?php echo esc_attr($asset->id); ?>" style="display:block; margin:8px 0 6px; font-size:13px; color:#666;">
-                                                <?php esc_html_e('Notes', 'agency-client-portal'); ?>
-                                            </label>
-                                            <textarea id="notes-<?php echo esc_attr($asset->id); ?>"
-                                                      class="asset-notes-input"
-                                                      data-asset-id="<?php echo esc_attr($asset->id); ?>"
-                                                      rows="3"
-                                                      placeholder="<?php esc_attr_e('Add notes...', 'agency-client-portal'); ?>"
-                                                      <?php echo $is_manager ? '' : 'readonly'; ?>><?php echo isset($asset->voiceover) ? esc_textarea($asset->voiceover) : ''; ?></textarea>
-                                            <?php if ($is_manager): ?>
-                                                <button class="agency-btn agency-btn-sm agency-btn-primary save-notes-btn"
-                                                        data-asset-id="<?php echo esc_attr($asset->id); ?>"
-                                                        style="margin-top:6px;">
-                                                    <?php esc_html_e('Save notes', 'agency-client-portal'); ?>
-                                                </button>
-                                                <span class="notes-save-status"
-                                                      data-asset-id="<?php echo esc_attr($asset->id); ?>"
-                                                      style="margin-left:8px; font-size:12px;"></span>
-                                            <?php endif; ?>
-                                        </div>
-
-                                        <!-- Commentaires -->
-                                        <?php if (Agency_Block::client_can_comment_allowed($block)) : ?>
-                                        <div class="video-comments">
-                                            <h4><?php esc_html_e('Comments', 'agency-client-portal'); ?></h4>
-
-                                            <div class="asset-comments-list" data-asset-id="<?php echo esc_attr($asset->id); ?>">
-                                                <?php if (empty($asset_comments)): ?>
-                                                    <p class="no-comments"><?php esc_html_e('No comments.', 'agency-client-portal'); ?></p>
-                                                <?php else: ?>
-                                                    <?php foreach ($asset_comments as $comment): ?>
-                                                        <div class="comment-item" data-comment-id="<?php echo esc_attr($comment->id); ?>">
-                                                            <div class="comment-header">
-                                                                <span class="comment-author"><?php echo esc_html($comment->user->display_name); ?></span>
-                                                                <span class="comment-date"><?php echo esc_html(Agency_Template::time_ago($comment->created_at)); ?></span>
-                                                            </div>
-                                                            <div class="comment-content"><?php echo wp_kses_post($comment->content); ?></div>
-                                                            <?php if ($is_manager || get_current_user_id() === (int)$comment->user_id): ?>
-                                                                <button class="comment-delete-btn delete-comment" data-comment-id="<?php echo esc_attr($comment->id); ?>">
-                                                                    <?php esc_html_e('Delete', 'agency-client-portal'); ?>
-                                                                </button>
-                                                            <?php endif; ?>
-                                                        </div>
-                                                    <?php endforeach; ?>
-                                                <?php endif; ?>
-                                            </div>
-
-                                            <div class="asset-comment-form">
-                                                <form class="new-asset-comment-form" data-asset-id="<?php echo esc_attr($asset->id); ?>">
-                                                    <textarea name="comment_content"
-                                                              class="asset-comment-input"
-                                                              rows="3"
-                                                              placeholder="<?php esc_attr_e('Add a comment...', 'agency-client-portal'); ?>"
-                                                              required></textarea>
-                                                    <button type="submit" class="agency-btn agency-btn-primary agency-btn-sm">
-                                                        <?php esc_html_e('Send', 'agency-client-portal'); ?>
-                                                    </button>
-                                                </form>
-                                        </div>
-                                        </div>
-                                        <?php endif; ?>
-                                    </div>
+                                    <?php endif; ?>
                                 </div>
+                                <?php
+                                $vi_player = ob_get_clean();
+
+                                $vi_asset   = $asset;
+                                $vi_kind    = 'upload';
+                                $vi_title   = pathinfo($asset->original_filename, PATHINFO_FILENAME);
+                                $vi_ext     = strtoupper(pathinfo($asset->original_filename, PATHINFO_EXTENSION));
+                                $vi_tags    = array_filter(array(__('Video', 'agency-client-portal'), $vi_ext, $asset->file_size ? size_format($asset->file_size) : ''));
+                                $vi_attrs   = '';
+                                $vi_actions = '';
+                                if ($can_download_media) {
+                                    $vi_actions .= '<a href="' . esc_url(Agency_Asset::get_download_url($asset->id)) . '" class="agency-btn-icon" target="_blank" title="' . esc_attr__('Download', 'agency-client-portal') . '" aria-label="' . esc_attr__('Download', 'agency-client-portal') . '">' . Agency_Icons::get('download', 16) . '</a>';
+                                }
+                                if ($is_manager) {
+                                    $vi_actions .= '<button type="button" class="agency-btn-icon delete-asset" data-asset-id="' . esc_attr($asset->id) . '" title="' . esc_attr__('Delete', 'agency-client-portal') . '" aria-label="' . esc_attr__('Delete', 'agency-client-portal') . '">' . Agency_Icons::get('trash', 16) . '</button>';
+                                }
+                                include AGENCY_PLUGIN_DIR . 'templates/partials/video-item.php';
+                                ?>
                             <?php endforeach; ?>
                         </div>
                     </div>
                 <?php endif; ?>
+
+            </div>
+        </div>
+    </main>
 
     <?php include AGENCY_PLUGIN_DIR . 'templates/partials/footer.php'; ?>
 </div>
@@ -1064,7 +880,6 @@ $embed_asset_ids = array();
     </div>
 </div>
 
-<?php wp_footer(); ?>
 <!-- Loading overlay pour import vidéo -->
 <div class="agency-modal" id="upload-progress-overlay" style="display:none;">
     <div class="agency-modal-content agency-upload-modal">
@@ -1073,3 +888,7 @@ $embed_asset_ids = array();
     </div>
 </div>
 <?php endif; ?>
+
+<?php wp_footer(); ?>
+</body>
+</html>

@@ -96,66 +96,6 @@
 }
 
 /* Comments */
-.block-comments {
-    background: var(--ag-panel);
-    border-radius: var(--agency-radius);
-    padding: 24px;
-    box-shadow: var(--agency-shadow);
-    margin-top: 30px;
-}
-
-.comments-list {
-    margin: 20px 0;
-}
-
-.comment-item {
-    padding: 16px;
-    border-bottom: 1px solid var(--agency-border-color);
-}
-
-.comment-item:last-child {
-    border-bottom: none;
-}
-
-.comment-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-}
-
-.comment-author {
-    font-weight: 600;
-    font-size: 14px;
-}
-
-.comment-date {
-    font-size: 12px;
-    color: var(--ag-text-3);
-}
-
-.comment-content {
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-.comment-form {
-    margin-top: 30px;
-}
-
-.comment-form textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--agency-border-color);
-    border-radius: var(--agency-radius);
-    font-family: inherit;
-    font-size: 14px;
-    resize: vertical;
-}
-
-.comment-form button {
-    margin-top: 12px;
-}
-
 /* Two-Column Layout (2/3 + 1/3) for Script Block */
 .block-two-column-layout {
     display: grid;
@@ -319,27 +259,7 @@
 
 /* Le curseur de drag vit sur .storyboard-drag-handle (poignée dédiée),
    plus sur la slide entière — voir _block-views.css */
-.storyboard-items.sortable .storyboard-item:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
-}
 
-/* Storyboard Item avec animations smooth */
-.storyboard-item {
-    background: var(--ag-panel);
-    border-radius: var(--agency-radius);
-    padding: 24px;
-    box-shadow: var(--agency-shadow);
-    display: grid;
-    grid-template-columns: 70% 30%;
-    gap: 30px;
-    align-items: start;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    border: 1px solid var(--agency-border-color);
-}
-
-/* Animations de drag & drop pour storyboard */
 .storyboard-items .sortable-ghost {
     opacity: 0.3;
     background: var(--agency-light-bg);
@@ -369,9 +289,6 @@
     }
 }
 
-.storyboard-item {
-    animation: slideInUp 0.4s ease;
-}
 
 /* Transition fluide lors du réarrangement */
 .storyboard-items.sortable .storyboard-item {
@@ -462,76 +379,9 @@
     width: 6px;
 }
 
-.asset-comments-list::-webkit-scrollbar-track {
-    background: var(--agency-light-bg);
-    border-radius: 3px;
-}
-
-.asset-comments-list::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 3px;
-}
-
-.asset-comments-list::-webkit-scrollbar-thumb:hover {
-    background: #999;
-}
-
-.asset-comments-list .comment-item {
-    background: var(--agency-light-bg);
-    border-radius: 8px;
-    padding: 12px;
-    margin-bottom: 12px;
-    border: none;
-}
-
-.asset-comments-list .comment-header {
-    margin-bottom: 6px;
-}
-
-.asset-comments-list .comment-content {
-    font-size: 13px;
-}
-
-.comment-delete-btn {
-    background: none;
-    border: none;
-    color: var(--agency-danger);
-    font-size: 11px;
-    cursor: pointer;
-    padding: 4px 0;
-    margin-top: 4px;
-    text-decoration: underline;
-}
-
-.comment-delete-btn:hover {
-    color: var(--agency-danger-hover);
-}
-
-.asset-comment-form {
-    border-top: 1px solid var(--agency-border-color);
-    padding-top: 16px;
-}
-
-.asset-comment-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--agency-border-color);
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 13px;
-    resize: vertical;
-    margin-bottom: 8px;
-}
-
-.asset-comment-input:focus {
-    outline: none;
-    border-color: var(--agency-primary-color);
-}
-
 /* .agency-btn-sm : modificateur de taille pur, défini dans assets/css/ui.css.
    La couleur vient des variantes (-primary, -secondary…). */
-.no-assets,
-.no-comments {
+.no-assets {
     text-align: center;
     padding: 40px 20px;
     color: var(--ag-text-3);

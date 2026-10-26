@@ -3754,3 +3754,156 @@ msgstr "Erreur lors de l'importation."
 #: assets/js/manager.js:706
 msgid "Delete this layout?"
 msgstr "Supprimer cette disposition ?"
+
+msgid "%1$s commented on %2$s"
+msgstr "%1$s a commenté la %2$s"
+
+msgid "%1$s created %2$s"
+msgstr "%1$s a créé la %2$s"
+
+msgid "%1$s uploaded %2$s"
+msgstr "%1$s a téléversé la %2$s"
+
+msgid "%1$s · %2$s · %3$s"
+msgstr "%1$s · %2$s · %3$s"
+
+msgid "%1$s · by %2$s"
+msgstr "%1$s · par %2$s"
+
+msgid "Accepted files: %1$s — max size: %2$d MB"
+msgstr "Fichiers acceptés : %1$s — taille max : %2$d Mo"
+
+msgid "Activity"
+msgstr "Activité"
+
+msgid "Add a comment…"
+msgstr "Ajouter un commentaire…"
+
+msgid "Added %s"
+msgstr "Ajoutée %s"
+
+msgid "Agency files"
+msgstr "Fichiers de l’agence"
+
+msgid "Align left"
+msgstr "Aligner à gauche"
+
+msgid "Allowed extensions"
+msgstr "Extensions autorisées"
+
+msgid "Back to project"
+msgstr "Retour au projet"
+
+msgid "Choose a file"
+msgstr "Choisir un fichier"
+
+msgid "Client files"
+msgstr "Fichiers du client"
+
+msgid "Client preview"
+msgstr "Aperçu client"
+
+msgid "Current version"
+msgstr "Version actuelle"
+
+msgid "Custom"
+msgstr "Personnalisé"
+
+msgid "Destination"
+msgstr "Destination"
+
+msgid "Done"
+msgstr "Terminé"
+
+msgid "File is too large"
+msgstr "Le fichier est trop volumineux"
+
+msgid "Font"
+msgstr "Police"
+
+msgid "Google Slides integration"
+msgstr "Intégration Google Slides"
+
+msgid "Hex colour"
+msgstr "Couleur hexadécimale"
+
+msgid "In progress"
+msgstr "En cours"
+
+msgid "Italic"
+msgstr "Italique"
+
+msgid "Link URL:"
+msgstr "URL du lien :"
+
+msgid "MB"
+msgstr "Mo"
+
+msgid "No link yet."
+msgstr "Aucun lien pour le moment."
+
+msgid "Remove"
+msgstr "Retirer"
+
+msgid "Reply"
+msgstr "Répondre"
+
+msgid "See less"
+msgstr "Voir moins"
+
+msgid "See more"
+msgstr "Voir plus"
+
+msgid "Shot %d"
+msgstr "Plan %d"
+
+msgid "Size"
+msgstr "Taille"
+
+msgid "Text colour"
+msgstr "Couleur du texte"
+
+msgid "Underline"
+msgstr "Souligné"
+
+msgid "Video %d"
+msgstr "Vidéo %d"
+
+msgid "Your reply..."
+msgstr "Votre réponse…"
+
+msgid "comma-separated"
+msgstr "séparées par des virgules"
+
+msgid "or drag and drop"
+msgstr "ou glisser-déposer"
+
+msgid "sequence"
+msgstr "séquence"
+
+msgid "sequences"
+msgstr "séquences"
+
+msgid "up to %d MB"
+msgstr "jusqu’à %d Mo"
+
+msgid "word"
+msgstr "mot"
+
+msgid "words"
+msgstr "mots"
+
+msgid "%d line"
+msgid_plural "%d lines"
+msgstr[0] "%d ligne"
+msgstr[1] "%d lignes"
+
+msgid "%s byte"
+msgid_plural "%s bytes"
+msgstr[0] "%s octet"
+msgstr[1] "%s octets"
+
+msgid "History · %d version"
+msgid_plural "History · %d versions"
+msgstr[0] "Historique · %d version"
+msgstr[1] "Historique · %d versions"

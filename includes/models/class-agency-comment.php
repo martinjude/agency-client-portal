@@ -59,6 +59,39 @@ class Agency_Comment {
     }
     
     /**
+     * Regroupe une liste plate en fil : les réponses (parent_id) sont rattachées
+     * à leur commentaire racine dans ->replies (un seul niveau d'imbrication).
+     *
+     * @param array $comments Liste plate triée par date.
+     * @return array Commentaires racine, chacun avec ->replies.
+     */
+    public static function nest($comments) {
+        $roots = array();
+        $index = array();
+
+        foreach ($comments as $comment) {
+            $comment->replies = array();
+            $index[(int) $comment->id] = $comment;
+        }
+
+        foreach ($comments as $comment) {
+            $parent_id = isset($comment->parent_id) ? (int) $comment->parent_id : 0;
+            if ($parent_id && isset($index[$parent_id])) {
+                // Une réponse à une réponse reste au niveau de la racine
+                $root = $index[$parent_id];
+                while (!empty($root->parent_id) && isset($index[(int) $root->parent_id])) {
+                    $root = $index[(int) $root->parent_id];
+                }
+                $root->replies[] = $comment;
+            } else {
+                $roots[] = $comment;
+            }
+        }
+
+        return $roots;
+    }
+
+    /**
      * Obtenir un commentaire par ID
      */
     public static function get_by_id($id) {

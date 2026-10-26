@@ -903,6 +903,8 @@
             }
             
             const blockId = $(e.currentTarget).data('block-id');
+            // Depuis une page de bloc : retour au projet (la page n'existe plus)
+            const redirectUrl = $(e.currentTarget).data('redirect');
             
             $.ajax({
                 url: agencyData.rest_url + 'blocks/' + blockId,
@@ -912,7 +914,11 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        location.reload();
+                        if (redirectUrl) {
+                            location.href = redirectUrl;
+                        } else {
+                            location.reload();
+                        }
                     }
                 },
                 error: function() {

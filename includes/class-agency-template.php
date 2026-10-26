@@ -42,6 +42,51 @@ class Agency_Template {
     }
 
     /**
+     * Initiales d'un nom (2 lettres max, avatars des commentaires).
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function initials($name) {
+        $parts = preg_split('/\s+/u', trim((string) $name), -1, PREG_SPLIT_NO_EMPTY);
+        if (empty($parts)) {
+            return '?';
+        }
+        $out = self::initial($parts[0]);
+        if (count($parts) > 1) {
+            $out .= self::initial(end($parts));
+        }
+        return $out;
+    }
+
+    /**
+     * Tuile de type de fichier (extension en mono, teintée par famille).
+     *
+     * @param string $filename Nom de fichier.
+     * @return string HTML échappé.
+     */
+    public static function file_tile($filename) {
+        $ext = strtolower(pathinfo((string) $filename, PATHINFO_EXTENSION));
+        $groups = array(
+            'zip'   => array('zip', 'rar', '7z', 'tar', 'gz'),
+            'pdf'   => array('pdf'),
+            'img'   => array('png', 'jpg', 'jpeg', 'gif', 'webp'),
+            'vec'   => array('svg', 'ai', 'eps'),
+            'video' => array('mp4', 'mov', 'avi', 'mkv', 'webm'),
+            'audio' => array('mp3', 'wav', 'aac', 'flac'),
+        );
+        $family = 'other';
+        foreach ($groups as $name => $exts) {
+            if (in_array($ext, $exts, true)) {
+                $family = $name;
+                break;
+            }
+        }
+        $label = $ext !== '' ? strtoupper(substr($ext, 0, 4)) : '—';
+        return '<span class="agency-ftile agency-ftile--' . esc_attr($family) . '">' . esc_html($label) . '</span>';
+    }
+
+    /**
      * Couleur client sûre pour un attribut style.
      *
      * @param object|null $client

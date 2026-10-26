@@ -101,90 +101,73 @@ $can_comment = Agency_Block::client_can_comment_allowed($block);
                     </div>
                 </div>
 
-                <div class="block-columns<?php echo !$can_comment ? ' no-comments' : ''; ?>">
+                <div class="agency-bp-grid<?php echo !$can_comment ? ' agency-bp-grid--solo' : ''; ?>">
 
                     <!-- Colonne principale : code -->
-                    <div class="block-column-left">
+                    <div class="agency-bp-main">
 
                         <?php if ($code): ?>
-                        <div class="agency-code-block-wrapper">
-                            <?php if ($file_name): ?>
-                            <div class="agency-code-block-label">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                                <?php echo esc_html($file_name); ?>
-                            </div>
-                            <?php endif; ?>
-                            <button class="agency-code-copy-btn" id="copy-code-btn" type="button"
-                                    data-code-b64="<?php echo esc_attr(base64_encode($code)); ?>"
-                                    data-label-copy="<?php esc_attr_e('Copy', 'agency-client-portal'); ?>"
-                                    data-label-copied="<?php esc_attr_e('Copied!', 'agency-client-portal'); ?>"
-                                    data-label-error="<?php esc_attr_e('Error', 'agency-client-portal'); ?>"
-                                    title="<?php esc_attr_e('Copy code', 'agency-client-portal'); ?>">
-                                <span class="agency-code-copy-icon" aria-hidden="true">
-                                    <svg class="icon-copy" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.2474 6.25033V2.91699H17.0807V13.7503H13.7474M13.7474 6.25033V17.0837H2.91406V6.25033H13.7474Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/></svg>
-                                    <svg class="icon-check" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="3,10 8,15 17,5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <?php
+                        $code_lines = substr_count(rtrim($code, "\r\n"), "\n") + 1;
+                        $code_bytes = strlen($code);
+                        $code_lang  = ($language === 'markup') ? 'HTML' : strtoupper($language === 'plaintext' ? 'TXT' : $language);
+                        ?>
+                        <section class="agency-bp-card agency-code-card">
+                            <header class="agency-code-tabs">
+                                <span class="agency-code-tab">
+                                    <?php Agency_Icons::render('file', 16); ?>
+                                    <span class="agency-code-tab__name"><?php echo esc_html($file_name ? $file_name : $block->title); ?></span>
                                 </span>
-                                <span class="copy-btn-label"><?php esc_html_e('Copy', 'agency-client-portal'); ?></span>
-                            </button>
-                            <pre class="line-numbers language-<?php echo esc_attr($language); ?>"><code id="code-content" class="language-<?php echo esc_attr($language); ?>"><?php echo esc_html($code); ?></code></pre>
-                        </div>
+                                <span class="agency-badge agency-code-lang"><?php echo esc_html($code_lang); ?></span>
+                            </header>
+                            <div class="agency-code-block-wrapper">
+                                <pre class="line-numbers language-<?php echo esc_attr($language); ?>"><code id="code-content" class="language-<?php echo esc_attr($language); ?>"><?php echo esc_html($code); ?></code></pre>
+                            </div>
+                            <footer class="agency-code-foot">
+                                <span class="agency-code-stats">
+                                    <?php
+                                    /* translators: 1: language, 2: number of lines, 3: size in bytes */
+                                    echo esc_html(sprintf(__('%1$s · %2$s · %3$s', 'agency-client-portal'),
+                                        $code_lang,
+                                        sprintf(_n('%d line', '%d lines', $code_lines, 'agency-client-portal'), $code_lines),
+                                        sprintf(_n('%s byte', '%s bytes', $code_bytes, 'agency-client-portal'), number_format_i18n($code_bytes))
+                                    ));
+                                    ?>
+                                </span>
+                                <button class="agency-btn agency-code-copy-btn" id="copy-code-btn" type="button"
+                                        data-code-b64="<?php echo esc_attr(base64_encode($code)); ?>"
+                                        data-label-copy="<?php esc_attr_e('Copy code', 'agency-client-portal'); ?>"
+                                        data-label-copied="<?php esc_attr_e('Copied!', 'agency-client-portal'); ?>"
+                                        data-label-error="<?php esc_attr_e('Error', 'agency-client-portal'); ?>"
+                                        title="<?php esc_attr_e('Copy code', 'agency-client-portal'); ?>">
+                                    <span class="agency-code-copy-icon" aria-hidden="true">
+                                        <svg class="icon-copy" width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.2474 6.25033V2.91699H17.0807V13.7503H13.7474M13.7474 6.25033V17.0837H2.91406V6.25033H13.7474Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/></svg>
+                                        <svg class="icon-check" width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="3,10 8,15 17,5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    </span>
+                                    <span class="copy-btn-label"><?php esc_html_e('Copy code', 'agency-client-portal'); ?></span>
+                                </button>
+                            </footer>
+                        </section>
                         <?php elseif ($is_manager): ?>
-                        <div class="agency-code-empty">
-                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                        <section class="agency-bp-card agency-code-empty">
+                            <?php Agency_Icons::render_glyph('code', 32); ?>
                             <p><?php esc_html_e('No code yet.', 'agency-client-portal'); ?></p>
                             <button class="agency-btn agency-btn-primary" id="edit-code-btn-empty" type="button">
                                 <?php esc_html_e('Add code', 'agency-client-portal'); ?>
                             </button>
-                        </div>
+                        </section>
                         <?php else: ?>
-                        <div class="agency-code-empty">
+                        <section class="agency-bp-card agency-code-empty">
                             <p><?php esc_html_e('No code available.', 'agency-client-portal'); ?></p>
-                        </div>
+                        </section>
                         <?php endif; ?>
 
                     </div>
 
-                    <!-- Colonne commentaires -->
                     <?php if ($can_comment): ?>
-                    <div class="block-column-right">
-                        <div class="block-comments">
-                            <h3><?php esc_html_e('Comments', 'agency-client-portal'); ?></h3>
-
-                            <div class="comments-list" id="comments-list">
-                                <?php if (empty($comments)): ?>
-                                    <p class="no-comments"><?php esc_html_e('No comments yet.', 'agency-client-portal'); ?></p>
-                                <?php else: ?>
-                                    <?php foreach ($comments as $comment): ?>
-                                        <div class="comment-item" data-comment-id="<?php echo esc_attr($comment->id); ?>">
-                                            <div class="comment-header">
-                                                <span class="comment-author"><?php echo esc_html($comment->user->display_name); ?></span>
-                                                <span class="comment-date"><?php echo esc_html(Agency_Template::time_ago($comment->created_at)); ?></span>
-                                            </div>
-                                            <div class="comment-content"><?php echo wp_kses_post($comment->content); ?></div>
-                                            <?php if ($is_manager || get_current_user_id() === (int)$comment->user_id): ?>
-                                            <div class="comment-actions">
-                                                <button class="agency-btn-text delete-comment" data-comment-id="<?php echo esc_attr($comment->id); ?>">
-                                                    <?php esc_html_e('Delete', 'agency-client-portal'); ?>
-                                                </button>
-                                            </div>
-                                            <?php endif; ?>
-                                        </div>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </div>
-
-                            <div class="comment-form">
-                                <h4><?php esc_html_e('Add a comment', 'agency-client-portal'); ?></h4>
-                                <form id="new-comment-form">
-                                    <textarea name="comment_content" id="comment-content" rows="4"
-                                              placeholder="<?php esc_attr_e('Your comment...', 'agency-client-portal'); ?>" required></textarea>
-                                    <button type="submit" class="agency-btn agency-btn-primary">
-                                        <?php esc_html_e('Send', 'agency-client-portal'); ?>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                    <aside class="agency-bp-aside">
+                        <?php $cm_comments = $comments; include AGENCY_PLUGIN_DIR . 'templates/partials/block-comments.php'; ?>
+                    </aside>
                     <?php endif; ?>
 
                 </div>
@@ -422,36 +405,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    <?php endif; ?>
-
-    <?php if ($can_comment): ?>
-    // ----- Comment submit -----
-    var commentForm = document.getElementById('new-comment-form');
-    if (commentForm) {
-        commentForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            var content   = document.getElementById('comment-content').value.trim();
-            if (!content) return;
-            var submitBtn = commentForm.querySelector('button[type=submit]');
-            submitBtn.disabled = true;
-            fetch(agencyData.rest_url + 'comments', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': agencyData.nonce },
-                body: JSON.stringify({ block_id: <?php echo intval($block->id); ?>, content: content })
-            }).then(function(r) { return r.json(); }).then(function(data) {
-                if (data.success) window.location.reload(); else submitBtn.disabled = false;
-            }).catch(function() { submitBtn.disabled = false; });
-        });
-    }
-    // ----- Comment delete -----
-    document.querySelectorAll('.delete-comment').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            if (!confirm(<?php echo wp_json_encode(__('Delete this comment?', 'agency-client-portal')); ?>)) return;
-            fetch(agencyData.rest_url + 'comments/' + btn.getAttribute('data-comment-id'), {
-                method: 'DELETE', headers: { 'X-WP-Nonce': agencyData.nonce }
-            }).then(function(r) { return r.json(); }).then(function(data) { if (data.success) window.location.reload(); });
-        });
-    });
     <?php endif; ?>
 
 });

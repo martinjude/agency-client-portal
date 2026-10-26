@@ -48,6 +48,20 @@ Agency_Template::crumbs(array(
                 data-project-slug="<?php echo esc_attr($project->slug); ?>">
             <?php Agency_Icons::render('copy', 16); ?> <?php esc_html_e('Copy link', 'agency-client-portal'); ?>
         </button>
+        <div class="agency-dropdown">
+            <button type="button" class="agency-btn-icon" data-agency-dropdown aria-haspopup="true" aria-expanded="false" aria-label="<?php esc_attr_e('More actions', 'agency-client-portal'); ?>">
+                <?php Agency_Icons::render_ui('more', 16); ?>
+            </button>
+            <div class="agency-menu" role="menu">
+                <a class="agency-menu__item" href="<?php echo esc_url(home_url("/client/{$client->slug}/project/{$project->slug}/")); ?>"><?php Agency_Icons::render_ui('external', 16); ?> <?php esc_html_e('Back to project', 'agency-client-portal'); ?></a>
+                <hr class="agency-menu__sep">
+                <button type="button" class="agency-menu__item agency-menu__item--danger delete-block"
+                        data-block-id="<?php echo esc_attr($block->id); ?>"
+                        data-redirect="<?php echo esc_url(home_url("/client/{$client->slug}/project/{$project->slug}/")); ?>">
+                    <?php Agency_Icons::render('trash', 16); ?> <?php esc_html_e('Delete', 'agency-client-portal'); ?>
+                </button>
+            </div>
+        </div>
     </div>
     <?php endif; ?>
 </div>
