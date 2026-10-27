@@ -25,8 +25,9 @@ trap 'rm -rf "$TMP_DIR"' EXIT
 
 rsync -a --exclude-from="$PLUGIN_DIR/.distignore" "$PLUGIN_DIR/" "$TMP_DIR/$SLUG/"
 
-mkdir -p "$PLUGIN_DIR/dist"
-ZIP="$PLUGIN_DIR/dist/$SLUG-$VERSION.zip"
+OUT_DIR="${OUT_DIR:-$PLUGIN_DIR/dist}"
+mkdir -p "$OUT_DIR"
+ZIP="$OUT_DIR/$SLUG-$VERSION.zip"
 rm -f "$ZIP"
 (cd "$TMP_DIR" && zip -qr -X "$ZIP" "$SLUG")
 

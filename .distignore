@@ -5,6 +5,8 @@
 /bin
 /design
 /dist
+/release
+/release.command
 /node_modules
 /vendor
 .gitignore

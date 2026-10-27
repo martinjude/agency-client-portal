@@ -18,3 +18,6 @@ Thumbs.db
 # Archives de build (bin/build-zip.sh)
 /dist/
 *.zip
+
+# Archives de build (release.command)
+/release/
