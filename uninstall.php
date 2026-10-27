@@ -16,12 +16,12 @@ require_once plugin_dir_path(__FILE__) . 'includes/class-agency-database.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-agency-roles.php';
 
 // Supprimer les tables personnalisées
-$database = new Agency_Database();
-$database->drop_tables();
+$agency_database = new Agency_Database();
+$agency_database->drop_tables();
 
 // Supprimer les rôles personnalisés
-$roles = new Agency_Roles();
-$roles->remove_roles();
+$agency_roles = new Agency_Roles();
+$agency_roles->remove_roles();
 
 // Supprimer les options de base
 delete_option('agency_version');

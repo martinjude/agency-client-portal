@@ -30,4 +30,5 @@ jobs:
       - uses: wordpress/plugin-check-action@v1
         with:
           build-dir: agency-client-portal
-          exclude-directories: 'design,.github,.wordpress-org'
+          exclude-directories: 'design,.github,.wordpress-org,bin,dist'
+          exclude-files: 'AGENTS.md,CLAUDE.md'

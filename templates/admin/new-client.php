@@ -11,34 +11,34 @@ if (!defined('ABSPATH')) {
 
 // Traitement du formulaire
 if (isset($_POST['agency_create_client']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['agency_client_nonce'])), 'agency_create_client')) {
-    $data = array(
+    $agency_data = array(
         'name' => sanitize_text_field(wp_unslash($_POST['client_name'])),
         'logo_url' => esc_url_raw(wp_unslash($_POST['client_logo'])),
         'primary_color' => sanitize_hex_color(wp_unslash($_POST['primary_color'])),
     );
 
     // Créer le post CPT agency_client
-    $post_id = wp_insert_post(array(
-        'post_title'   => $data['name'],
+    $agency_post_id = wp_insert_post(array(
+        'post_title'   => $agency_data['name'],
         'post_type'    => 'agency_client',
         'post_status'  => 'publish',
     ));
 
-    if ($post_id && !is_wp_error($post_id)) {
+    if ($agency_post_id && !is_wp_error($agency_post_id)) {
         // Associer les métadonnées au post
-        update_post_meta($post_id, 'logo_url', $data['logo_url']);
-        update_post_meta($post_id, 'primary_color', $data['primary_color']);
+        update_post_meta($agency_post_id, 'logo_url', $agency_data['logo_url']);
+        update_post_meta($agency_post_id, 'primary_color', $agency_data['primary_color']);
 
         // Créer l'entrée en base personnalisée (token-based access only)
-        $client_id = Agency_Client::create($data);
+        $agency_client_id = Agency_Client::create($agency_data);
 
         // Lier le post CPT à l'entrée DB personnalisée (meta)
-        update_post_meta($post_id, 'agency_client_id', $client_id);
+        update_post_meta($agency_post_id, 'agency_client_id', $agency_client_id);
 
         // Legacy user meta/role removed
 
         echo '<div class="agency-notice success"><p>' . esc_html(__('Client created successfully!', 'agency-client-portal')) . '</p></div>';
-        $client = Agency_Client::get_by_id($client_id);
+        $agency_client = Agency_Client::get_by_id($agency_client_id);
     } else {
         echo '<div class="agency-notice error"><p>' . esc_html(__('Error while creating the client.', 'agency-client-portal')) . '</p></div>';
     }
@@ -49,14 +49,14 @@ if (isset($_POST['agency_create_client']) && wp_verify_nonce(sanitize_text_field
     <div class="agency-admin-wrap">
         <h1 class="agency-admin-title"><?php esc_html_e('Create a New Client', 'agency-client-portal'); ?></h1>
 
-        <?php if (isset($client)): ?>
+        <?php if (isset($agency_client)): ?>
             <div class="agency-notice success">
                 <p><strong><?php esc_html_e('Client created successfully!', 'agency-client-portal'); ?></strong></p>
                 <p><?php esc_html_e('Access URL:', 'agency-client-portal'); ?></p>
                 <div class="agency-access-url">
-                    <?php echo esc_url(home_url('/client/' . $client->slug)); ?>
+                    <?php echo esc_url(home_url('/client/' . $agency_client->slug)); ?>
                 </div>
-                <button class="agency-copy-btn" data-url="<?php echo esc_url(home_url('/client/' . $client->slug)); ?>">
+                <button class="agency-copy-btn" data-url="<?php echo esc_url(home_url('/client/' . $agency_client->slug)); ?>">
                     <?php esc_html_e('Copy URL', 'agency-client-portal'); ?>
                 </button>
             </div>

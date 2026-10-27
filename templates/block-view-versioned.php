@@ -10,39 +10,39 @@
 <body <?php body_class(); ?>>
 
 <?php
-$client_slug = get_query_var('agency_client');
-$project_slug = get_query_var('agency_project');
-$block_id = get_query_var('agency_block');
+$agency_client_slug = get_query_var('agency_client');
+$agency_project_slug = get_query_var('agency_project');
+$agency_block_id = get_query_var('agency_block');
 
-$client = Agency_Client::get_by_slug($client_slug);
-$project = $client ? Agency_Project::get_by_slug($client->id, $project_slug) : null;
-$block   = Agency_Block::get_by_id($block_id);
+$agency_client = Agency_Client::get_by_slug($agency_client_slug);
+$agency_project = $agency_client ? Agency_Project::get_by_slug($agency_client->id, $agency_project_slug) : null;
+$agency_block   = Agency_Block::get_by_id($agency_block_id);
 
-if (!$client || !$project || !$block || $block->type !== 'versioned_media') {
+if (!$agency_client || !$agency_project || !$agency_block || $agency_block->type !== 'versioned_media') {
     wp_die(esc_html__('Content not found', 'agency-client-portal'), 404);
 }
 
-$assets      = Agency_Asset::get_by_block($block_id);
-$comments    = Agency_Comment::get_by_block($block_id);
-$is_manager  = current_user_can('manage_agency_projects');
-$external_links = Agency_External_Link::get_by_block($block_id);
-$settings = Agency_Block::get_settings($block);
-$allow_media_download = Agency_Block::is_media_download_allowed($block);
-$can_download_media = $is_manager || $allow_media_download;
-$token_authenticated = Agency_Security::can_access_client_by_token($client->id);
-$preview_only_for_token_client = !$is_manager && $token_authenticated && !$allow_media_download;
+$agency_assets      = Agency_Asset::get_by_block($agency_block_id);
+$agency_comments    = Agency_Comment::get_by_block($agency_block_id);
+$agency_is_manager  = current_user_can('manage_agency_projects');
+$agency_external_links = Agency_External_Link::get_by_block($agency_block_id);
+$agency_settings = Agency_Block::get_settings($agency_block);
+$agency_allow_media_download = Agency_Block::is_media_download_allowed($agency_block);
+$agency_can_download_media = $agency_is_manager || $agency_allow_media_download;
+$agency_token_authenticated = Agency_Security::can_access_client_by_token($agency_client->id);
+$agency_preview_only_for_token_client = !$agency_is_manager && $agency_token_authenticated && !$agency_allow_media_download;
 
 // Trier les versions: la plus récente (numéro le plus grand) en premier
-usort($assets, function($a, $b) {
-    $va = isset($a->version_number) ? intval($a->version_number) : 1;
+usort($agency_assets, function($agency_a, $b) {
+    $va = isset($agency_a->version_number) ? intval($agency_a->version_number) : 1;
     $vb = isset($b->version_number) ? intval($b->version_number) : 1;
     if ($va === $vb) {
-        return strtotime($b->created_at) <=> strtotime($a->created_at);
+        return strtotime($b->created_at) <=> strtotime($agency_a->created_at);
     }
     return $vb <=> $va;
 });
 
-$active_asset_id = !empty($assets) ? $assets[0]->id : null;
+$agency_active_asset_id = !empty($agency_assets) ? $agency_assets[0]->id : null;
 ?>
 
 <div class="agency-wrapper">
@@ -54,34 +54,34 @@ $active_asset_id = !empty($assets) ? $assets[0]->id : null;
 
     <main class="agency-main">
         <div class="agency-container">
-            <div class="agency-block-view agency-block-versioned" data-block-id="<?php echo esc_attr($block->id); ?>">
+            <div class="agency-block-view agency-block-versioned" data-block-id="<?php echo esc_attr($agency_block->id); ?>">
                 <?php include AGENCY_PLUGIN_DIR . 'templates/partials/block-head.php'; ?>
 
                 <div class="block-header-full agency-bv-bar">
 <?php
-                    $_bv_subtitle = !empty($settings['subtitle']) ? $settings['subtitle'] : '';
-                    $_bv_description = $block->content ?? '';
+                    $agency_bv_subtitle = !empty($agency_settings['subtitle']) ? $agency_settings['subtitle'] : '';
+                    $agency_bv_description = $agency_block->content ?? '';
                     ?>
-                    <?php if ($is_manager || $_bv_description): ?>
+                    <?php if ($agency_is_manager || $agency_bv_description): ?>
                     <div class="block-description versioned-description"
                          data-placeholder="<?php esc_attr_e('Add a description…', 'agency-client-portal'); ?>"
-                         <?php if ($is_manager): ?>
+                         <?php if ($agency_is_manager): ?>
                          contenteditable="true"
                          id="versioned-description"
-                         data-block-id="<?php echo esc_attr($block->id); ?>"
+                         data-block-id="<?php echo esc_attr($agency_block->id); ?>"
                          <?php endif; ?>>
-                        <?php echo wp_kses_post($_bv_description); ?>
+                        <?php echo wp_kses_post($agency_bv_description); ?>
                     </div>
                     <?php endif; ?>
 
                     <div class="agency-links">
-                        <?php if (!empty($external_links)): ?>
+                        <?php if (!empty($agency_external_links)): ?>
                             <div class="external-links-display">
-                                <?php foreach ($external_links as $link): ?>
+                                <?php foreach ($agency_external_links as $link): ?>
                                     <a href="<?php echo esc_url($link->url); ?>" class="external-link-item" target="_blank" rel="noopener" data-link-id="<?php echo esc_attr($link->id); ?>">
                                         <span class="link-emoji"><?php echo esc_html($link->emoji); ?></span>
                                         <span class="link-text"><?php echo esc_html($link->text); ?></span>
-                                        <?php if ($is_manager): ?>
+                                        <?php if ($agency_is_manager): ?>
                                             <button class="edit-external-link" data-link-id="<?php echo esc_attr($link->id); ?>" data-link-emoji="<?php echo esc_attr($link->emoji); ?>" data-link-text="<?php echo esc_attr($link->text); ?>" data-link-url="<?php echo esc_attr($link->url); ?>" title="<?php esc_attr_e('Edit', 'agency-client-portal'); ?>"><?php Agency_Icons::render('edit', 14); ?></button>
                                             <button class="delete-external-link" data-link-id="<?php echo esc_attr($link->id); ?>" title="<?php esc_attr_e('Delete', 'agency-client-portal'); ?>">×</button>
                                         <?php endif; ?>
@@ -89,14 +89,14 @@ $active_asset_id = !empty($assets) ? $assets[0]->id : null;
                                 <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
-                        <?php if ($is_manager): ?>
+                        <?php if ($agency_is_manager): ?>
                             <button class="agency-btn agency-btn-sm agency-btn-secondary" id="add-external-link-btn" type="button">
                                 <?php Agency_Icons::render('link', 16); ?> <?php esc_html_e('Add a link', 'agency-client-portal'); ?>
                             </button>
                         <?php endif; ?>
                     </div>
 
-                    <?php if ($is_manager): ?>
+                    <?php if ($agency_is_manager): ?>
                         <div class="agency-actions">
                             <button class="agency-btn agency-btn-primary" id="upload-version-btn" type="button" data-accept="image/*,.svg,.pdf" data-multiple="false">
                                 <?php Agency_Icons::render('paperclip', 16); ?> <?php esc_html_e('New version', 'agency-client-portal'); ?>
@@ -106,8 +106,8 @@ $active_asset_id = !empty($assets) ? $assets[0]->id : null;
                 </div>
 
                 <?php
-                $vm_can_comment = Agency_Block::client_can_comment_allowed($block);
-                $vm_statuses = array(
+                $agency_vm_can_comment = Agency_Block::client_can_comment_allowed($agency_block);
+                $agency_vm_statuses = array(
                     'draft'             => __('Draft', 'agency-client-portal'),
                     'approved'          => __('Approved', 'agency-client-portal'),
                     'pending'           => __('Pending', 'agency-client-portal'),
@@ -118,139 +118,142 @@ $active_asset_id = !empty($assets) ? $assets[0]->id : null;
                 );
 
                 // Activité : envois de versions + commentaires, du plus récent au plus ancien
-                $vm_events = array();
-                $vm_comments_by_asset = array();
-                foreach ($assets as $ev_asset) {
-                    $ev_vnum = isset($ev_asset->version_number) ? intval($ev_asset->version_number) : 1;
-                    $ev_user = !empty($ev_asset->uploaded_by) ? get_userdata((int) $ev_asset->uploaded_by) : null;
-                    $vm_events[] = array(
-                        'type' => $ev_vnum <= 1 ? 'create' : 'upload',
-                        'who'  => $ev_user ? $ev_user->display_name : get_bloginfo('name'),
-                        'v'    => $ev_vnum,
-                        'at'   => $ev_asset->created_at,
+                $agency_vm_events = array();
+                $agency_vm_comments_by_asset = array();
+                foreach ($agency_assets as $agency_ev_asset) {
+                    $agency_ev_vnum = isset($agency_ev_asset->version_number) ? intval($agency_ev_asset->version_number) : 1;
+                    $agency_ev_user = !empty($agency_ev_asset->uploaded_by) ? get_userdata((int) $agency_ev_asset->uploaded_by) : null;
+                    $agency_vm_events[] = array(
+                        'type' => $agency_ev_vnum <= 1 ? 'create' : 'upload',
+                        'who'  => $agency_ev_user ? $agency_ev_user->display_name : get_bloginfo('name'),
+                        'v'    => $agency_ev_vnum,
+                        'at'   => $agency_ev_asset->created_at,
                     );
-                    $vm_comments_by_asset[$ev_asset->id] = Agency_Comment::get_by_asset($ev_asset->id);
-                    foreach ($vm_comments_by_asset[$ev_asset->id] as $ev_comment) {
-                        $vm_events[] = array(
+                    $agency_vm_comments_by_asset[$agency_ev_asset->id] = Agency_Comment::get_by_asset($agency_ev_asset->id);
+                    foreach ($agency_vm_comments_by_asset[$agency_ev_asset->id] as $agency_ev_comment) {
+                        $agency_vm_events[] = array(
                             'type' => 'comment',
-                            'who'  => isset($ev_comment->user->display_name) ? $ev_comment->user->display_name : __('Client', 'agency-client-portal'),
-                            'v'    => $ev_vnum,
-                            'at'   => $ev_comment->created_at,
+                            'who'  => isset($agency_ev_comment->user->display_name) ? $agency_ev_comment->user->display_name : __('Client', 'agency-client-portal'),
+                            'v'    => $agency_ev_vnum,
+                            'at'   => $agency_ev_comment->created_at,
                         );
                     }
                 }
-                usort($vm_events, function($x, $y) { return strtotime($y['at']) <=> strtotime($x['at']); });
-                $vm_events = array_slice($vm_events, 0, 8);
-                $vm_event_labels = array(
+                usort($agency_vm_events, function($x, $y) { return strtotime($y['at']) <=> strtotime($x['at']); });
+                $agency_vm_events = array_slice($agency_vm_events, 0, 8);
+                $agency_vm_event_labels = array(
+                    /* translators: 1: user name, 2: version number (e.g. "V2") */
                     'create'  => array('plus', __('%1$s created %2$s', 'agency-client-portal')),
+                    /* translators: 1: user name, 2: version number (e.g. "V2") */
                     'upload'  => array('upload', __('%1$s uploaded %2$s', 'agency-client-portal')),
+                    /* translators: 1: user name, 2: version number (e.g. "V2") */
                     'comment' => array('comment', __('%1$s commented on %2$s', 'agency-client-portal')),
                 );
                 ?>
 
-                <?php if (empty($assets)): ?>
+                <?php if (empty($agency_assets)): ?>
                     <p class="no-assets"><?php esc_html_e('No versions yet. Add a first version.', 'agency-client-portal'); ?></p>
                 <?php endif; ?>
 
-                <?php foreach ($assets as $asset): ?>
+                <?php foreach ($agency_assets as $agency_asset): ?>
                     <?php
-                        $asset_comments = $vm_comments_by_asset[$asset->id];
-                        $asset_view_url = $preview_only_for_token_client ? Agency_Asset::get_preview_url($asset->id) : Agency_Asset::get_url($asset->id);
-                        $vnum      = isset($asset->version_number) ? intval($asset->version_number) : 1;
-                        $vlabel    = $asset->version_label ? $asset->version_label : sprintf(/* translators: %d: version number */ __('Version %d', 'agency-client-portal'), $vnum);
-                        $is_active = ($asset->id === $active_asset_id);
-                        $is_latest = ($asset->id === $active_asset_id);
-                        $file_ext  = strtoupper(pathinfo($asset->original_filename, PATHINFO_EXTENSION));
-                        $uploader  = !empty($asset->uploaded_by) ? get_userdata((int) $asset->uploaded_by) : null;
-                        $added     = sprintf(/* translators: %s: relative time */ __('Added %s', 'agency-client-portal'), Agency_Template::time_ago($asset->created_at));
-                        if ($uploader) {
+                        $agency_asset_comments = $agency_vm_comments_by_asset[$agency_asset->id];
+                        $agency_asset_view_url = $agency_preview_only_for_token_client ? Agency_Asset::get_preview_url($agency_asset->id) : Agency_Asset::get_url($agency_asset->id);
+                        $agency_vnum      = isset($agency_asset->version_number) ? intval($agency_asset->version_number) : 1;
+                        $agency_vlabel    = $agency_asset->version_label ? $agency_asset->version_label : sprintf(/* translators: %d: version number */ __('Version %d', 'agency-client-portal'), $agency_vnum);
+                        $agency_is_active = ($agency_asset->id === $agency_active_asset_id);
+                        $agency_is_latest = ($agency_asset->id === $agency_active_asset_id);
+                        $agency_file_ext  = strtoupper(pathinfo($agency_asset->original_filename, PATHINFO_EXTENSION));
+                        $agency_uploader  = !empty($agency_asset->uploaded_by) ? get_userdata((int) $agency_asset->uploaded_by) : null;
+                        $agency_added     = sprintf(/* translators: %s: relative time */ __('Added %s', 'agency-client-portal'), Agency_Template::time_ago($agency_asset->created_at));
+                        if ($agency_uploader) {
                             /* translators: 1: "Added 2 hours ago", 2: uploader name */
-                            $added = sprintf(__('%1$s · by %2$s', 'agency-client-portal'), $added, $uploader->display_name);
+                            $agency_added = sprintf(/* translators: 1: "Added …" text, 2: uploader name */ __('%1$s · by %2$s', 'agency-client-portal'), $agency_added, $agency_uploader->display_name);
                         }
                     ?>
-                    <div class="agency-bp-grid version-panel <?php echo $is_active ? 'is-active' : ''; ?><?php echo !$vm_can_comment ? ' agency-bp-grid--solo' : ''; ?>"
-                         data-version-id="<?php echo esc_attr($asset->id); ?>"
-                         data-label="<?php echo esc_attr($asset->version_label); ?>"
-                         data-notes="<?php echo esc_attr($asset->version_notes); ?>">
+                    <div class="agency-bp-grid version-panel <?php echo $agency_is_active ? 'is-active' : ''; ?><?php echo !$agency_vm_can_comment ? ' agency-bp-grid--solo' : ''; ?>"
+                         data-version-id="<?php echo esc_attr($agency_asset->id); ?>"
+                         data-label="<?php echo esc_attr($agency_asset->version_label); ?>"
+                         data-notes="<?php echo esc_attr($agency_asset->version_notes); ?>">
 
                         <div class="agency-bp-main">
                             <section class="agency-bp-card">
                                 <header class="agency-bp-card__head">
-                                    <h3 class="agency-bp-card__title"><?php echo esc_html($block->title . ' — V' . $vnum); ?></h3>
+                                    <h3 class="agency-bp-card__title"><?php echo esc_html($agency_block->title . ' — V' . $agency_vnum); ?></h3>
                                     <div class="agency-bp-card__tools media-actions">
-                                        <?php if ($can_download_media): ?>
-                                        <a href="<?php echo esc_url(Agency_Asset::get_download_url($asset->id)); ?>" class="agency-btn-icon agency-btn-icon--sm" target="_blank"
+                                        <?php if ($agency_can_download_media): ?>
+                                        <a href="<?php echo esc_url(Agency_Asset::get_download_url($agency_asset->id)); ?>" class="agency-btn-icon agency-btn-icon--sm" target="_blank"
                                            title="<?php esc_attr_e('Download', 'agency-client-portal'); ?>" aria-label="<?php esc_attr_e('Download', 'agency-client-portal'); ?>"><?php Agency_Icons::render('download', 16); ?></a>
                                         <?php endif; ?>
-                                        <?php if ($is_manager): ?>
-                                        <button type="button" class="agency-btn-icon agency-btn-icon--sm delete-asset" data-asset-id="<?php echo esc_attr($asset->id); ?>"
+                                        <?php if ($agency_is_manager): ?>
+                                        <button type="button" class="agency-btn-icon agency-btn-icon--sm delete-asset" data-asset-id="<?php echo esc_attr($agency_asset->id); ?>"
                                                 title="<?php esc_attr_e('Delete', 'agency-client-portal'); ?>" aria-label="<?php esc_attr_e('Delete', 'agency-client-portal'); ?>"><?php Agency_Icons::render('trash', 16); ?></button>
                                         <?php endif; ?>
                                     </div>
                                 </header>
 
                                 <div class="version-media">
-                                    <span class="storyboard-pill storyboard-pill--version" style="left: 12px; right: auto;">V<?php echo esc_html($vnum); ?></span>
-                                    <?php if ($is_latest): ?>
+                                    <span class="storyboard-pill storyboard-pill--version" style="left: 12px; right: auto;">V<?php echo esc_html($agency_vnum); ?></span>
+                                    <?php if ($agency_is_latest): ?>
                                     <span class="agency-pill agency-pill--ok version-current"><?php esc_html_e('Current version', 'agency-client-portal'); ?></span>
                                     <?php endif; ?>
-                                    <?php if ($asset->file_type === 'image'): ?>
-                                        <img src="<?php echo esc_url($asset_view_url); ?>" alt="<?php echo esc_attr($asset->original_filename); ?>" class="versioned-image" loading="lazy">
-                                    <?php elseif ($asset->file_type === 'document' && strtolower(pathinfo($asset->original_filename, PATHINFO_EXTENSION)) === 'pdf'): ?>
+                                    <?php if ($agency_asset->file_type === 'image'): ?>
+                                        <img src="<?php echo esc_url($agency_asset_view_url); ?>" alt="<?php echo esc_attr($agency_asset->original_filename); ?>" class="versioned-image" loading="lazy">
+                                    <?php elseif ($agency_asset->file_type === 'document' && strtolower(pathinfo($agency_asset->original_filename, PATHINFO_EXTENSION)) === 'pdf'): ?>
                                         <div class="versioned-pdf-preview">
-                                            <iframe src="<?php echo esc_url($asset_view_url); ?>" class="pdf-preview-frame" title="<?php echo esc_attr($asset->original_filename); ?>"></iframe>
+                                            <iframe src="<?php echo esc_url($agency_asset_view_url); ?>" class="pdf-preview-frame" title="<?php echo esc_attr($agency_asset->original_filename); ?>"></iframe>
                                             <div class="pdf-download-fallback">
-                                                <span class="file-name"><?php echo esc_html($asset->original_filename); ?></span>
-                                                <a href="<?php echo esc_url($asset_view_url); ?>" target="_blank" class="agency-btn agency-btn-sm"><?php esc_html_e('Open PDF', 'agency-client-portal'); ?></a>
+                                                <span class="file-name"><?php echo esc_html($agency_asset->original_filename); ?></span>
+                                                <a href="<?php echo esc_url($agency_asset_view_url); ?>" target="_blank" class="agency-btn agency-btn-sm"><?php esc_html_e('Open PDF', 'agency-client-portal'); ?></a>
                                             </div>
                                         </div>
                                     <?php else: ?>
                                         <div class="storyboard-file-icon">
                                             <span class="file-icon"><?php Agency_Icons::render('file', 16); ?></span>
-                                            <span class="file-name"><?php echo esc_html($asset->original_filename); ?></span>
+                                            <span class="file-name"><?php echo esc_html($agency_asset->original_filename); ?></span>
                                         </div>
                                     <?php endif; ?>
                                 </div>
 
                                 <div class="agency-bp-tags">
-                                    <span class="agency-tag"><?php echo esc_html(Agency_Block::get_type_label($block->type)); ?></span>
-                                    <span class="agency-tag agency-tag--outline"><?php echo esc_html(trim($file_ext . ($asset->file_size ? ' · ' . size_format($asset->file_size) : ''))); ?></span>
-                                    <?php if (!empty($asset->version_status)): ?>
-                                    <span class="version-status agency-pill version-status-<?php echo esc_attr($asset->version_status); ?>" data-status="<?php echo esc_attr($asset->version_status); ?>" data-version-id="<?php echo esc_attr($asset->id); ?>"><?php echo esc_html(isset($vm_statuses[$asset->version_status]) ? $vm_statuses[$asset->version_status] : $asset->version_status); ?></span>
+                                    <span class="agency-tag"><?php echo esc_html(Agency_Block::get_type_label($agency_block->type)); ?></span>
+                                    <span class="agency-tag agency-tag--outline"><?php echo esc_html(trim($agency_file_ext . ($agency_asset->file_size ? ' · ' . size_format($agency_asset->file_size) : ''))); ?></span>
+                                    <?php if (!empty($agency_asset->version_status)): ?>
+                                    <span class="version-status agency-pill version-status-<?php echo esc_attr($agency_asset->version_status); ?>" data-status="<?php echo esc_attr($agency_asset->version_status); ?>" data-version-id="<?php echo esc_attr($agency_asset->id); ?>"><?php echo esc_html(isset($agency_vm_statuses[$agency_asset->version_status]) ? $agency_vm_statuses[$agency_asset->version_status] : $agency_asset->version_status); ?></span>
                                     <?php endif; ?>
-                                    <span class="agency-bp-tags__meta"><?php echo esc_html($added); ?></span>
+                                    <span class="agency-bp-tags__meta"><?php echo esc_html($agency_added); ?></span>
                                 </div>
 
-                                <?php if (!empty($asset->version_notes)): ?>
-                                <p class="version-notes"><?php echo esc_html($asset->version_notes); ?></p>
+                                <?php if (!empty($agency_asset->version_notes)): ?>
+                                <p class="version-notes"><?php echo esc_html($agency_asset->version_notes); ?></p>
                                 <?php endif; ?>
 
                                 <div class="agency-bp-notes storyboard-voiceover">
-                                    <label for="voiceover-<?php echo esc_attr($asset->id); ?>" class="agency-bp-label"><?php esc_html_e('Agency note', 'agency-client-portal'); ?></label>
-                                    <textarea id="voiceover-<?php echo esc_attr($asset->id); ?>" class="asset-voiceover-input" data-asset-id="<?php echo esc_attr($asset->id); ?>" rows="3" placeholder="<?php esc_attr_e('Enter an internal note...', 'agency-client-portal'); ?>" <?php echo $is_manager ? '' : 'readonly'; ?>><?php echo isset($asset->voiceover) ? esc_textarea($asset->voiceover) : ''; ?></textarea>
-                                    <?php if ($is_manager): ?>
+                                    <label for="voiceover-<?php echo esc_attr($agency_asset->id); ?>" class="agency-bp-label"><?php esc_html_e('Agency note', 'agency-client-portal'); ?></label>
+                                    <textarea id="voiceover-<?php echo esc_attr($agency_asset->id); ?>" class="asset-voiceover-input" data-asset-id="<?php echo esc_attr($agency_asset->id); ?>" rows="3" placeholder="<?php esc_attr_e('Enter an internal note...', 'agency-client-portal'); ?>" <?php echo $agency_is_manager ? '' : 'readonly'; ?>><?php echo isset($agency_asset->voiceover) ? esc_textarea($agency_asset->voiceover) : ''; ?></textarea>
+                                    <?php if ($agency_is_manager): ?>
                                     <div class="agency-bp-notes__foot">
-                                        <button type="button" class="agency-btn agency-btn-primary save-voiceover-btn" data-asset-id="<?php echo esc_attr($asset->id); ?>"><?php esc_html_e('Save note', 'agency-client-portal'); ?></button>
-                                        <span class="voiceover-save-status" data-asset-id="<?php echo esc_attr($asset->id); ?>"></span>
+                                        <button type="button" class="agency-btn agency-btn-primary save-voiceover-btn" data-asset-id="<?php echo esc_attr($agency_asset->id); ?>"><?php esc_html_e('Save note', 'agency-client-portal'); ?></button>
+                                        <span class="voiceover-save-status" data-asset-id="<?php echo esc_attr($agency_asset->id); ?>"></span>
                                     </div>
                                     <?php endif; ?>
                                 </div>
                             </section>
 
-                            <?php if (!empty($vm_events)): ?>
+                            <?php if (!empty($agency_vm_events)): ?>
                             <section class="agency-bp-card version-activity">
                                 <header class="agency-bp-card__head agency-bp-card__head--rule">
                                     <h3 class="agency-bp-card__title"><?php esc_html_e('Activity', 'agency-client-portal'); ?></h3>
                                 </header>
                                 <ol class="version-activity__list">
-                                    <?php foreach ($vm_events as $ev): ?>
+                                    <?php foreach ($agency_vm_events as $agency_ev): ?>
                                     <li class="version-activity__item">
-                                        <span class="version-activity__icon"><?php Agency_Icons::render($vm_event_labels[$ev['type']][0], 14); ?></span>
+                                        <span class="version-activity__icon"><?php Agency_Icons::render($agency_vm_event_labels[$agency_ev['type']][0], 14); ?></span>
                                         <div>
                                             <p class="version-activity__text"><?php
-                                            echo wp_kses(sprintf($vm_event_labels[$ev['type']][1], '<strong>' . esc_html($ev['who']) . '</strong>', '<strong>V' . intval($ev['v']) . '</strong>'), array('strong' => array()));
+                                            echo wp_kses(sprintf($agency_vm_event_labels[$agency_ev['type']][1], '<strong>' . esc_html($agency_ev['who']) . '</strong>', '<strong>V' . intval($agency_ev['v']) . '</strong>'), array('strong' => array()));
                                             ?></p>
-                                            <span class="version-activity__time"><?php echo esc_html(Agency_Template::time_ago($ev['at'])); ?></span>
+                                            <span class="version-activity__time"><?php echo esc_html(Agency_Template::time_ago($agency_ev['at'])); ?></span>
                                         </div>
                                     </li>
                                     <?php endforeach; ?>
@@ -260,42 +263,42 @@ $active_asset_id = !empty($assets) ? $assets[0]->id : null;
                         </div>
 
                         <aside class="agency-bp-aside">
-                            <?php if (count($assets) > 1 || $is_manager): ?>
+                            <?php if (count($agency_assets) > 1 || $agency_is_manager): ?>
                             <section class="agency-bp-card version-list" aria-label="<?php esc_attr_e('Versions', 'agency-client-portal'); ?>">
                                 <header class="agency-bp-card__head agency-bp-card__head--rule">
                                     <h3 class="agency-bp-card__title"><?php esc_html_e('Versions', 'agency-client-portal'); ?></h3>
-                                    <span class="agency-count"><?php echo intval(count($assets)); ?></span>
+                                    <span class="agency-count"><?php echo intval(count($agency_assets)); ?></span>
                                 </header>
                                 <div class="version-list__rows">
-                                    <?php foreach ($assets as $row_idx => $row): ?>
+                                    <?php foreach ($agency_assets as $agency_row_idx => $agency_row): ?>
                                     <?php
-                                        $row_vnum = isset($row->version_number) ? intval($row->version_number) : 1;
-                                        $row_user = !empty($row->uploaded_by) ? get_userdata((int) $row->uploaded_by) : null;
-                                        $row_meta = date_i18n(get_option('date_format'), strtotime($row->created_at)) . ($row_user ? ' · ' . $row_user->display_name : '');
+                                        $agency_row_vnum = isset($agency_row->version_number) ? intval($agency_row->version_number) : 1;
+                                        $agency_row_user = !empty($agency_row->uploaded_by) ? get_userdata((int) $agency_row->uploaded_by) : null;
+                                        $agency_row_meta = date_i18n(get_option('date_format'), strtotime($agency_row->created_at)) . ($agency_row_user ? ' · ' . $agency_row_user->display_name : '');
                                     ?>
-                                    <div class="version-tab version-row<?php echo $row->id === $asset->id ? ' is-active' : ''; ?><?php echo $row_idx >= 4 ? ' version-row--more' : ''; ?>" role="button" tabindex="0" data-version-id="<?php echo esc_attr($row->id); ?>"<?php echo $row_idx >= 4 ? ' hidden' : ''; ?>>
+                                    <div class="version-tab version-row<?php echo $agency_row->id === $agency_asset->id ? ' is-active' : ''; ?><?php echo $agency_row_idx >= 4 ? ' version-row--more' : ''; ?>" role="button" tabindex="0" data-version-id="<?php echo esc_attr($agency_row->id); ?>"<?php echo $agency_row_idx >= 4 ? ' hidden' : ''; ?>>
                                         <span class="version-row__icon"><?php Agency_Icons::render('file', 14); ?></span>
                                         <span class="version-row__text">
-                                            <strong class="version-row__name"><?php echo esc_html($row->version_label ? $row->version_label : sprintf(/* translators: %d: version number */ __('Version %d', 'agency-client-portal'), $row_vnum)); ?></strong>
-                                            <span class="version-row__meta"><?php echo esc_html($row_meta); ?></span>
+                                            <strong class="version-row__name"><?php echo esc_html($agency_row->version_label ? $agency_row->version_label : sprintf(/* translators: %d: version number */ __('Version %d', 'agency-client-portal'), $agency_row_vnum)); ?></strong>
+                                            <span class="version-row__meta"><?php echo esc_html($agency_row_meta); ?></span>
                                         </span>
-                                        <?php if ($row->id === $asset->id): ?><span class="version-row__check"><?php Agency_Icons::render_ui('check', 16); ?></span><?php endif; ?>
-                                        <?php if ($is_manager): ?>
-                                        <button type="button" class="version-delete-btn" data-version-id="<?php echo esc_attr($row->id); ?>" title="<?php esc_attr_e('Delete this version', 'agency-client-portal'); ?>" aria-label="<?php esc_attr_e('Delete this version', 'agency-client-portal'); ?>">×</button>
+                                        <?php if ($agency_row->id === $agency_asset->id): ?><span class="version-row__check"><?php Agency_Icons::render_ui('check', 16); ?></span><?php endif; ?>
+                                        <?php if ($agency_is_manager): ?>
+                                        <button type="button" class="version-delete-btn" data-version-id="<?php echo esc_attr($agency_row->id); ?>" title="<?php esc_attr_e('Delete this version', 'agency-client-portal'); ?>" aria-label="<?php esc_attr_e('Delete this version', 'agency-client-portal'); ?>">×</button>
                                         <?php endif; ?>
                                     </div>
                                     <?php endforeach; ?>
                                 </div>
-                                <?php if (count($assets) > 4): ?>
+                                <?php if (count($agency_assets) > 4): ?>
                                 <button type="button" class="agency-btn version-list__more" data-more-label="<?php esc_attr_e('See more', 'agency-client-portal'); ?>" data-less-label="<?php esc_attr_e('See less', 'agency-client-portal'); ?>"><?php esc_html_e('See more', 'agency-client-portal'); ?></button>
                                 <?php endif; ?>
                             </section>
                             <?php endif; ?>
 
-                            <?php if ($vm_can_comment): ?>
+                            <?php if ($agency_vm_can_comment): ?>
                                 <?php
-                                $cm_asset_id = (int) $asset->id;
-                                $cm_comments = $asset_comments;
+                                $agency_cm_asset_id = (int) $agency_asset->id;
+                                $agency_cm_comments = $agency_asset_comments;
                                 include AGENCY_PLUGIN_DIR . 'templates/partials/block-comments.php';
                                 ?>
                             <?php endif; ?>
@@ -310,7 +313,7 @@ $active_asset_id = !empty($assets) ? $assets[0]->id : null;
     <?php include AGENCY_PLUGIN_DIR . 'templates/partials/footer.php'; ?>
 </div>
 
-<?php if ($is_manager): ?>
+<?php if ($agency_is_manager): ?>
 <!-- Modal nouvelle version -->
 <div class="agency-modal" id="new-version-modal">
     <div class="agency-modal-content">
@@ -512,7 +515,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    <?php if ($is_manager): ?>
+    <?php if ($agency_is_manager): ?>
     // Delete version
     document.querySelectorAll('.version-delete-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
@@ -620,7 +623,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 const fd = new FormData();
-                fd.append('block_id', <?php echo intval($block->id); ?>);
+                fd.append('block_id', <?php echo intval($agency_block->id); ?>);
                 fd.append('file', fileInput.files[0]);
                 fd.append('version_label', document.getElementById('version-label').value.trim());
                 fd.append('version_status', document.getElementById('version-status').value);
@@ -687,7 +690,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         'X-WP-Nonce': '<?php echo esc_js(wp_create_nonce('wp_rest')); ?>'
                     },
                     body: JSON.stringify({
-                        block_id: <?php echo intval($block->id); ?>,
+                        block_id: <?php echo intval($agency_block->id); ?>,
                         emoji: emoji,
                         text: text,
                         url: url

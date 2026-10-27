@@ -10,31 +10,31 @@ if (!defined('ABSPATH')) {
 }
 
 global $wpdb;
-$total_clients = intval($wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}agency_clients WHERE status = 'active'"));
+$agency_total_clients = intval($wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}agency_clients WHERE status = 'active'"));
 
 // Pagination
-$per_page = 12;
-$current_page = isset($_GET['client_page']) ? max(1, intval($_GET['client_page'])) : 1;
-$offset = ($current_page - 1) * $per_page;
-$total_pages = ceil($total_clients / $per_page);
+$agency_per_page = 12;
+$agency_current_page = isset($_GET['client_page']) ? max(1, intval($_GET['client_page'])) : 1;
+$agency_offset = ($agency_current_page - 1) * $agency_per_page;
+$agency_total_pages = ceil($agency_total_clients / $agency_per_page);
 
 // Tous les clients actifs avec pagination
-$all_clients = $wpdb->get_results($wpdb->prepare(
+$agency_all_clients = $wpdb->get_results($wpdb->prepare(
     "SELECT * FROM {$wpdb->prefix}agency_clients WHERE status = 'active' ORDER BY created_at DESC LIMIT %d OFFSET %d",
-    $per_page,
-    $offset
+    $agency_per_page,
+    $agency_offset
 ));
 
 // Pre-charger le nombre de projets par client
-$client_ids = wp_list_pluck($all_clients, 'id');
-$project_counts = array();
-if (!empty($client_ids)) {
-    $ids_placeholder = implode(',', array_map('intval', $client_ids));
-    $counts = $wpdb->get_results(
-        "SELECT client_id, COUNT(*) as cnt FROM {$wpdb->prefix}agency_projects WHERE client_id IN ($ids_placeholder) AND status = 'active' GROUP BY client_id"
+$agency_client_ids = wp_list_pluck($agency_all_clients, 'id');
+$agency_project_counts = array();
+if (!empty($agency_client_ids)) {
+    $agency_ids_placeholder = implode(',', array_map('intval', $agency_client_ids));
+    $agency_counts = $wpdb->get_results(
+        "SELECT client_id, COUNT(*) as cnt FROM {$wpdb->prefix}agency_projects WHERE client_id IN ($agency_ids_placeholder) AND status = 'active' GROUP BY client_id"
     );
-    foreach ($counts as $row) {
-        $project_counts[$row->client_id] = intval($row->cnt);
+    foreach ($agency_counts as $agency_row) {
+        $agency_project_counts[$agency_row->client_id] = intval($agency_row->cnt);
     }
 }
 ?>
@@ -52,33 +52,33 @@ if (!empty($client_ids)) {
         <div class="agency-section">
             <h2><?php esc_html_e('Clients', 'agency-client-portal'); ?></h2>
 
-            <?php if (empty($all_clients)): ?>
+            <?php if (empty($agency_all_clients)): ?>
                 <p><?php esc_html_e('No clients yet.', 'agency-client-portal'); ?></p>
             <?php else: ?>
                 <div class="agency-clients-grid">
-                    <?php foreach ($all_clients as $client): ?>
+                    <?php foreach ($agency_all_clients as $agency_client): ?>
                         <?php
-                        $edit_url = home_url('/agency/edit-client/' . intval($client->id) . '/');
-                        $nb_projects = isset($project_counts[$client->id]) ? $project_counts[$client->id] : 0;
-                        $initials = mb_strtoupper(mb_substr(trim($client->name), 0, 2));
-                        $has_token = !empty($client->token_hash) && !empty($client->token_active);
+                        $agency_edit_url = home_url('/agency/edit-client/' . intval($agency_client->id) . '/');
+                        $agency_nb_projects = isset($agency_project_counts[$agency_client->id]) ? $agency_project_counts[$agency_client->id] : 0;
+                        $agency_initials = mb_strtoupper(mb_substr(trim($agency_client->name), 0, 2));
+                        $agency_has_token = !empty($agency_client->token_hash) && !empty($agency_client->token_active);
 
-                        $logo_url = !empty($client->logo_url) ? $client->logo_url : '';
+                        $agency_logo_url = !empty($agency_client->logo_url) ? $agency_client->logo_url : '';
                         ?>
                         <div class="agency-client-card">
                             <div class="agency-client-card-header">
-                                <div class="agency-client-avatar" <?php if ($logo_url): ?>style="background-image:url('<?php echo esc_url($logo_url); ?>'); background-size:cover; background-position:center;"<?php endif; ?>>
-                                    <?php if (!$logo_url): ?><?php echo esc_html($initials); ?><?php endif; ?>
+                                <div class="agency-client-avatar" <?php if ($agency_logo_url): ?>style="background-image:url('<?php echo esc_url($agency_logo_url); ?>'); background-size:cover; background-position:center;"<?php endif; ?>>
+                                    <?php if (!$agency_logo_url): ?><?php echo esc_html($agency_initials); ?><?php endif; ?>
                                 </div>
                                 <div class="agency-client-info">
-                                    <div class="agency-client-name"><?php echo esc_html($client->name); ?></div>
+                                    <div class="agency-client-name"><?php echo esc_html($agency_client->name); ?></div>
                                     <div class="agency-client-stats">
                                         <?php echo esc_html(sprintf(
                                             /* translators: %d: number of projects */
-                                            _n('%d project', '%d projects', $nb_projects, 'agency-client-portal'),
-                                            $nb_projects
+                                            _n('%d project', '%d projects', $agency_nb_projects, 'agency-client-portal'),
+                                            $agency_nb_projects
                                         )); ?>
-                                        <?php if ($has_token): ?>
+                                        <?php if ($agency_has_token): ?>
                                             <span class="agency-token-badge active" title="<?php esc_attr_e('Direct access active', 'agency-client-portal'); ?>">&#x1f511;</span>
                                         <?php else: ?>
                                             <span class="agency-token-badge inactive" title="<?php esc_attr_e('No access link', 'agency-client-portal'); ?>">&#x1f512;</span>
@@ -87,15 +87,15 @@ if (!empty($client_ids)) {
                                 </div>
                             </div>
                             <div class="agency-client-card-actions">
-                                <a href="<?php echo esc_url($edit_url); ?>" class="agency-btn agency-btn-sm agency-btn-secondary">
+                                <a href="<?php echo esc_url($agency_edit_url); ?>" class="agency-btn agency-btn-sm agency-btn-secondary">
                                     <?php esc_html_e('Edit', 'agency-client-portal'); ?>
                                 </a>
-                                <a href="<?php echo esc_url(home_url('/client/' . $client->slug)); ?>" class="agency-btn agency-btn-sm agency-btn-secondary">
+                                <a href="<?php echo esc_url(home_url('/client/' . $agency_client->slug)); ?>" class="agency-btn agency-btn-sm agency-btn-secondary">
                                     <?php esc_html_e('Projects', 'agency-client-portal'); ?>
                                 </a>
-                                <?php if ($has_token): ?>
+                                <?php if ($agency_has_token): ?>
                                     <button type="button" class="agency-btn agency-btn-sm agency-btn-primary agency-copy-access-url"
-                                            data-client-id="<?php echo esc_attr($client->id); ?>">
+                                            data-client-id="<?php echo esc_attr($agency_client->id); ?>">
                                         <?php esc_html_e('Private link', 'agency-client-portal'); ?>
                                     </button>
                                 <?php endif; ?>
@@ -104,13 +104,13 @@ if (!empty($client_ids)) {
                     <?php endforeach; ?>
                 </div>
 
-                <?php if ($total_pages > 1): ?>
+                <?php if ($agency_total_pages > 1): ?>
                 <div class="agency-pagination">
-                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                        <?php if ($i === $current_page): ?>
-                            <span class="agency-page-current"><?php echo esc_html($i); ?></span>
+                    <?php for ($agency_i = 1; $agency_i <= $agency_total_pages; $agency_i++): ?>
+                        <?php if ($agency_i === $agency_current_page): ?>
+                            <span class="agency-page-current"><?php echo esc_html($agency_i); ?></span>
                         <?php else: ?>
-                            <a href="<?php echo esc_url(add_query_arg('client_page', $i)); ?>" class="agency-page-link"><?php echo esc_html($i); ?></a>
+                            <a href="<?php echo esc_url(add_query_arg('client_page', $agency_i)); ?>" class="agency-page-link"><?php echo esc_html($agency_i); ?></a>
                         <?php endif; ?>
                     <?php endfor; ?>
                 </div>

@@ -17,8 +17,8 @@ $agency_accent_field_presets = array('#7C83FD', '#F59E0B', '#10B981', '#EC4899',
     </label>
     <input type="text" id="<?php echo esc_attr($agency_accent_field_id); ?>-text" class="agency-form-input agency-accent-field__hex" value="<?php echo esc_attr(strtoupper($agency_accent_field_value)); ?>" maxlength="7" spellcheck="false">
     <div class="agency-accent-field__presets" role="group" aria-label="<?php esc_attr_e('Suggested colors', 'agency-client-portal'); ?>">
-        <?php foreach ($agency_accent_field_presets as $preset): ?>
-            <button type="button" class="agency-accent-field__preset<?php echo strtolower($preset) === strtolower($agency_accent_field_value) ? ' is-on' : ''; ?>" data-color="<?php echo esc_attr($preset); ?>" style="background:<?php echo esc_attr($preset); ?>" aria-label="<?php echo esc_attr($preset); ?>"></button>
+        <?php foreach ($agency_accent_field_presets as $agency_preset): ?>
+            <button type="button" class="agency-accent-field__preset<?php echo strtolower($agency_preset) === strtolower($agency_accent_field_value) ? ' is-on' : ''; ?>" data-color="<?php echo esc_attr($agency_preset); ?>" style="background:<?php echo esc_attr($agency_preset); ?>" aria-label="<?php echo esc_attr($agency_preset); ?>"></button>
         <?php endforeach; ?>
     </div>
 </div>

@@ -233,8 +233,8 @@ class Agency_Admin {
         wp_nonce_field('agency_client_meta', 'agency_client_nonce');
         
         // Get the custom table client ID from post meta
-        $client_id = get_post_meta($post->ID, 'agency_client_id', true);
-        $client_data = $client_id ? Agency_Client::get_by_id($client_id) : null;
+        $agency_client_id = get_post_meta($post->ID, 'agency_client_id', true);
+        $agency_client_data = $agency_client_id ? Agency_Client::get_by_id($agency_client_id) : null;
         
         include AGENCY_PLUGIN_DIR . 'templates/admin/meta-boxes/client-details.php';
     }
@@ -243,8 +243,8 @@ class Agency_Admin {
      * Render branding meta box
      */
     public function render_branding_meta_box($post) {
-        $client_id = get_post_meta($post->ID, 'agency_client_id', true);
-        $client_data = $client_id ? Agency_Client::get_by_id($client_id) : null;
+        $agency_client_id = get_post_meta($post->ID, 'agency_client_id', true);
+        $agency_client_data = $agency_client_id ? Agency_Client::get_by_id($agency_client_id) : null;
         include AGENCY_PLUGIN_DIR . 'templates/admin/meta-boxes/branding.php';
     }
     
@@ -252,8 +252,8 @@ class Agency_Admin {
      * Render access meta box
      */
     public function render_access_meta_box($post) {
-        $client_id = get_post_meta($post->ID, 'agency_client_id', true);
-        $client_data = $client_id ? Agency_Client::get_by_id($client_id) : null;
+        $agency_client_id = get_post_meta($post->ID, 'agency_client_id', true);
+        $agency_client_data = $agency_client_id ? Agency_Client::get_by_id($agency_client_id) : null;
         include AGENCY_PLUGIN_DIR . 'templates/admin/meta-boxes/access.php';
     }
     

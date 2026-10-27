@@ -1,0 +1,9 @@
+{
+ "viewport": { "width": 1440, "height": 900 },
+ "skip": [],
+ "pages": [
+  ["01", "file://__DESIGN__/prototypes/page-dashboard.html", false],
+  ["02", "file://__DESIGN__/prototypes/page-nouveau-client.html", false],
+  ["08", "file://__DESIGN__/prototypes/page-acces-refuse.html", false]
+ ]
+}

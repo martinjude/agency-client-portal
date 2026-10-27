@@ -14,30 +14,30 @@ if (current_user_can('manage_agency_projects')) {
     return;
 }
 
-if (!isset($client) || !$client) {
-    $client_slug = get_query_var('agency_client');
-    $client      = $client_slug ? Agency_Client::get_by_slug($client_slug) : null;
+if (!isset($agency_client) || !$agency_client) {
+    $agency_client_slug = get_query_var('agency_client');
+    $agency_client      = $agency_client_slug ? Agency_Client::get_by_slug($agency_client_slug) : null;
 }
 
-$authenticated_client = Agency_Security::get_authenticated_client();
-$is_token_auth        = $authenticated_client && !is_user_logged_in();
-$brand_logo_url       = (string) get_option('agency_brand_logo_url', '');
-$header_logo_url      = $client && !empty($client->logo_url) ? $client->logo_url : $brand_logo_url;
-$portal_url           = $client ? home_url('/client/' . $client->slug . '/') : home_url('/');
+$agency_authenticated_client = Agency_Security::get_authenticated_client();
+$agency_is_token_auth        = $agency_authenticated_client && !is_user_logged_in();
+$agency_brand_logo_url       = (string) get_option('agency_brand_logo_url', '');
+$agency_header_logo_url      = $agency_client && !empty($agency_client->logo_url) ? $agency_client->logo_url : $agency_brand_logo_url;
+$agency_portal_url           = $agency_client ? home_url('/client/' . $agency_client->slug . '/') : home_url('/');
 ?>
 <header class="agency-topbar">
     <div class="agency-topbar__inner">
-        <a class="agency-topbar__brand" href="<?php echo esc_url($portal_url); ?>">
-            <?php if ($header_logo_url): ?>
-                <img src="<?php echo esc_url($header_logo_url); ?>" alt="<?php echo esc_attr($client ? $client->name : get_bloginfo('name')); ?>" class="agency-topbar__logo" onerror="this.style.display='none'">
-            <?php elseif ($client): ?>
-                <span class="agency-avatar agency-avatar--28"><?php echo esc_html(function_exists('mb_substr') ? mb_strtoupper(mb_substr($client->name, 0, 1)) : strtoupper(substr($client->name, 0, 1))); ?></span>
-                <span class="agency-topbar__name"><?php echo esc_html($client->name); ?></span>
+        <a class="agency-topbar__brand" href="<?php echo esc_url($agency_portal_url); ?>">
+            <?php if ($agency_header_logo_url): ?>
+                <img src="<?php echo esc_url($agency_header_logo_url); ?>" alt="<?php echo esc_attr($agency_client ? $agency_client->name : get_bloginfo('name')); ?>" class="agency-topbar__logo" onerror="this.style.display='none'">
+            <?php elseif ($agency_client): ?>
+                <span class="agency-avatar agency-avatar--28"><?php echo esc_html(function_exists('mb_substr') ? mb_strtoupper(mb_substr($agency_client->name, 0, 1)) : strtoupper(substr($agency_client->name, 0, 1))); ?></span>
+                <span class="agency-topbar__name"><?php echo esc_html($agency_client->name); ?></span>
             <?php else: ?>
                 <span class="agency-topbar__name"><?php echo esc_html(get_bloginfo('name')); ?></span>
             <?php endif; ?>
         </a>
-        <?php if ($is_token_auth): ?>
+        <?php if ($agency_is_token_auth): ?>
             <a href="#" class="agency-btn agency-btn-sm agency-btn-ghost agency-token-logout">
                 <?php Agency_Icons::render_glyph('logout', 16); ?>
                 <?php esc_html_e('Close session', 'agency-client-portal'); ?>
@@ -46,7 +46,7 @@ $portal_url           = $client ? home_url('/client/' . $client->slug . '/') : h
     </div>
 </header>
 
-<?php if ($is_token_auth): ?>
+<?php if ($agency_is_token_auth): ?>
 <?php ob_start(); ?>
 /* Déconnexion client (token) — autonome, indépendant de frontend.js,
    pour fonctionner sur toutes les pages du portail (y compris les blocs vidéo). */

@@ -12,8 +12,9 @@ Thumbs.db
 .env
 .env.*
 
-# Fichiers de design sources (non distribués)
-/design/
+# Fichier Illustrator source : contient des captures de produits tiers (calque RÉFÉRENCES), reste en local
+/design/*.ai
 
-# Archives de build
+# Archives de build (bin/build-zip.sh)
+/dist/
 *.zip

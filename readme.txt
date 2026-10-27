@@ -3,7 +3,7 @@ Contributors: martinjude
 Tags: client portal, agency, project management, file sharing, collaboration
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -106,6 +106,9 @@ YouTube / Google: https://policies.google.com/privacy — Vimeo: https://vimeo.c
 3. Agency dashboard: client management.
 
 == Changelog ==
+
+= 2.0.1 =
+* Block detail pages (video, versioned media, storyboard, script, link, code, file deposit) redesigned to match the design system, with a shared page head and comment thread.
 
 = 2.0.0 =
 * The plugin is now free and open source. Every feature is available without a license: progress bars, layouts (presets), advanced branding, block links and email notifications.

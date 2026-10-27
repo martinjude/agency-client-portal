@@ -5,37 +5,37 @@ if (!defined('ABSPATH')) { exit; }
  * Block View: Code
  * Affiche un bloc de code avec coloration syntaxique (Prism.js).
  */
-$client_slug  = get_query_var('agency_client');
-$project_slug = get_query_var('agency_project');
-$block_id     = get_query_var('agency_block');
+$agency_client_slug  = get_query_var('agency_client');
+$agency_project_slug = get_query_var('agency_project');
+$agency_block_id     = get_query_var('agency_block');
 
-$client  = Agency_Client::get_by_slug($client_slug);
-$project = $client ? Agency_Project::get_by_slug($client->id, $project_slug) : null;
-$block   = Agency_Block::get_by_id($block_id);
+$agency_client  = Agency_Client::get_by_slug($agency_client_slug);
+$agency_project = $agency_client ? Agency_Project::get_by_slug($agency_client->id, $agency_project_slug) : null;
+$agency_block   = Agency_Block::get_by_id($agency_block_id);
 
-if (!$client || !$project || !$block || $block->type !== 'code') {
+if (!$agency_client || !$agency_project || !$agency_block || $agency_block->type !== 'code') {
     wp_die(esc_html__('Content not found', 'agency-client-portal'), 404);
 }
 
 // Vérifier l'accès
-$token_authenticated = Agency_Security::can_access_client_by_token($client->id);
-$wp_authenticated    = is_user_logged_in() && agency()->security->user_can_access_client($client->id);
-if (!$token_authenticated && !$wp_authenticated) {
+$agency_token_authenticated = Agency_Security::can_access_client_by_token($agency_client->id);
+$agency_wp_authenticated    = is_user_logged_in() && agency()->security->user_can_access_client($agency_client->id);
+if (!$agency_token_authenticated && !$agency_wp_authenticated) {
     wp_die(esc_html__('Access denied', 'agency-client-portal'), 403);
 }
 
-$is_manager    = current_user_can('manage_agency_projects');
-$comments      = Agency_Block::client_can_comment_allowed($block) ? Agency_Comment::get_by_block($block_id) : array();
-$external_links = Agency_External_Link::get_by_block($block_id);
+$agency_is_manager    = current_user_can('manage_agency_projects');
+$agency_comments      = Agency_Block::client_can_comment_allowed($agency_block) ? Agency_Comment::get_by_block($agency_block_id) : array();
+$agency_external_links = Agency_External_Link::get_by_block($agency_block_id);
 
-$settings  = !empty($block->settings) ? json_decode($block->settings, true) : array();
-$file_name = !empty($settings['file_name']) ? $settings['file_name'] : '';
-$language  = !empty($settings['language'])  ? $settings['language']  : 'plaintext';
-$subtitle  = !empty($settings['subtitle'])  ? $settings['subtitle']  : '';
-$code      = !empty($block->content)        ? $block->content        : '';
+$agency_settings  = !empty($agency_block->settings) ? json_decode($agency_block->settings, true) : array();
+$agency_file_name = !empty($agency_settings['file_name']) ? $agency_settings['file_name'] : '';
+$agency_language  = !empty($agency_settings['language'])  ? $agency_settings['language']  : 'plaintext';
+$agency_subtitle  = !empty($agency_settings['subtitle'])  ? $agency_settings['subtitle']  : '';
+$agency_code      = !empty($agency_block->content)        ? $agency_block->content        : '';
 
-$back_url = home_url("/client/{$client->slug}/project/{$project->slug}");
-$can_comment = Agency_Block::client_can_comment_allowed($block);
+$agency_back_url = home_url("/client/{$agency_client->slug}/project/{$agency_project->slug}");
+$agency_can_comment = Agency_Block::client_can_comment_allowed($agency_block);
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -57,27 +57,27 @@ $can_comment = Agency_Block::client_can_comment_allowed($block);
 
     <main class="agency-main">
         <div class="agency-container">
-            <div class="agency-block-view agency-block-code" data-block-id="<?php echo esc_attr($block->id); ?>">
+            <div class="agency-block-view agency-block-code" data-block-id="<?php echo esc_attr($agency_block->id); ?>">
 
                 <?php include AGENCY_PLUGIN_DIR . 'templates/partials/block-head.php'; ?>
 
                 <div class="block-header-full agency-bv-bar">
 
-                    <?php if ($subtitle || $is_manager): ?>
-                    <p class="block-description<?php echo $is_manager ? ' agency-block-subtitle--editable' : ''; ?>"
-                       <?php if ($is_manager): ?>contenteditable="true" data-block-id="<?php echo esc_attr($block->id); ?>"<?php endif; ?>>
-                        <?php echo esc_html($subtitle); ?>
+                    <?php if ($agency_subtitle || $agency_is_manager): ?>
+                    <p class="block-description<?php echo $agency_is_manager ? ' agency-block-subtitle--editable' : ''; ?>"
+                       <?php if ($agency_is_manager): ?>contenteditable="true" data-block-id="<?php echo esc_attr($agency_block->id); ?>"<?php endif; ?>>
+                        <?php echo esc_html($agency_subtitle); ?>
                     </p>
                     <?php endif; ?>
 
                     <div class="agency-links">
-                        <?php if (!empty($external_links)): ?>
+                        <?php if (!empty($agency_external_links)): ?>
                             <div class="external-links-display">
-                                <?php foreach ($external_links as $link): ?>
+                                <?php foreach ($agency_external_links as $link): ?>
                                     <a href="<?php echo esc_url($link->url); ?>" class="external-link-item" target="_blank" rel="noopener" data-link-id="<?php echo esc_attr($link->id); ?>">
                                         <span class="link-emoji"><?php echo esc_html($link->emoji); ?></span>
                                         <span class="link-text"><?php echo esc_html($link->text); ?></span>
-                                        <?php if ($is_manager): ?>
+                                        <?php if ($agency_is_manager): ?>
                                             <button class="edit-external-link" data-link-id="<?php echo esc_attr($link->id); ?>" data-link-emoji="<?php echo esc_attr($link->emoji); ?>" data-link-text="<?php echo esc_attr($link->text); ?>" data-link-url="<?php echo esc_attr($link->url); ?>" title="<?php esc_attr_e('Edit', 'agency-client-portal'); ?>"><?php Agency_Icons::render('edit', 14); ?></button>
                                             <button class="delete-external-link" data-link-id="<?php echo esc_attr($link->id); ?>" title="<?php esc_attr_e('Delete', 'agency-client-portal'); ?>">×</button>
                                         <?php endif; ?>
@@ -85,7 +85,7 @@ $can_comment = Agency_Block::client_can_comment_allowed($block);
                                 <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
-                        <?php if ($is_manager): ?>
+                        <?php if ($agency_is_manager): ?>
                             <button class="agency-btn agency-btn-sm agency-btn-secondary" id="add-external-link-btn" type="button">
                                 <?php Agency_Icons::render('link', 16); ?> <?php esc_html_e('Add a link', 'agency-client-portal'); ?>
                             </button>
@@ -93,7 +93,7 @@ $can_comment = Agency_Block::client_can_comment_allowed($block);
                     </div>
 
                     <div class="agency-actions">
-                        <?php if ($is_manager): ?>
+                        <?php if ($agency_is_manager): ?>
                         <button class="agency-btn agency-btn-primary" id="edit-code-btn" type="button">
                             <?php esc_html_e('Edit code', 'agency-client-portal'); ?>
                         </button>
@@ -101,41 +101,43 @@ $can_comment = Agency_Block::client_can_comment_allowed($block);
                     </div>
                 </div>
 
-                <div class="agency-bp-grid<?php echo !$can_comment ? ' agency-bp-grid--solo' : ''; ?>">
+                <div class="agency-bp-grid<?php echo !$agency_can_comment ? ' agency-bp-grid--solo' : ''; ?>">
 
                     <!-- Colonne principale : code -->
                     <div class="agency-bp-main">
 
-                        <?php if ($code): ?>
+                        <?php if ($agency_code): ?>
                         <?php
-                        $code_lines = substr_count(rtrim($code, "\r\n"), "\n") + 1;
-                        $code_bytes = strlen($code);
-                        $code_lang  = ($language === 'markup') ? 'HTML' : strtoupper($language === 'plaintext' ? 'TXT' : $language);
+                        $agency_code_lines = substr_count(rtrim($agency_code, "\r\n"), "\n") + 1;
+                        $agency_code_bytes = strlen($agency_code);
+                        $agency_code_lang  = ($agency_language === 'markup') ? 'HTML' : strtoupper($agency_language === 'plaintext' ? 'TXT' : $agency_language);
                         ?>
                         <section class="agency-bp-card agency-code-card">
                             <header class="agency-code-tabs">
                                 <span class="agency-code-tab">
                                     <?php Agency_Icons::render('file', 16); ?>
-                                    <span class="agency-code-tab__name"><?php echo esc_html($file_name ? $file_name : $block->title); ?></span>
+                                    <span class="agency-code-tab__name"><?php echo esc_html($agency_file_name ? $agency_file_name : $agency_block->title); ?></span>
                                 </span>
-                                <span class="agency-badge agency-code-lang"><?php echo esc_html($code_lang); ?></span>
+                                <span class="agency-badge agency-code-lang"><?php echo esc_html($agency_code_lang); ?></span>
                             </header>
                             <div class="agency-code-block-wrapper">
-                                <pre class="line-numbers language-<?php echo esc_attr($language); ?>"><code id="code-content" class="language-<?php echo esc_attr($language); ?>"><?php echo esc_html($code); ?></code></pre>
+                                <pre class="line-numbers language-<?php echo esc_attr($agency_language); ?>"><code id="code-content" class="language-<?php echo esc_attr($agency_language); ?>"><?php echo esc_html($agency_code); ?></code></pre>
                             </div>
                             <footer class="agency-code-foot">
                                 <span class="agency-code-stats">
                                     <?php
                                     /* translators: 1: language, 2: number of lines, 3: size in bytes */
                                     echo esc_html(sprintf(__('%1$s · %2$s · %3$s', 'agency-client-portal'),
-                                        $code_lang,
-                                        sprintf(_n('%d line', '%d lines', $code_lines, 'agency-client-portal'), $code_lines),
-                                        sprintf(_n('%s byte', '%s bytes', $code_bytes, 'agency-client-portal'), number_format_i18n($code_bytes))
+                                        $agency_code_lang,
+                                        /* translators: %d: number of lines */
+                                        sprintf(_n('%d line', '%d lines', $agency_code_lines, 'agency-client-portal'), $agency_code_lines),
+                                        /* translators: %s: size in bytes */
+                                        sprintf(_n('%s byte', '%s bytes', $agency_code_bytes, 'agency-client-portal'), number_format_i18n($agency_code_bytes))
                                     ));
                                     ?>
                                 </span>
                                 <button class="agency-btn agency-code-copy-btn" id="copy-code-btn" type="button"
-                                        data-code-b64="<?php echo esc_attr(base64_encode($code)); ?>"
+                                        data-code-b64="<?php echo esc_attr(base64_encode($agency_code)); ?>"
                                         data-label-copy="<?php esc_attr_e('Copy code', 'agency-client-portal'); ?>"
                                         data-label-copied="<?php esc_attr_e('Copied!', 'agency-client-portal'); ?>"
                                         data-label-error="<?php esc_attr_e('Error', 'agency-client-portal'); ?>"
@@ -148,7 +150,7 @@ $can_comment = Agency_Block::client_can_comment_allowed($block);
                                 </button>
                             </footer>
                         </section>
-                        <?php elseif ($is_manager): ?>
+                        <?php elseif ($agency_is_manager): ?>
                         <section class="agency-bp-card agency-code-empty">
                             <?php Agency_Icons::render_glyph('code', 32); ?>
                             <p><?php esc_html_e('No code yet.', 'agency-client-portal'); ?></p>
@@ -164,9 +166,9 @@ $can_comment = Agency_Block::client_can_comment_allowed($block);
 
                     </div>
 
-                    <?php if ($can_comment): ?>
+                    <?php if ($agency_can_comment): ?>
                     <aside class="agency-bp-aside">
-                        <?php $cm_comments = $comments; include AGENCY_PLUGIN_DIR . 'templates/partials/block-comments.php'; ?>
+                        <?php $agency_cm_comments = $agency_comments; include AGENCY_PLUGIN_DIR . 'templates/partials/block-comments.php'; ?>
                     </aside>
                     <?php endif; ?>
 
@@ -178,7 +180,7 @@ $can_comment = Agency_Block::client_can_comment_allowed($block);
 
     <?php include AGENCY_PLUGIN_DIR . 'templates/partials/footer.php'; ?>
 
-    <?php if ($is_manager): ?>
+    <?php if ($agency_is_manager): ?>
     <!-- Modal : nouveau lien externe -->
     <div class="agency-modal" id="new-external-link-modal">
         <div class="agency-modal-content">
@@ -249,14 +251,14 @@ $can_comment = Agency_Block::client_can_comment_allowed($block);
                 <div class="agency-form-group">
                     <label class="agency-form-label" for="code-block-filename"><?php esc_html_e('File name', 'agency-client-portal'); ?></label>
                     <input type="text" id="code-block-filename" class="agency-form-input"
-                           value="<?php echo esc_attr($file_name); ?>"
+                           value="<?php echo esc_attr($agency_file_name); ?>"
                            placeholder="<?php esc_attr_e('app.py', 'agency-client-portal'); ?>">
                     <span class="agency-form-help"><?php esc_html_e('The extension determines the syntax highlighting.', 'agency-client-portal'); ?></span>
                 </div>
                 <div class="agency-form-group">
                     <label class="agency-form-label" for="code-block-content"><?php esc_html_e('Code', 'agency-client-portal'); ?></label>
                     <textarea id="code-block-content" class="agency-form-input"
-                              rows="16"><?php echo esc_textarea($code); ?></textarea>
+                              rows="16"><?php echo esc_textarea($agency_code); ?></textarea>
                 </div>
             </div>
             <div class="agency-modal-footer">
@@ -272,7 +274,7 @@ $can_comment = Agency_Block::client_can_comment_allowed($block);
 <?php ob_start(); ?>
 document.addEventListener('DOMContentLoaded', function() {
 
-    <?php if ($is_manager): ?>
+    <?php if ($agency_is_manager): ?>
 
     // ----- Language detection from file extension -----
     var extensionMap = {
@@ -315,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fetch('<?php echo esc_url(rest_url('agency/v1/external-links')); ?>', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': '<?php echo esc_js(wp_create_nonce('wp_rest')); ?>' },
-                body: JSON.stringify({ block_id: <?php echo intval($block->id); ?>, emoji: emoji, text: text, url: url })
+                body: JSON.stringify({ block_id: <?php echo intval($agency_block->id); ?>, emoji: emoji, text: text, url: url })
             }).then(function(r) { return r.json(); }).then(function(d) {
                 if (d.success) window.location.reload();
                 else { alert(<?php echo wp_json_encode(__('Error while creating the link', 'agency-client-portal')); ?>); createLinkBtn.disabled = false; }
@@ -383,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var lang     = detectLanguage(filename);
         saveBtn.disabled = true;
         saveBtn.textContent = <?php echo wp_json_encode(__('Saving...', 'agency-client-portal')); ?>;
-        fetch(agencyData.rest_url + 'blocks/<?php echo intval($block->id); ?>', {
+        fetch(agencyData.rest_url + 'blocks/<?php echo intval($agency_block->id); ?>', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': agencyData.nonce },
             body: JSON.stringify({ content: content, settings: { file_name: filename, language: lang } })

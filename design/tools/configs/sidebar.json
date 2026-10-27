@@ -1,0 +1,14 @@
+{
+ "viewport": {
+  "width": 2700,
+  "height": 1080
+ },
+ "skip": [],
+ "pages": [
+  [
+   "09",
+   "file://__DESIGN__/prototypes/sidebar.html",
+   false
+  ]
+ ]
+}

@@ -8,60 +8,60 @@
     <?php wp_head(); ?>
 </head>
 <?php
-$client_slug = get_query_var('agency_client');
-$client = Agency_Client::get_by_slug($client_slug);
+$agency_client_slug = get_query_var('agency_client');
+$agency_client = Agency_Client::get_by_slug($agency_client_slug);
 
-if (!$client) {
+if (!$agency_client) {
     wp_die(esc_html__('Client not found', 'agency-client-portal'), 404);
 }
 
 // Préparer les classes CSS du body
-$body_classes = array();
+$agency_body_classes = array();
 if (Agency_Security::get_authenticated_client() && !is_user_logged_in()) {
-    $body_classes[] = 'agency-client-mode';
+    $agency_body_classes[] = 'agency-client-mode';
 }
 ?>
-<body <?php body_class($body_classes); ?> data-client-id="<?php echo esc_attr($client->id); ?>">
+<body <?php body_class($agency_body_classes); ?> data-client-id="<?php echo esc_attr($agency_client->id); ?>">
 
 <?php
 // Vérifier les permissions (hybride : token ou utilisateur WordPress)
-$security = agency()->security;
-$token_authenticated = Agency_Security::can_access_client_by_token($client->id);
-$wp_authenticated = is_user_logged_in() && $security->user_can_access_client($client->id);
+$agency_security = agency()->security;
+$agency_token_authenticated = Agency_Security::can_access_client_by_token($agency_client->id);
+$agency_wp_authenticated = is_user_logged_in() && $agency_security->user_can_access_client($agency_client->id);
 
-if (!$token_authenticated && !$wp_authenticated) {
+if (!$agency_token_authenticated && !$agency_wp_authenticated) {
     wp_die(esc_html__('Access denied', 'agency-client-portal'), 403);
 }
 
-$projects = Agency_Client::get_projects($client->id);
-$is_manager = current_user_can('manage_agency_projects');
-$is_client_mode = $token_authenticated && !is_user_logged_in(); // Mode client pur (sans compte WP)
-$client_view_title = !empty($client->client_view_title) ? $client->client_view_title : __('Your Projects', 'agency-client-portal');
+$agency_projects = Agency_Client::get_projects($agency_client->id);
+$agency_is_manager = current_user_can('manage_agency_projects');
+$agency_is_client_mode = $agency_token_authenticated && !is_user_logged_in(); // Mode client pur (sans compte WP)
+$agency_client_view_title = !empty($agency_client->client_view_title) ? $agency_client->client_view_title : __('Your Projects', 'agency-client-portal');
 
 // Blocs de navigation par projet (compteurs des cartes) en une requête
-$nav_blocks   = Agency_Block::get_nav_by_projects(wp_list_pluck($projects, 'id'));
-$total_blocks = 0;
-foreach ($nav_blocks as $list) {
-    $total_blocks += count($list);
+$agency_nav_blocks   = Agency_Block::get_nav_by_projects(wp_list_pluck($agency_projects, 'id'));
+$agency_total_blocks = 0;
+foreach ($agency_nav_blocks as $agency_list) {
+    $agency_total_blocks += count($agency_list);
 }
-$archived_count = $is_manager ? count(Agency_Project::get_archived_by_client($client->id)) : 0;
-$has_token      = !empty($client->token_hash) && !empty($client->token_active);
-$is_active      = $client->status === 'active';
+$agency_archived_count = $agency_is_manager ? count(Agency_Project::get_archived_by_client($agency_client->id)) : 0;
+$agency_has_token      = !empty($agency_client->token_hash) && !empty($agency_client->token_active);
+$agency_is_active      = $agency_client->status === 'active';
 
 // Libellés disponibles : uniquement ceux liés aux projets du client
-$available_labels_global = (array) get_option('agency_project_labels', array());
-$used_labels = array();
-foreach ($projects as $p) {
-    if (!empty($p->labels)) {
-        foreach (explode(',', $p->labels) as $lbl) {
-            $lbl = trim($lbl);
-            if ($lbl !== '' && in_array($lbl, $available_labels_global, true)) {
-                $used_labels[$lbl] = true;
+$agency_available_labels_global = (array) get_option('agency_project_labels', array());
+$agency_used_labels = array();
+foreach ($agency_projects as $agency_p) {
+    if (!empty($agency_p->labels)) {
+        foreach (explode(',', $agency_p->labels) as $agency_lbl) {
+            $agency_lbl = trim($agency_lbl);
+            if ($agency_lbl !== '' && in_array($agency_lbl, $agency_available_labels_global, true)) {
+                $agency_used_labels[$agency_lbl] = true;
             }
         }
     }
 }
-$available_labels = array_keys($used_labels);
+$agency_available_labels = array_keys($agency_used_labels);
 ?>
 
 <div class="agency-wrapper">
@@ -75,49 +75,49 @@ $available_labels = array_keys($used_labels);
 
                 <div class="agency-page-head">
                     <div class="agency-page-head__main">
-                        <span class="agency-avatar agency-avatar--48" style="background:<?php echo esc_attr(Agency_Template::client_color($client)); ?>">
-                            <?php if (!empty($client->logo_url)): ?>
-                                <img src="<?php echo esc_url($client->logo_url); ?>" alt="" data-initial="<?php echo esc_attr(Agency_Template::initial($client->name)); ?>" onerror="this.parentNode.textContent=this.dataset.initial">
+                        <span class="agency-avatar agency-avatar--48" style="background:<?php echo esc_attr(Agency_Template::client_color($agency_client)); ?>">
+                            <?php if (!empty($agency_client->logo_url)): ?>
+                                <img src="<?php echo esc_url($agency_client->logo_url); ?>" alt="" data-initial="<?php echo esc_attr(Agency_Template::initial($agency_client->name)); ?>" onerror="this.parentNode.textContent=this.dataset.initial">
                             <?php else: ?>
-                                <?php echo esc_html(Agency_Template::initial($client->name)); ?>
+                                <?php echo esc_html(Agency_Template::initial($agency_client->name)); ?>
                             <?php endif; ?>
                         </span>
                         <div class="agency-page-head__text">
                             <div class="agency-page-head__title-row">
-                                <?php if ($is_manager): ?>
-                                    <h1 class="agency-page-title"><?php echo esc_html($client->name); ?></h1>
-                                    <span class="agency-pill <?php echo $is_active ? 'agency-pill--ok' : 'agency-pill--off'; ?>"><?php echo $is_active ? esc_html__('Active', 'agency-client-portal') : esc_html__('Inactive', 'agency-client-portal'); ?></span>
+                                <?php if ($agency_is_manager): ?>
+                                    <h1 class="agency-page-title"><?php echo esc_html($agency_client->name); ?></h1>
+                                    <span class="agency-pill <?php echo $agency_is_active ? 'agency-pill--ok' : 'agency-pill--off'; ?>"><?php echo $agency_is_active ? esc_html__('Active', 'agency-client-portal') : esc_html__('Inactive', 'agency-client-portal'); ?></span>
                                 <?php else: ?>
-                                    <h1 class="agency-page-title"><?php echo esc_html($client_view_title); ?></h1>
+                                    <h1 class="agency-page-title"><?php echo esc_html($agency_client_view_title); ?></h1>
                                 <?php endif; ?>
                             </div>
                             <div class="agency-page-meta">
                                 <?php
-                                $meta_parts = array(
+                                $agency_meta_parts = array(
                                     /* translators: %d: number of projects */
-                                    sprintf(_n('%d project', '%d projects', count($projects), 'agency-client-portal'), count($projects)),
+                                    sprintf(_n('%d project', '%d projects', count($agency_projects), 'agency-client-portal'), count($agency_projects)),
                                     /* translators: %d: number of blocks */
-                                    sprintf(_n('%d block', '%d blocks', $total_blocks, 'agency-client-portal'), $total_blocks),
+                                    sprintf(_n('%d block', '%d blocks', $agency_total_blocks, 'agency-client-portal'), $agency_total_blocks),
                                 );
-                                if ($is_manager) {
-                                    $meta_parts[] = $has_token ? __('portal active', 'agency-client-portal') : __('no access link', 'agency-client-portal');
+                                if ($agency_is_manager) {
+                                    $agency_meta_parts[] = $agency_has_token ? __('portal active', 'agency-client-portal') : __('no access link', 'agency-client-portal');
                                 }
-                                echo esc_html(implode(' · ', $meta_parts));
+                                echo esc_html(implode(' · ', $agency_meta_parts));
                                 ?>
                             </div>
-                            <?php if ($is_manager): ?>
+                            <?php if ($agency_is_manager): ?>
                                 <p class="agency-page-sub">
                                     <span class="agency-count"><?php esc_html_e('Title shown to the client:', 'agency-client-portal'); ?></span>
-                                    <span class="agency-inline-edit" id="agency-client-title" contenteditable="true" data-client-id="<?php echo esc_attr($client->id); ?>" aria-label="<?php esc_attr_e('Client page title', 'agency-client-portal'); ?>"><?php echo esc_html($client_view_title); ?></span>
+                                    <span class="agency-inline-edit" id="agency-client-title" contenteditable="true" data-client-id="<?php echo esc_attr($agency_client->id); ?>" aria-label="<?php esc_attr_e('Client page title', 'agency-client-portal'); ?>"><?php echo esc_html($agency_client_view_title); ?></span>
                                     <span class="agency-title-status" id="client-title-status" aria-live="polite"></span>
                                 </p>
                             <?php endif; ?>
                         </div>
                     </div>
-                    <?php if ($is_manager): ?>
+                    <?php if ($agency_is_manager): ?>
                     <div class="agency-page-head__actions">
-                        <?php if ($has_token): ?>
-                        <button type="button" class="agency-btn agency-copy-access" data-client-id="<?php echo esc_attr($client->id); ?>">
+                        <?php if ($agency_has_token): ?>
+                        <button type="button" class="agency-btn agency-copy-access" data-client-id="<?php echo esc_attr($agency_client->id); ?>">
                             <?php Agency_Icons::render('copy', 16); ?> <?php esc_html_e('Copy portal link', 'agency-client-portal'); ?>
                         </button>
                         <?php endif; ?>
@@ -126,8 +126,8 @@ $available_labels = array_keys($used_labels);
                                 <?php Agency_Icons::render_ui('more', 16); ?>
                             </button>
                             <div class="agency-menu" role="menu">
-                                <a class="agency-menu__item" href="<?php echo esc_url(home_url('/agency/edit-client/' . intval($client->id) . '/')); ?>"><?php Agency_Icons::render('edit', 16); ?> <?php esc_html_e('Edit client', 'agency-client-portal'); ?></a>
-                                <a class="agency-menu__item" href="<?php echo esc_url(home_url('/agency/edit-client/' . intval($client->id) . '/#agec-access')); ?>"><?php Agency_Icons::render('key', 16); ?> <?php esc_html_e('Access & security', 'agency-client-portal'); ?></a>
+                                <a class="agency-menu__item" href="<?php echo esc_url(home_url('/agency/edit-client/' . intval($agency_client->id) . '/')); ?>"><?php Agency_Icons::render('edit', 16); ?> <?php esc_html_e('Edit client', 'agency-client-portal'); ?></a>
+                                <a class="agency-menu__item" href="<?php echo esc_url(home_url('/agency/edit-client/' . intval($agency_client->id) . '/#agec-access')); ?>"><?php Agency_Icons::render('key', 16); ?> <?php esc_html_e('Access & security', 'agency-client-portal'); ?></a>
                             </div>
                         </div>
                     </div>
@@ -139,13 +139,13 @@ $available_labels = array_keys($used_labels);
                         <?php Agency_Icons::render_ui('search', 16); ?>
                         <input type="search" id="project-search" placeholder="<?php esc_attr_e('Search a project', 'agency-client-portal'); ?>" autocomplete="off">
                     </label>
-                    <?php if ($is_manager): ?>
+                    <?php if ($agency_is_manager): ?>
                     <button type="button" class="agency-btn" id="show-archived-btn" aria-pressed="false">
                         <?php Agency_Icons::render_glyph('folder', 16); ?> <?php esc_html_e('Archived', 'agency-client-portal'); ?>
-                        <span class="agency-badge"><?php echo esc_html($archived_count); ?></span>
+                        <span class="agency-badge"><?php echo esc_html($agency_archived_count); ?></span>
                     </button>
                     <?php endif; ?>
-                    <?php if (!empty($available_labels)): ?>
+                    <?php if (!empty($agency_available_labels)): ?>
                     <div class="agency-dropdown">
                         <button type="button" class="agency-btn" data-agency-dropdown aria-haspopup="true" aria-expanded="false">
                             <?php Agency_Icons::render_ui('filter', 16); ?> <?php esc_html_e('Filter', 'agency-client-portal'); ?>
@@ -153,8 +153,8 @@ $available_labels = array_keys($used_labels);
                         <div class="agency-menu" id="label-filters">
                             <div class="agency-menu__label"><?php esc_html_e('Labels', 'agency-client-portal'); ?></div>
                             <button type="button" class="agency-label-filter active" data-label="all"><?php esc_html_e('All', 'agency-client-portal'); ?></button>
-                            <?php foreach ($available_labels as $label): ?>
-                                <button type="button" class="agency-label-filter" data-label="<?php echo esc_attr($label); ?>"><?php echo esc_html($label); ?></button>
+                            <?php foreach ($agency_available_labels as $agency_label): ?>
+                                <button type="button" class="agency-label-filter" data-label="<?php echo esc_attr($agency_label); ?>"><?php echo esc_html($agency_label); ?></button>
                             <?php endforeach; ?>
                         </div>
                     </div>
@@ -163,14 +163,14 @@ $available_labels = array_keys($used_labels);
                         <button type="button" data-view="grid" class="is-on" aria-label="<?php esc_attr_e('Grid', 'agency-client-portal'); ?>"><?php Agency_Icons::render_ui('grid', 16); ?></button>
                         <button type="button" data-view="list" aria-label="<?php esc_attr_e('List', 'agency-client-portal'); ?>"><?php Agency_Icons::render_ui('list', 16); ?></button>
                     </div>
-                    <?php if ($is_manager): ?>
+                    <?php if ($agency_is_manager): ?>
                     <button class="agency-btn agency-btn-primary" id="add-project-btn" type="button">
                         <?php Agency_Icons::render_ui('plus', 16); ?> <?php esc_html_e('Add a project', 'agency-client-portal'); ?>
                     </button>
                     <?php endif; ?>
                 </div>
 
-                <?php if ($is_manager): ?>
+                <?php if ($agency_is_manager): ?>
                     <!-- Modal de création de projet -->
                     <div class="agency-modal" id="new-project-modal">
                         <div class="agency-modal-content">
@@ -213,13 +213,13 @@ $available_labels = array_keys($used_labels);
                                     </div>
                                     <div class="agency-image-preview" id="new-project-image-preview" style="display:none;"></div>
                                 </div>
-                                <?php if (!empty($available_labels_global)): ?>
+                                <?php if (!empty($agency_available_labels_global)): ?>
                                 <div class="agency-form-group">
                                     <label class="agency-form-label"><?php esc_html_e('Labels', 'agency-client-portal'); ?></label>
                                     <div class="agency-labels-select" id="new-project-labels">
-                                        <?php foreach ($available_labels_global as $label): ?>
-                                            <button type="button" class="agency-label-toggle" data-value="<?php echo esc_attr($label); ?>">
-                                                <?php echo esc_html($label); ?>
+                                        <?php foreach ($agency_available_labels_global as $agency_label): ?>
+                                            <button type="button" class="agency-label-toggle" data-value="<?php echo esc_attr($agency_label); ?>">
+                                                <?php echo esc_html($agency_label); ?>
                                             </button>
                                         <?php endforeach; ?>
                                     </div>
@@ -293,13 +293,13 @@ $available_labels = array_keys($used_labels);
                                     </div>
                                     <div class="agency-image-preview" id="edit-project-image-preview" style="display:none;"></div>
                                 </div>
-                                <?php if (!empty($available_labels_global)): ?>
+                                <?php if (!empty($agency_available_labels_global)): ?>
                                 <div class="agency-form-group">
                                     <label class="agency-form-label"><?php esc_html_e('Labels', 'agency-client-portal'); ?></label>
                                     <div class="agency-labels-select" id="edit-project-labels">
-                                        <?php foreach ($available_labels_global as $label): ?>
-                                            <button type="button" class="agency-label-toggle" data-value="<?php echo esc_attr($label); ?>">
-                                                <?php echo esc_html($label); ?>
+                                        <?php foreach ($agency_available_labels_global as $agency_label): ?>
+                                            <button type="button" class="agency-label-toggle" data-value="<?php echo esc_attr($agency_label); ?>">
+                                                <?php echo esc_html($agency_label); ?>
                                             </button>
                                         <?php endforeach; ?>
                                     </div>
@@ -329,78 +329,78 @@ $available_labels = array_keys($used_labels);
 
                 <!-- Grille des projets actifs -->
                 <div id="active-projects-view">
-                    <h2 class="agency-sec-h"><?php esc_html_e('Projects', 'agency-client-portal'); ?> <span class="agency-badge"><?php echo esc_html(count($projects)); ?></span></h2>
-                    <?php if (empty($projects) && !$is_manager): ?>
+                    <h2 class="agency-sec-h"><?php esc_html_e('Projects', 'agency-client-portal'); ?> <span class="agency-badge"><?php echo esc_html(count($agency_projects)); ?></span></h2>
+                    <?php if (empty($agency_projects) && !$agency_is_manager): ?>
                         <div class="agency-empty">
                             <p class="agency-empty__title"><?php esc_html_e('No projects yet.', 'agency-client-portal'); ?></p>
                             <p class="agency-empty__text"><?php esc_html_e('Your projects will appear here as soon as they are shared with you.', 'agency-client-portal'); ?></p>
                         </div>
                     <?php else: ?>
-                        <div class="agency-card-grid agency-projects-grid <?php echo $is_manager ? 'sortable' : ''; ?>" id="projects-grid" data-client-id="<?php echo esc_attr($client->id); ?>">
-                            <?php foreach ($projects as $project): ?>
+                        <div class="agency-card-grid agency-projects-grid <?php echo $agency_is_manager ? 'sortable' : ''; ?>" id="projects-grid" data-client-id="<?php echo esc_attr($agency_client->id); ?>">
+                            <?php foreach ($agency_projects as $agency_project): ?>
                                 <?php
-                                    $project_name = isset($project->name) && $project->name !== '' ? $project->name : sprintf(/* translators: %d: project ID */ __('Project #%d', 'agency-client-portal'), intval($project->id));
-                                    $project_emoji = !empty($project->emoji) ? $project->emoji : '📋';
-                                    $project_url  = home_url("/client/{$client->slug}/project/{$project->slug}/");
-                                    $blocks_count = isset($nav_blocks[intval($project->id)]) ? count($nav_blocks[intval($project->id)]) : 0;
-                                    $cover_url = Agency_Project::get_cover_thumbnail_url($project);
-                                    $project_labels_raw = !empty($project->labels) ? $project->labels : '';
+                                    $agency_project_name = isset($agency_project->name) && $agency_project->name !== '' ? $agency_project->name : sprintf(/* translators: %d: project ID */ __('Project #%d', 'agency-client-portal'), intval($agency_project->id));
+                                    $agency_project_emoji = !empty($agency_project->emoji) ? $agency_project->emoji : '📋';
+                                    $agency_project_url  = home_url("/client/{$agency_client->slug}/project/{$agency_project->slug}/");
+                                    $agency_blocks_count = isset($agency_nav_blocks[intval($agency_project->id)]) ? count($agency_nav_blocks[intval($agency_project->id)]) : 0;
+                                    $agency_cover_url = Agency_Project::get_cover_thumbnail_url($agency_project);
+                                    $agency_project_labels_raw = !empty($agency_project->labels) ? $agency_project->labels : '';
                                 ?>
                                 <div class="agency-card agency-project-card"
-                                     data-project-id="<?php echo esc_attr($project->id); ?>"
-                                     data-project-labels="<?php echo esc_attr($project_labels_raw); ?>"
-                                     data-project-name="<?php echo esc_attr($project_name); ?>">
-                                    <a href="<?php echo esc_url($project_url); ?>" class="agency-card__link" aria-label="<?php echo esc_attr($project_name); ?>"></a>
-                                    <div class="agency-card__cover<?php echo $cover_url ? '' : ' is-empty'; ?>"<?php if ($cover_url): ?> data-bg-lazy="<?php echo esc_url($cover_url); ?>"<?php endif; ?>></div>
+                                     data-project-id="<?php echo esc_attr($agency_project->id); ?>"
+                                     data-project-labels="<?php echo esc_attr($agency_project_labels_raw); ?>"
+                                     data-project-name="<?php echo esc_attr($agency_project_name); ?>">
+                                    <a href="<?php echo esc_url($agency_project_url); ?>" class="agency-card__link" aria-label="<?php echo esc_attr($agency_project_name); ?>"></a>
+                                    <div class="agency-card__cover<?php echo $agency_cover_url ? '' : ' is-empty'; ?>"<?php if ($agency_cover_url): ?> data-bg-lazy="<?php echo esc_url($agency_cover_url); ?>"<?php endif; ?>></div>
                                     <div class="agency-card__body">
                                         <div class="agency-card__tags">
-                                            <?php if (!empty($project_labels_raw)): ?>
-                                                <?php foreach (array_slice(explode(',', $project_labels_raw), 0, 3) as $lbl): ?>
-                                                    <span class="agency-tag agency-tag--outline"><?php echo esc_html(trim($lbl)); ?></span>
+                                            <?php if (!empty($agency_project_labels_raw)): ?>
+                                                <?php foreach (array_slice(explode(',', $agency_project_labels_raw), 0, 3) as $agency_lbl): ?>
+                                                    <span class="agency-tag agency-tag--outline"><?php echo esc_html(trim($agency_lbl)); ?></span>
                                                 <?php endforeach; ?>
                                             <?php endif; ?>
-                                            <?php if ($is_manager): ?>
+                                            <?php if ($agency_is_manager): ?>
                                             <div class="agency-dropdown agency-card__menu">
                                                 <button type="button" class="agency-btn-icon agency-btn-icon--ghost" data-agency-dropdown aria-haspopup="true" aria-expanded="false" aria-label="<?php esc_attr_e('Project actions', 'agency-client-portal'); ?>">
                                                     <?php Agency_Icons::render_ui('more-v', 16); ?>
                                                 </button>
                                                 <div class="agency-menu" role="menu">
-                                                    <a class="agency-menu__item" href="<?php echo esc_url($project_url); ?>"><?php Agency_Icons::render_ui('external', 16); ?> <?php esc_html_e('Open', 'agency-client-portal'); ?></a>
+                                                    <a class="agency-menu__item" href="<?php echo esc_url($agency_project_url); ?>"><?php Agency_Icons::render_ui('external', 16); ?> <?php esc_html_e('Open', 'agency-client-portal'); ?></a>
                                                     <button type="button" class="agency-menu__item edit-project"
-                                                        data-project-id="<?php echo esc_attr($project->id); ?>"
-                                                        data-project-name="<?php echo esc_attr($project->name); ?>"
-                                                        data-project-email="<?php echo esc_attr($project->email ?? ''); ?>"
-                                                        data-project-slug="<?php echo esc_attr($project->slug); ?>"
-                                                        data-project-emoji="<?php echo esc_attr($project->emoji); ?>"
-                                                        data-project-cover="<?php echo esc_attr($cover_url); ?>"
-                                                        data-project-cover-asset-id="<?php echo esc_attr($project->cover_image_asset_id ?? ''); ?>"
-                                                        data-project-cover-thumbnail-url="<?php echo esc_attr($project->cover_image_thumbnail_url ?? ''); ?>"
-                                                        data-project-labels="<?php echo esc_attr($project_labels_raw); ?>"
+                                                        data-project-id="<?php echo esc_attr($agency_project->id); ?>"
+                                                        data-project-name="<?php echo esc_attr($agency_project->name); ?>"
+                                                        data-project-email="<?php echo esc_attr($agency_project->email ?? ''); ?>"
+                                                        data-project-slug="<?php echo esc_attr($agency_project->slug); ?>"
+                                                        data-project-emoji="<?php echo esc_attr($agency_project->emoji); ?>"
+                                                        data-project-cover="<?php echo esc_attr($agency_cover_url); ?>"
+                                                        data-project-cover-asset-id="<?php echo esc_attr($agency_project->cover_image_asset_id ?? ''); ?>"
+                                                        data-project-cover-thumbnail-url="<?php echo esc_attr($agency_project->cover_image_thumbnail_url ?? ''); ?>"
+                                                        data-project-labels="<?php echo esc_attr($agency_project_labels_raw); ?>"
                                                         data-project-archived="0"><?php Agency_Icons::render('edit', 16); ?> <?php esc_html_e('Edit', 'agency-client-portal'); ?></button>
                                                     <hr class="agency-menu__sep">
-                                                    <button type="button" class="agency-menu__item agency-menu__item--danger delete-project" data-project-id="<?php echo esc_attr($project->id); ?>"><?php Agency_Icons::render('trash', 16); ?> <?php esc_html_e('Delete', 'agency-client-portal'); ?></button>
+                                                    <button type="button" class="agency-menu__item agency-menu__item--danger delete-project" data-project-id="<?php echo esc_attr($agency_project->id); ?>"><?php Agency_Icons::render('trash', 16); ?> <?php esc_html_e('Delete', 'agency-client-portal'); ?></button>
                                                 </div>
                                             </div>
                                             <?php endif; ?>
                                         </div>
                                         <h3 class="agency-card__title">
-                                            <span class="agency-card__emoji" data-agency-emoji><?php echo esc_html($project_emoji); ?></span>
-                                            <span class="agency-card__title-text"><?php echo esc_html($project_name); ?></span>
+                                            <span class="agency-card__emoji" data-agency-emoji><?php echo esc_html($agency_project_emoji); ?></span>
+                                            <span class="agency-card__title-text"><?php echo esc_html($agency_project_name); ?></span>
                                         </h3>
                                         <div class="agency-card__meta">
                                             <?php Agency_Icons::render_glyph('versioned_media', 12); ?>
                                             <?php
                                             echo esc_html(
                                                 /* translators: %d: number of blocks */
-                                                sprintf(_n('%d block', '%d blocks', $blocks_count, 'agency-client-portal'), $blocks_count)
-                                                . ' · ' . Agency_Template::time_ago(!empty($project->updated_at) ? $project->updated_at : $project->created_at)
+                                                sprintf(_n('%d block', '%d blocks', $agency_blocks_count, 'agency-client-portal'), $agency_blocks_count)
+                                                . ' · ' . Agency_Template::time_ago(!empty($agency_project->updated_at) ? $agency_project->updated_at : $agency_project->created_at)
                                             );
                                             ?>
                                         </div>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
-                            <?php if ($is_manager): ?>
+                            <?php if ($agency_is_manager): ?>
                                 <button type="button" class="agency-card agency-card--add" id="add-project-card">
                                     <span class="agency-card__plus"><?php Agency_Icons::render_ui('plus', 18); ?></span>
                                     <?php esc_html_e('Add a project', 'agency-client-portal'); ?>
@@ -474,7 +474,7 @@ jQuery(document).ready(function($) {
     }
 
     function loadArchivedProjects() {
-        var clientId = <?php echo intval($client->id); ?>;
+        var clientId = <?php echo intval($agency_client->id); ?>;
         $.ajax({
             url: agencyData.rest_url + 'projects/archived?client_id=' + clientId,
             method: 'GET',
@@ -492,7 +492,7 @@ jQuery(document).ready(function($) {
                 $.each(projects, function(i, project) {
                     var name = project.name || '<?php echo esc_js(__('Project', 'agency-client-portal')); ?>';
                     var emoji = project.emoji || '📋';
-                    var url = '<?php echo esc_js(home_url("/client/{$client->slug}/project/")); ?>' + encodeURIComponent(project.slug) + '/';
+                    var url = '<?php echo esc_js(home_url("/client/{$agency_client->slug}/project/")); ?>' + encodeURIComponent(project.slug) + '/';
                     var cover = project.cover_image_thumbnail_url || project.cover_image_url || '';
                     var tags = '';
                     String(project.labels || '').split(',').forEach(function(lbl) {
@@ -500,7 +500,7 @@ jQuery(document).ready(function($) {
                         if (lbl) tags += '<span class="agency-tag agency-tag--outline">' + esc(lbl) + '</span>';
                     });
                     var menu = '';
-                    <?php if ($is_manager): ?>
+                    <?php if ($agency_is_manager): ?>
                     menu = '<div class="agency-dropdown agency-card__menu">' +
                         '<button type="button" class="agency-btn-icon agency-btn-icon--ghost" data-agency-dropdown aria-haspopup="true" aria-expanded="false">⋮</button>' +
                         '<div class="agency-menu" role="menu">' +
@@ -698,7 +698,7 @@ jQuery(document).ready(function($) {
     });
 
     // ─── Create project modal ─────────────────────────────────────────────────
-    <?php if ($is_manager): ?>
+    <?php if ($agency_is_manager): ?>
     var newModal = new AgencyModal('new-project-modal');
 
     $('#add-project-btn').on('click', function() {
@@ -743,7 +743,7 @@ jQuery(document).ready(function($) {
 
         // Prepare payload
         var payload = {
-            client_id: <?php echo intval($client->id); ?>,
+            client_id: <?php echo intval($agency_client->id); ?>,
             name: name,
             emoji: emoji,
             cover_image_url: coverImageUrl,
@@ -786,7 +786,7 @@ jQuery(document).ready(function($) {
     // Delete project — handled by manager.js (AgencyManager.deleteProject)
 
     // WP Media uploader for images (cached to avoid double-open)
-    var clientSlugForUpload = '<?php echo esc_js($client->slug); ?>';
+    var clientSlugForUpload = '<?php echo esc_js($agency_client->slug); ?>';
 
     function agencySetUploadContext(clientSlug, projectSlug, callback) {
         $.post(agencyData.ajax_url, {

@@ -1,0 +1,45 @@
+{
+ "skip": [
+  "#wpadminbar",
+  "#agency-manager-sidebar",
+  "#agency-sidebar-toggle",
+  ".agency-sidebar-toggle"
+ ],
+ "pages": [
+  [
+   "01",
+   "https://agency.local/agency/dashboard/",
+   true
+  ],
+  [
+   "02",
+   "https://agency.local/agency/dashboard/?action=new-client",
+   true
+  ],
+  [
+   "03",
+   "https://agency.local/agency/edit-client/9/",
+   true
+  ],
+  [
+   "04",
+   "https://agency.local/client/lumen/",
+   true
+  ],
+  [
+   "05",
+   "https://agency.local/client/lumen/project/lancement-aurora/",
+   true
+  ],
+  [
+   "06",
+   "https://agency.local/client/lumen/project/lancement-aurora/block/212/",
+   true
+  ],
+  [
+   "08",
+   "https://agency.local/client/lumen/",
+   false
+  ]
+ ]
+}

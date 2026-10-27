@@ -15,8 +15,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$brand_logo_url = get_option('agency_brand_logo_url', '');
-$home_url       = home_url('/');
+$agency_brand_logo_url = get_option('agency_brand_logo_url', '');
+$agency_home_url       = home_url('/');
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -95,9 +95,9 @@ $home_url       = home_url('/');
 </head>
 <body>
     <div class="agency-access-denied">
-        <?php if ($brand_logo_url) : ?>
+        <?php if ($agency_brand_logo_url) : ?>
             <div class="agency-access-denied__logo">
-                <img src="<?php echo esc_url($brand_logo_url); ?>" alt="<?php bloginfo('name'); ?>">
+                <img src="<?php echo esc_url($agency_brand_logo_url); ?>" alt="<?php bloginfo('name'); ?>">
             </div>
         <?php endif; ?>
 
@@ -109,7 +109,7 @@ $home_url       = home_url('/');
             <p class="agency-access-denied__reason">
                 <?php echo esc_html(!empty($error_reason) ? $error_reason : __('No access link detected. Please use the link provided by your agency.', 'agency-client-portal')); ?>
             </p>
-            <a href="<?php echo esc_url($home_url); ?>" class="agency-access-denied__link">
+            <a href="<?php echo esc_url($agency_home_url); ?>" class="agency-access-denied__link">
                 <?php echo esc_html__('Back to home', 'agency-client-portal'); ?>
             </a>
             <div class="agency-access-denied__foot"><?php esc_html_e('Error 403 · link missing or expired', 'agency-client-portal'); ?></div>

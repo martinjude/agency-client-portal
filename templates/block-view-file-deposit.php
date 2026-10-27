@@ -9,28 +9,28 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$client_slug  = get_query_var('agency_client');
-$project_slug = get_query_var('agency_project');
-$block_id     = get_query_var('agency_block');
+$agency_client_slug  = get_query_var('agency_client');
+$agency_project_slug = get_query_var('agency_project');
+$agency_block_id     = get_query_var('agency_block');
 
-$client  = Agency_Client::get_by_slug($client_slug);
-$project = $client ? Agency_Project::get_by_slug($client->id, $project_slug) : null;
-$block   = Agency_Block::get_by_id($block_id);
+$agency_client  = Agency_Client::get_by_slug($agency_client_slug);
+$agency_project = $agency_client ? Agency_Project::get_by_slug($agency_client->id, $agency_project_slug) : null;
+$agency_block   = Agency_Block::get_by_id($agency_block_id);
 
-if (!$client || !$project || !$block || $block->type !== 'file_deposit') {
+if (!$agency_client || !$agency_project || !$agency_block || $agency_block->type !== 'file_deposit') {
     wp_die(esc_html__('Content not found', 'agency-client-portal'), 404);
 }
 
-$is_manager = current_user_can('manage_agency_projects');
-$assets     = Agency_Asset::get_by_block($block_id);
+$agency_is_manager = current_user_can('manage_agency_projects');
+$agency_assets     = Agency_Asset::get_by_block($agency_block_id);
 
 // Settings du bloc
-$block_settings      = !empty($block->settings) ? json_decode($block->settings, true) : array();
-$allowed_extensions  = !empty($block_settings['allowed_extensions'])
-    ? (array) $block_settings['allowed_extensions']
+$agency_block_settings      = !empty($agency_block->settings) ? json_decode($agency_block->settings, true) : array();
+$agency_allowed_extensions  = !empty($agency_block_settings['allowed_extensions'])
+    ? (array) $agency_block_settings['allowed_extensions']
     : array('zip');
-$max_size_mb         = !empty($block_settings['max_size_mb']) ? intval($block_settings['max_size_mb']) : 100;
-$allowed_ext_str     = implode(', ', $allowed_extensions);
+$agency_max_size_mb         = !empty($agency_block_settings['max_size_mb']) ? intval($agency_block_settings['max_size_mb']) : 100;
+$agency_allowed_ext_str     = implode(', ', $agency_allowed_extensions);
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -57,38 +57,38 @@ $allowed_ext_str     = implode(', ', $allowed_extensions);
                 <!-- Block Header -->
                 <?php include AGENCY_PLUGIN_DIR . 'templates/partials/block-head.php'; ?>
 
-                <?php if ($block->content): ?>
+                <?php if ($agency_block->content): ?>
                 <div class="block-header-full agency-bv-bar">
                     <div class="block-description">
-                        <?php echo wp_kses_post($block->content); ?>
+                        <?php echo wp_kses_post($agency_block->content); ?>
                     </div>
                 </div>
                 <?php endif; ?>
 
                 <?php
-                $client_assets = array();
-                $agency_assets = array();
-                if (!empty($assets)) {
-                    foreach ($assets as $asset) {
-                        if (!empty($asset->suggested_by_client)) {
-                            $client_assets[] = $asset;
+                $agency_client_assets = array();
+                $agency_staff_assets = array();
+                if (!empty($agency_assets)) {
+                    foreach ($agency_assets as $agency_asset) {
+                        if (!empty($agency_asset->suggested_by_client)) {
+                            $agency_client_assets[] = $agency_asset;
                         } else {
-                            $agency_assets[] = $asset;
+                            $agency_staff_assets[] = $agency_asset;
                         }
                     }
                 }
-                $deposit_cols = array(
+                $agency_deposit_cols = array(
                     array(
                         'key'    => 'client',
-                        'title'  => $is_manager ? __('Client files', 'agency-client-portal') : __('My uploads', 'agency-client-portal'),
+                        'title'  => $agency_is_manager ? __('Client files', 'agency-client-portal') : __('My uploads', 'agency-client-portal'),
                         'pill'   => '<span class="agency-tag agency-tag--client-outline">' . esc_html__('Client', 'agency-client-portal') . '</span>',
-                        'assets' => $client_assets,
+                        'assets' => $agency_client_assets,
                     ),
                     array(
                         'key'    => 'agency',
                         'title'  => __('Agency files', 'agency-client-portal'),
                         'pill'   => '<span class="agency-pill agency-pill--off">' . esc_html__('Agency', 'agency-client-portal') . '</span>',
-                        'assets' => $agency_assets,
+                        'assets' => $agency_staff_assets,
                     ),
                 );
                 ?>
@@ -96,7 +96,7 @@ $allowed_ext_str     = implode(', ', $allowed_extensions);
                 <div class="agency-fd">
 
                 <!-- Manager : configuration du dépôt -->
-                <?php if ($is_manager): ?>
+                <?php if ($agency_is_manager): ?>
                 <section class="agency-bp-card file-deposit-settings">
                     <header class="agency-bp-card__head">
                         <h3 class="agency-bp-card__title"><?php esc_html_e('Deposit settings', 'agency-client-portal'); ?></h3>
@@ -109,18 +109,18 @@ $allowed_ext_str     = implode(', ', $allowed_extensions);
                                 <span class="agency-bp-label__hint"><?php esc_html_e('comma-separated', 'agency-client-portal'); ?></span>
                             </label>
                             <input type="text" id="fd-allowed-ext" class="agency-form-input"
-                                   value="<?php echo esc_attr($allowed_ext_str); ?>" placeholder="zip, pdf, docx">
+                                   value="<?php echo esc_attr($agency_allowed_ext_str); ?>" placeholder="zip, pdf, docx">
                         </div>
                         <div class="file-deposit-settings-field">
                             <label class="agency-bp-label" for="fd-max-size"><?php esc_html_e('Maximum size (MB)', 'agency-client-portal'); ?></label>
                             <div class="agency-input-suffix">
                                 <input type="number" id="fd-max-size" class="agency-form-input"
-                                       value="<?php echo esc_attr($max_size_mb); ?>" min="1" max="2048">
+                                       value="<?php echo esc_attr($agency_max_size_mb); ?>" min="1" max="2048">
                                 <span><?php esc_html_e('MB', 'agency-client-portal'); ?></span>
                             </div>
                         </div>
                         <button type="button" class="agency-btn agency-btn-primary" id="fd-save-settings-btn"
-                                data-block-id="<?php echo esc_attr($block->id); ?>">
+                                data-block-id="<?php echo esc_attr($agency_block->id); ?>">
                             <?php esc_html_e('Save', 'agency-client-portal'); ?>
                         </button>
                     </div>
@@ -136,16 +136,16 @@ $allowed_ext_str     = implode(', ', $allowed_extensions);
                                 <?php echo esc_html(sprintf(
                                     /* translators: 1: allowed file extensions, 2: maximum size in MB */
                                     __('Accepted files: %1$s — max size: %2$d MB', 'agency-client-portal'),
-                                    $allowed_ext_str,
-                                    (int) $max_size_mb
+                                    $agency_allowed_ext_str,
+                                    (int) $agency_max_size_mb
                                 )); ?>
                             </p>
                             <div class="file-deposit-zone" id="file-deposit-zone">
                                 <span class="file-deposit-zone-icon"><?php Agency_Icons::render_glyph('file_deposit', 32); ?></span>
                                 <p class="file-deposit-zone__title"><strong><?php esc_html_e('Choose a file', 'agency-client-portal'); ?></strong> <?php esc_html_e('or drag and drop', 'agency-client-portal'); ?></p>
-                                <p class="file-deposit-zone__hint"><?php echo esc_html(strtoupper(implode(', ', $allowed_extensions)) . ' · ' . sprintf(/* translators: %d: maximum size in MB */ __('up to %d MB', 'agency-client-portal'), (int) $max_size_mb)); ?></p>
+                                <p class="file-deposit-zone__hint"><?php echo esc_html(strtoupper(implode(', ', $agency_allowed_extensions)) . ' · ' . sprintf(/* translators: %d: maximum size in MB */ __('up to %d MB', 'agency-client-portal'), (int) $agency_max_size_mb)); ?></p>
                                 <input type="file" id="file-deposit-input" class="file-deposit-input-hidden"
-                                       accept=".<?php echo esc_attr(implode(',.', $allowed_extensions)); ?>">
+                                       accept=".<?php echo esc_attr(implode(',.', $agency_allowed_extensions)); ?>">
                             </div>
                             <p id="file-deposit-error" class="file-deposit-error" hidden></p>
                         </div>
@@ -158,36 +158,36 @@ $allowed_ext_str     = implode(', ', $allowed_extensions);
 
                 <!-- Fichiers déposés -->
                 <div class="file-deposit-list" id="file-deposit-list">
-                    <?php foreach ($deposit_cols as $col): ?>
-                    <section class="agency-bp-card file-deposit-column file-deposit-column--<?php echo esc_attr($col['key']); ?>">
+                    <?php foreach ($agency_deposit_cols as $agency_col): ?>
+                    <section class="agency-bp-card file-deposit-column file-deposit-column--<?php echo esc_attr($agency_col['key']); ?>">
                         <header class="agency-bp-card__head agency-bp-card__head--rule">
-                            <h3 class="agency-bp-card__title"><?php echo esc_html($col['title']); ?> <span class="agency-count"><?php echo intval(count($col['assets'])); ?></span></h3>
-                            <?php echo $col['pill']; // phpcs:ignore WordPress.Security.EscapeOutput -- construit ci-dessus avec esc_html__ ?>
+                            <h3 class="agency-bp-card__title"><?php echo esc_html($agency_col['title']); ?> <span class="agency-count"><?php echo intval(count($agency_col['assets'])); ?></span></h3>
+                            <?php echo $agency_col['pill']; // phpcs:ignore WordPress.Security.EscapeOutput -- construit ci-dessus avec esc_html__ ?>
                         </header>
-                        <?php if (empty($col['assets'])): ?>
+                        <?php if (empty($agency_col['assets'])): ?>
                             <p class="file-deposit-empty"><?php esc_html_e('No files uploaded yet.', 'agency-client-portal'); ?></p>
                         <?php else: ?>
                         <div class="file-deposit-items">
-                            <?php foreach ($col['assets'] as $asset):
-                                if (!empty($asset->suggested_by_client)) {
-                                    $author = $client->name;
+                            <?php foreach ($agency_col['assets'] as $agency_asset):
+                                if (!empty($agency_asset->suggested_by_client)) {
+                                    $agency_author = $agency_client->name;
                                 } else {
-                                    $uploader = !empty($asset->uploaded_by) ? get_userdata((int) $asset->uploaded_by) : null;
-                                    $author   = $uploader ? $uploader->display_name : get_bloginfo('name');
+                                    $agency_uploader = !empty($agency_asset->uploaded_by) ? get_userdata((int) $agency_asset->uploaded_by) : null;
+                                    $agency_author   = $agency_uploader ? $agency_uploader->display_name : get_bloginfo('name');
                                 }
                             ?>
-                            <div class="file-deposit-item" data-asset-id="<?php echo esc_attr($asset->id); ?>">
-                                <?php echo Agency_Template::file_tile($asset->original_filename); // phpcs:ignore WordPress.Security.EscapeOutput -- échappé dans file_tile() ?>
+                            <div class="file-deposit-item" data-asset-id="<?php echo esc_attr($agency_asset->id); ?>">
+                                <?php echo Agency_Template::file_tile($agency_asset->original_filename); // phpcs:ignore WordPress.Security.EscapeOutput -- échappé dans file_tile() ?>
                                 <div class="file-deposit-item-info">
-                                    <span class="file-deposit-item-name"><?php echo esc_html($asset->original_filename); ?></span>
-                                    <span class="file-deposit-item-meta"><?php echo esc_html(size_format($asset->file_size) . ' · ' . $author . ' · ' . Agency_Template::time_ago($asset->created_at)); ?></span>
+                                    <span class="file-deposit-item-name"><?php echo esc_html($agency_asset->original_filename); ?></span>
+                                    <span class="file-deposit-item-meta"><?php echo esc_html(size_format($agency_asset->file_size) . ' · ' . $agency_author . ' · ' . Agency_Template::time_ago($agency_asset->created_at)); ?></span>
                                 </div>
                                 <div class="file-deposit-item-actions">
-                                    <a href="<?php echo esc_url(Agency_Asset::get_url($asset->id)); ?>" class="agency-btn-icon agency-btn-icon--ghost" download
+                                    <a href="<?php echo esc_url(Agency_Asset::get_url($agency_asset->id)); ?>" class="agency-btn-icon agency-btn-icon--ghost" download
                                        title="<?php esc_attr_e('Download', 'agency-client-portal'); ?>" aria-label="<?php esc_attr_e('Download', 'agency-client-portal'); ?>"><?php Agency_Icons::render('download', 16); ?></a>
-                                    <?php if ($is_manager): ?>
+                                    <?php if ($agency_is_manager): ?>
                                     <button type="button" class="agency-btn-icon agency-btn-icon--ghost delete-deposit-asset"
-                                            data-asset-id="<?php echo esc_attr($asset->id); ?>"
+                                            data-asset-id="<?php echo esc_attr($agency_asset->id); ?>"
                                             title="<?php esc_attr_e('Delete', 'agency-client-portal'); ?>" aria-label="<?php esc_attr_e('Delete', 'agency-client-portal'); ?>"><?php Agency_Icons::render('trash', 16); ?></button>
                                     <?php endif; ?>
                                 </div>
@@ -237,7 +237,7 @@ $allowed_ext_str     = implode(', ', $allowed_extensions);
     var errorEl   = document.getElementById('file-deposit-error');
 
     var queue = document.getElementById('file-deposit-queue');
-    var maxBytes = <?php echo intval($max_size_mb) * 1024 * 1024; ?>;
+    var maxBytes = <?php echo intval($agency_max_size_mb) * 1024 * 1024; ?>;
 
     function showError(msg) {
         if (!errorEl) return;
@@ -260,7 +260,7 @@ $allowed_ext_str     = implode(', ', $allowed_extensions);
 
         var formData = new FormData();
         formData.append('file', file);
-        formData.append('block_id', <?php echo intval($block->id); ?>);
+        formData.append('block_id', <?php echo intval($agency_block->id); ?>);
 
         // Ligne « en cours »
         var row = document.createElement('div');

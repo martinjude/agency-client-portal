@@ -11,44 +11,44 @@ if (!defined('ABSPATH')) { exit; }
 global $wpdb;
 
 // Clients actifs et inactifs (les supprimés sont exclus)
-$all_clients = Agency_Client::get_all_listable();
-$total_clients = count($all_clients);
+$agency_all_clients = Agency_Client::get_all_listable();
+$agency_total_clients = count($agency_all_clients);
 
 // Comptage de projets par client en une seule requête
-$project_counts = array();
-if (!empty($all_clients)) {
-    $client_ids = array_map(function ($c) { return intval($c->id); }, $all_clients);
-    $ids_placeholder = implode(',', array_fill(0, count($client_ids), '%d'));
+$agency_project_counts = array();
+if (!empty($agency_all_clients)) {
+    $agency_client_ids = array_map(function ($c) { return intval($c->id); }, $agency_all_clients);
+    $agency_ids_placeholder = implode(',', array_fill(0, count($agency_client_ids), '%d'));
     // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $ids_placeholder ne contient que des %d.
-    $counts = $wpdb->get_results($wpdb->prepare(
+    $agency_counts = $wpdb->get_results($wpdb->prepare(
         "SELECT client_id, COUNT(*) as cnt
          FROM {$wpdb->prefix}agency_projects
-         WHERE client_id IN ($ids_placeholder) AND status = 'active'
+         WHERE client_id IN ($agency_ids_placeholder) AND status = 'active'
          GROUP BY client_id",
-        $client_ids
+        $agency_client_ids
     ));
-    foreach ($counts as $row) {
-        $project_counts[intval($row->client_id)] = intval($row->cnt);
+    foreach ($agency_counts as $agency_row) {
+        $agency_project_counts[intval($agency_row->client_id)] = intval($agency_row->cnt);
     }
 }
 
-$dashboard_url  = home_url('/agency/dashboard/');
-$client         = null; // Pas de client sélectionné sur le dashboard
-$total_projects = array_sum($project_counts);
+$agency_dashboard_url  = home_url('/agency/dashboard/');
+$agency_client         = null; // Pas de client sélectionné sur le dashboard
+$agency_total_projects = array_sum($agency_project_counts);
 
 // Salutation contextuelle
-$_current_user = wp_get_current_user();
-$_first_name   = !empty($_current_user->first_name) ? $_current_user->first_name : $_current_user->display_name;
-$_hour         = intval(wp_date('G')); // 0–23
-if ($_hour < 12) {
-    $_salut = __('Good morning', 'agency-client-portal');
-} elseif ($_hour < 18) {
-    $_salut = __('Good afternoon', 'agency-client-portal');
+$agency_current_user = wp_get_current_user();
+$agency_first_name   = !empty($agency_current_user->first_name) ? $agency_current_user->first_name : $agency_current_user->display_name;
+$agency_hour         = intval(wp_date('G')); // 0–23
+if ($agency_hour < 12) {
+    $agency_salut = __('Good morning', 'agency-client-portal');
+} elseif ($agency_hour < 18) {
+    $agency_salut = __('Good afternoon', 'agency-client-portal');
 } else {
-    $_salut = __('Good evening', 'agency-client-portal');
+    $agency_salut = __('Good evening', 'agency-client-portal');
 }
 // Sous-message : une variation par jour de la semaine
-$_day_messages = array(
+$agency_day_messages = array(
     0 => __('Have a great week! It all starts now.', 'agency-client-portal'),
     1 => __('A new week, new projects.', 'agency-client-portal'),
     2 => __('Tuesday is a day for creating.', 'agency-client-portal'),
@@ -57,7 +57,7 @@ $_day_messages = array(
     5 => __('Friday! Finish the week in style.', 'agency-client-portal'),
     6 => __('Have a great weekend! Get some rest.', 'agency-client-portal'),
 );
-$_day_sub = $_day_messages[intval(wp_date('w'))];
+$agency_day_sub = $agency_day_messages[intval(wp_date('w'))];
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -80,18 +80,18 @@ $_day_sub = $_day_messages[intval(wp_date('w'))];
     <div class="agency-page-head">
         <div class="agency-page-head__text">
             <h1 class="agency-page-title">
-                <?php /* translators: 1: greeting, 2: user first name */ echo esc_html(sprintf(__('%1$s, %2$s!', 'agency-client-portal'), $_salut, $_first_name)); ?>
+                <?php /* translators: 1: greeting, 2: user first name */ echo esc_html(sprintf(__('%1$s, %2$s!', 'agency-client-portal'), $agency_salut, $agency_first_name)); ?>
             </h1>
             <div class="agency-page-meta">
                 <?php
                 echo esc_html(
-                    $_day_sub
+                    $agency_day_sub
                     . ' · '
                     /* translators: %d: number of clients */
-                    . sprintf(_n('%d client', '%d clients', $total_clients, 'agency-client-portal'), $total_clients)
+                    . sprintf(_n('%d client', '%d clients', $agency_total_clients, 'agency-client-portal'), $agency_total_clients)
                     . ' · '
                     /* translators: %d: number of projects */
-                    . sprintf(_n('%d project', '%d projects', $total_projects, 'agency-client-portal'), $total_projects)
+                    . sprintf(_n('%d project', '%d projects', $agency_total_projects, 'agency-client-portal'), $agency_total_projects)
                 );
                 ?>
             </div>
@@ -125,10 +125,10 @@ $_day_sub = $_day_messages[intval(wp_date('w'))];
 
     <h2 class="agency-sec-h">
         <?php esc_html_e('Clients', 'agency-client-portal'); ?>
-        <span class="agency-badge"><?php echo esc_html($total_clients); ?></span>
+        <span class="agency-badge"><?php echo esc_html($agency_total_clients); ?></span>
     </h2>
 
-    <?php if (empty($all_clients)): ?>
+    <?php if (empty($agency_all_clients)): ?>
     <div class="agency-empty">
         <span class="agency-page-tile"><?php Agency_Icons::render_glyph('folder', 22); ?></span>
         <p class="agency-empty__title"><?php esc_html_e('No clients yet.', 'agency-client-portal'); ?></p>
@@ -139,51 +139,51 @@ $_day_sub = $_day_messages[intval(wp_date('w'))];
     </div>
     <?php else: ?>
     <div class="agency-card-grid agency-client-grid" id="agd-clients-grid">
-        <?php foreach ($all_clients as $client_row):
-            $nb_projects = isset($project_counts[intval($client_row->id)]) ? $project_counts[intval($client_row->id)] : 0;
-            $has_token   = !empty($client_row->token_hash) && !empty($client_row->token_active);
-            $logo_url    = !empty($client_row->logo_url) ? $client_row->logo_url : '';
-            $initial     = mb_strtoupper(mb_substr(trim($client_row->name), 0, 1));
-            $accent      = sanitize_hex_color($client_row->primary_color) ?: '#7C83FD';
-            $edit_url    = home_url('/agency/edit-client/' . intval($client_row->id) . '/');
-            $portal_url  = home_url('/client/' . $client_row->slug . '/');
-            $is_active   = ($client_row->status === 'active');
+        <?php foreach ($agency_all_clients as $agency_client_row):
+            $agency_nb_projects = isset($agency_project_counts[intval($agency_client_row->id)]) ? $agency_project_counts[intval($agency_client_row->id)] : 0;
+            $agency_has_token   = !empty($agency_client_row->token_hash) && !empty($agency_client_row->token_active);
+            $agency_logo_url    = !empty($agency_client_row->logo_url) ? $agency_client_row->logo_url : '';
+            $agency_initial     = mb_strtoupper(mb_substr(trim($agency_client_row->name), 0, 1));
+            $agency_accent      = sanitize_hex_color($agency_client_row->primary_color) ?: '#7C83FD';
+            $agency_edit_url    = home_url('/agency/edit-client/' . intval($agency_client_row->id) . '/');
+            $agency_portal_url  = home_url('/client/' . $agency_client_row->slug . '/');
+            $agency_is_active   = ($agency_client_row->status === 'active');
         ?>
-        <div class="agency-client-card<?php echo $is_active ? '' : ' is-inactive'; ?>"
-             data-client-id="<?php echo esc_attr($client_row->id); ?>"
-             data-client-name="<?php echo esc_attr($client_row->name); ?>"
-             data-client-status="<?php echo $is_active ? 'active' : 'inactive'; ?>">
-            <a href="<?php echo esc_url($portal_url); ?>" class="agency-card__link" aria-label="<?php echo esc_attr($client_row->name); ?>"></a>
+        <div class="agency-client-card<?php echo $agency_is_active ? '' : ' is-inactive'; ?>"
+             data-client-id="<?php echo esc_attr($agency_client_row->id); ?>"
+             data-client-name="<?php echo esc_attr($agency_client_row->name); ?>"
+             data-client-status="<?php echo $agency_is_active ? 'active' : 'inactive'; ?>">
+            <a href="<?php echo esc_url($agency_portal_url); ?>" class="agency-card__link" aria-label="<?php echo esc_attr($agency_client_row->name); ?>"></a>
             <div class="agency-client-card__top">
-                <span class="agency-avatar agency-avatar--40" style="background:<?php echo esc_attr($accent); ?>">
-                    <?php if ($logo_url): ?>
-                        <img src="<?php echo esc_url($logo_url); ?>" alt="" data-initial="<?php echo esc_attr($initial); ?>" onerror="this.parentNode.textContent=this.dataset.initial">
+                <span class="agency-avatar agency-avatar--40" style="background:<?php echo esc_attr($agency_accent); ?>">
+                    <?php if ($agency_logo_url): ?>
+                        <img src="<?php echo esc_url($agency_logo_url); ?>" alt="" data-initial="<?php echo esc_attr($agency_initial); ?>" onerror="this.parentNode.textContent=this.dataset.initial">
                     <?php else: ?>
-                        <?php echo esc_html($initial); ?>
+                        <?php echo esc_html($agency_initial); ?>
                     <?php endif; ?>
                 </span>
                 <div class="agency-client-card__who">
-                    <div class="agency-client-card__name" title="<?php echo esc_attr($client_row->name); ?>"><?php echo esc_html($client_row->name); ?></div>
+                    <div class="agency-client-card__name" title="<?php echo esc_attr($agency_client_row->name); ?>"><?php echo esc_html($agency_client_row->name); ?></div>
                     <div class="agency-client-card__meta">
                         <?php echo esc_html(sprintf(
-                            /* translators: %d: number of projects */ _n('%d project', '%d projects', $nb_projects, 'agency-client-portal'),
-                            $nb_projects
+                            /* translators: %d: number of projects */ _n('%d project', '%d projects', $agency_nb_projects, 'agency-client-portal'),
+                            $agency_nb_projects
                         )); ?>
                     </div>
                 </div>
-                <span class="agency-pill <?php echo $is_active ? 'agency-pill--ok' : 'agency-pill--off'; ?>">
-                    <?php echo $is_active ? esc_html__('Active', 'agency-client-portal') : esc_html__('Inactive', 'agency-client-portal'); ?>
+                <span class="agency-pill <?php echo $agency_is_active ? 'agency-pill--ok' : 'agency-pill--off'; ?>">
+                    <?php echo $agency_is_active ? esc_html__('Active', 'agency-client-portal') : esc_html__('Inactive', 'agency-client-portal'); ?>
                 </span>
             </div>
             <div class="agency-client-card__btns">
-                <a href="<?php echo esc_url($edit_url); ?>" class="agency-btn agency-btn-sm"><?php esc_html_e('Edit', 'agency-client-portal'); ?></a>
-                <a href="<?php echo esc_url($portal_url); ?>" class="agency-btn agency-btn-sm"><?php esc_html_e('Projects', 'agency-client-portal'); ?></a>
-                <?php if ($has_token): ?>
-                <button type="button" class="agency-btn-icon agency-btn-icon--sm agency-copy-access" data-client-id="<?php echo esc_attr($client_row->id); ?>" title="<?php esc_attr_e('Copy portal link', 'agency-client-portal'); ?>" aria-label="<?php esc_attr_e('Copy portal link', 'agency-client-portal'); ?>">
+                <a href="<?php echo esc_url($agency_edit_url); ?>" class="agency-btn agency-btn-sm"><?php esc_html_e('Edit', 'agency-client-portal'); ?></a>
+                <a href="<?php echo esc_url($agency_portal_url); ?>" class="agency-btn agency-btn-sm"><?php esc_html_e('Projects', 'agency-client-portal'); ?></a>
+                <?php if ($agency_has_token): ?>
+                <button type="button" class="agency-btn-icon agency-btn-icon--sm agency-copy-access" data-client-id="<?php echo esc_attr($agency_client_row->id); ?>" title="<?php esc_attr_e('Copy portal link', 'agency-client-portal'); ?>" aria-label="<?php esc_attr_e('Copy portal link', 'agency-client-portal'); ?>">
                     <?php Agency_Icons::render('copy', 14); ?>
                 </button>
                 <?php endif; ?>
-                <a href="<?php echo esc_url($edit_url . '#agec-access'); ?>" class="agency-btn-icon agency-btn-icon--sm" title="<?php esc_attr_e('Access key', 'agency-client-portal'); ?>" aria-label="<?php esc_attr_e('Access key', 'agency-client-portal'); ?>">
+                <a href="<?php echo esc_url($agency_edit_url . '#agec-access'); ?>" class="agency-btn-icon agency-btn-icon--sm" title="<?php esc_attr_e('Access key', 'agency-client-portal'); ?>" aria-label="<?php esc_attr_e('Access key', 'agency-client-portal'); ?>">
                     <?php Agency_Icons::render('key', 14); ?>
                 </a>
             </div>

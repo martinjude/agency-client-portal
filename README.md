@@ -24,9 +24,9 @@ Clients open their space from a private link, with no WordPress account needed. 
 
 ## Installation
 
-### From WordPress.org
+### From a release zip
 
-Search for **Agency Client Portal** under *Plugins → Add New*.
+Download `agency-client-portal-X.Y.Z.zip` from the [latest GitHub release](https://github.com/martinjude/agency-client-portal/releases/latest), then upload it under *Plugins → Add New → Upload Plugin*.
 
 ### From source
 
@@ -80,7 +80,7 @@ There is no build step. Edit the PHP, JS and CSS files directly.
 Source strings are in English. To regenerate the translation files after changing strings (requires [WP-CLI](https://wp-cli.org/) and GNU gettext):
 
 ```bash
-wp i18n make-pot . languages/agency-client-portal.pot --domain=agency-client-portal --exclude=design
+wp i18n make-pot . languages/agency-client-portal.pot --domain=agency-client-portal --exclude=design,bin,dist
 msgmerge --update languages/agency-client-portal-fr_FR.po languages/agency-client-portal.pot
 msgfmt -o languages/agency-client-portal-fr_FR.mo languages/agency-client-portal-fr_FR.po
 wp i18n make-json languages/agency-client-portal-fr_FR.po --no-purge
@@ -97,14 +97,19 @@ Schema changes go in a new file, `includes/migrations/migration-X-Y-Z.php`, with
 - Escape all output (`esc_html()`, `esc_attr()`, `esc_url()`, `wp_kses()`…).
 - Use `$wpdb->prepare()` for every query that takes input.
 - Check capabilities and nonces on every write endpoint.
-- Run [Plugin Check](https://wordpress.org/plugins/plugin-check/) before submitting a pull request:
-  `wp plugin check agency-client-portal`
+- Prefix every variable defined at file level (templates, `uninstall.php`) with `$agency_`.
+- Run `bin/check.sh` before submitting a pull request. It runs PHP lint and [Plugin Check](https://wordpress.org/plugins/plugin-check/), auto-detecting a [Local](https://localwp.com) site (elsewhere: `WP_CLI=wp bin/check.sh`), and must report 0 errors.
+
+Coding agents: see [AGENTS.md](AGENTS.md).
 
 ### Releasing
 
 1. Bump the version in `agency.php` (header and `AGENCY_VERSION`) and the `Stable tag` in `readme.txt`.
 2. Add a changelog entry to `readme.txt`.
-3. Tag the release (`git tag vX.Y.Z && git push --tags`). The GitHub workflow deploys the tag to the WordPress.org SVN repository. Files listed in `.distignore` are excluded.
+3. Run `bin/check.sh`.
+4. Tag the release (`git tag vX.Y.Z && git push --tags`). The `Release` workflow checks that the tag matches the plugin version, builds the zip (files listed in `.distignore` are excluded) and publishes it as a GitHub Release.
+
+`bin/build-zip.sh` builds the same zip locally in `dist/`.
 
 ## Contributing
 

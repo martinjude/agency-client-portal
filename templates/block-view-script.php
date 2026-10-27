@@ -10,21 +10,21 @@
 <body <?php body_class(); ?>>
 
 <?php
-$client_slug = get_query_var('agency_client');
-$project_slug = get_query_var('agency_project');
-$block_id = get_query_var('agency_block');
+$agency_client_slug = get_query_var('agency_client');
+$agency_project_slug = get_query_var('agency_project');
+$agency_block_id = get_query_var('agency_block');
 
-$client = Agency_Client::get_by_slug($client_slug);
-$project = $client ? Agency_Project::get_by_slug($client->id, $project_slug) : null;
-$block = Agency_Block::get_by_id($block_id);
+$agency_client = Agency_Client::get_by_slug($agency_client_slug);
+$agency_project = $agency_client ? Agency_Project::get_by_slug($agency_client->id, $agency_project_slug) : null;
+$agency_block = Agency_Block::get_by_id($agency_block_id);
 
-if (!$client || !$project || !$block || $block->type !== 'script') {
+if (!$agency_client || !$agency_project || !$agency_block || $agency_block->type !== 'script') {
     wp_die(esc_html__('Content not found', 'agency-client-portal'), 404);
 }
 
-$comments = Agency_Comment::get_by_block($block_id);
-$is_manager = current_user_can('manage_agency_projects');
-$external_links = Agency_External_Link::get_by_block($block_id);
+$agency_comments = Agency_Comment::get_by_block($agency_block_id);
+$agency_is_manager = current_user_can('manage_agency_projects');
+$agency_external_links = Agency_External_Link::get_by_block($agency_block_id);
 ?>
 
 <div class="agency-wrapper">
@@ -45,41 +45,41 @@ $external_links = Agency_External_Link::get_by_block($block_id);
 
                 <div class="block-header-full agency-bv-bar">
 <?php
-                    $_bv_subtitle_raw = !empty($block->settings) ? json_decode($block->settings, true) : array();
-                    $_bv_subtitle = !empty($_bv_subtitle_raw['subtitle']) ? $_bv_subtitle_raw['subtitle'] : '';
-                    $_bv_script_content = isset($_bv_subtitle_raw['script_content']) ? $_bv_subtitle_raw['script_content'] : '';
-                    $_bv_description = $block->content ?? '';
-                    $_bv_google_doc_url = !empty($_bv_subtitle_raw['google_doc_url']) ? $_bv_subtitle_raw['google_doc_url'] : '';
+                    $agency_bv_subtitle_raw = !empty($agency_block->settings) ? json_decode($agency_block->settings, true) : array();
+                    $agency_bv_subtitle = !empty($agency_bv_subtitle_raw['subtitle']) ? $agency_bv_subtitle_raw['subtitle'] : '';
+                    $agency_bv_script_content = isset($agency_bv_subtitle_raw['script_content']) ? $agency_bv_subtitle_raw['script_content'] : '';
+                    $agency_bv_description = $agency_block->content ?? '';
+                    $agency_bv_google_doc_url = !empty($agency_bv_subtitle_raw['google_doc_url']) ? $agency_bv_subtitle_raw['google_doc_url'] : '';
                     // Transforme les URLs Google Docs/Sheets en URL d'aperçu intégrable
-                    $_bv_google_doc_embed = '';
-                    if ($_bv_google_doc_url) {
-                        if (preg_match('#docs\.google\.com/document(?:/u/\d+)?/d/([a-zA-Z0-9_-]+)#', $_bv_google_doc_url, $_bv_gdoc_match)) {
-                            $_bv_google_doc_embed = 'https://docs.google.com/document/d/' . $_bv_gdoc_match[1] . '/preview';
-                        } elseif (preg_match('#docs\.google\.com/spreadsheets(?:/u/\d+)?/d/([a-zA-Z0-9_-]+)#', $_bv_google_doc_url, $_bv_gsheet_match)) {
-                            $_bv_google_doc_embed = 'https://docs.google.com/spreadsheets/d/' . $_bv_gsheet_match[1] . '/preview';
+                    $agency_bv_google_doc_embed = '';
+                    if ($agency_bv_google_doc_url) {
+                        if (preg_match('#docs\.google\.com/document(?:/u/\d+)?/d/([a-zA-Z0-9_-]+)#', $agency_bv_google_doc_url, $_bv_gdoc_match)) {
+                            $agency_bv_google_doc_embed = 'https://docs.google.com/document/d/' . $_bv_gdoc_match[1] . '/preview';
+                        } elseif (preg_match('#docs\.google\.com/spreadsheets(?:/u/\d+)?/d/([a-zA-Z0-9_-]+)#', $agency_bv_google_doc_url, $_bv_gsheet_match)) {
+                            $agency_bv_google_doc_embed = 'https://docs.google.com/spreadsheets/d/' . $_bv_gsheet_match[1] . '/preview';
                         }
                     }
                     ?>
-                    <?php if ($is_manager || $_bv_description): ?>
+                    <?php if ($agency_is_manager || $agency_bv_description): ?>
                     <div class="block-description script-description"
                          data-placeholder="<?php esc_attr_e('Add a description…', 'agency-client-portal'); ?>"
-                         <?php if ($is_manager): ?>
+                         <?php if ($agency_is_manager): ?>
                          contenteditable="true"
                          id="script-description"
-                         data-block-id="<?php echo esc_attr($block->id); ?>"
+                         data-block-id="<?php echo esc_attr($agency_block->id); ?>"
                          <?php endif; ?>>
-                        <?php echo wp_kses_post($_bv_description); ?>
+                        <?php echo wp_kses_post($agency_bv_description); ?>
                     </div>
                     <?php endif; ?>
 
                     <div class="agency-links">
-                        <?php if (!empty($external_links)): ?>
+                        <?php if (!empty($agency_external_links)): ?>
                             <div class="external-links-display">
-                                <?php foreach ($external_links as $link): ?>
+                                <?php foreach ($agency_external_links as $link): ?>
                                     <a href="<?php echo esc_url($link->url); ?>" class="external-link-item" target="_blank" rel="noopener" data-link-id="<?php echo esc_attr($link->id); ?>">
                                         <span class="link-emoji"><?php echo esc_html($link->emoji); ?></span>
                                         <span class="link-text"><?php echo esc_html($link->text); ?></span>
-                                        <?php if ($is_manager): ?>
+                                        <?php if ($agency_is_manager): ?>
                                             <button class="edit-external-link" data-link-id="<?php echo esc_attr($link->id); ?>" data-link-emoji="<?php echo esc_attr($link->emoji); ?>" data-link-text="<?php echo esc_attr($link->text); ?>" data-link-url="<?php echo esc_attr($link->url); ?>" title="<?php esc_attr_e('Edit', 'agency-client-portal'); ?>"><?php Agency_Icons::render('edit', 14); ?></button>
                                             <button class="delete-external-link" data-link-id="<?php echo esc_attr($link->id); ?>" title="<?php esc_attr_e('Delete', 'agency-client-portal'); ?>">×</button>
                                         <?php endif; ?>
@@ -87,18 +87,18 @@ $external_links = Agency_External_Link::get_by_block($block_id);
                                 <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
-                        <?php if ($is_manager): ?>
+                        <?php if ($agency_is_manager): ?>
                             <button class="agency-btn agency-btn-sm agency-btn-secondary" id="add-external-link-btn" type="button">
                                 <?php Agency_Icons::render('link', 16); ?> <?php esc_html_e('Add a link', 'agency-client-portal'); ?>
                             </button>
-                            <?php if (empty($_bv_google_doc_embed)): ?>
+                            <?php if (empty($agency_bv_google_doc_embed)): ?>
                             <button class="agency-btn agency-btn-sm agency-btn-secondary" id="integrate-google-doc-btn" type="button"
-                                    data-block-id="<?php echo esc_attr($block->id); ?>">
+                                    data-block-id="<?php echo esc_attr($agency_block->id); ?>">
                                 <?php Agency_Icons::render('file', 16); ?> <?php esc_html_e('Embed Google Docs/Sheets', 'agency-client-portal'); ?>
                             </button>
                             <?php else: ?>
                             <button class="agency-btn agency-btn-sm agency-btn-danger" id="disintegrate-google-doc-btn" type="button"
-                                    data-block-id="<?php echo esc_attr($block->id); ?>">
+                                    data-block-id="<?php echo esc_attr($agency_block->id); ?>">
                                 <?php Agency_Icons::render('x', 14); ?> <?php esc_html_e('Remove the embedded doc', 'agency-client-portal'); ?>
                             </button>
                             <?php endif; ?>
@@ -107,10 +107,10 @@ $external_links = Agency_External_Link::get_by_block($block_id);
                 </div>
                 
                 <!-- Two-Column Layout: 2/3 + 1/3 -->
-                <?php if (!empty($_bv_google_doc_embed)): ?>
+                <?php if (!empty($agency_bv_google_doc_embed)): ?>
                 <div class="google-doc-section">
                     <div class="google-doc-cta">
-                        <a href="<?php echo esc_url($_bv_google_doc_url); ?>"
+                        <a href="<?php echo esc_url($agency_bv_google_doc_url); ?>"
                            target="_blank"
                            rel="noopener noreferrer"
                            class="agency-btn agency-btn-secondary">
@@ -118,26 +118,26 @@ $external_links = Agency_External_Link::get_by_block($block_id);
                         </a>
                     </div>
                     <iframe
-                        src="<?php echo esc_url($_bv_google_doc_embed); ?>"
+                        src="<?php echo esc_url($agency_bv_google_doc_embed); ?>"
                         class="google-doc-iframe"
                         frameborder="0"
                         allowfullscreen
                     ></iframe>
                 </div>
                 <?php else: ?>
-                <?php $can_comment = Agency_Block::client_can_comment_allowed($block); ?>
-                <div class="agency-bp-grid<?php echo !$can_comment ? ' agency-bp-grid--solo' : ''; ?>">
+                <?php $agency_can_comment = Agency_Block::client_can_comment_allowed($agency_block); ?>
+                <div class="agency-bp-grid<?php echo !$agency_can_comment ? ' agency-bp-grid--solo' : ''; ?>">
                     <!-- Colonne principale : contenu du script -->
                     <div class="agency-bp-main">
                         <section class="agency-bp-card script-editor-section">
                             <header class="agency-bp-card__head">
                                 <h3 class="agency-bp-card__title"><?php esc_html_e('Script', 'agency-client-portal'); ?></h3>
-                                <?php if ($is_manager): ?>
+                                <?php if ($agency_is_manager): ?>
                                 <span class="script-save-status is-saved" data-label-saved="<?php esc_attr_e('Saved', 'agency-client-portal'); ?>" data-label-dirty="<?php esc_attr_e('Unsaved changes', 'agency-client-portal'); ?>" data-label-error="<?php esc_attr_e('Error', 'agency-client-portal'); ?>"><?php Agency_Icons::render_ui('check', 14); ?><span class="script-save-status__text"><?php esc_html_e('Saved', 'agency-client-portal'); ?></span></span>
                                 <?php endif; ?>
                             </header>
 
-                            <?php if ($is_manager): ?>
+                            <?php if ($agency_is_manager): ?>
                                 <!-- Éditeur riche (manager) -->
                                 <div class="script-editor-wrapper">
                                     <div class="script-toolbar" role="toolbar">
@@ -168,7 +168,7 @@ $external_links = Agency_External_Link::get_by_block($block_id);
                                                 </div>
                                                 <div class="script-color__custom">
                                                     <span><?php esc_html_e('Custom', 'agency-client-portal'); ?></span>
-                                                    <input type="text" class="script-color__hex" value="<?php echo esc_attr(Agency_Template::client_color($client)); ?>" maxlength="7" aria-label="<?php esc_attr_e('Hex colour', 'agency-client-portal'); ?>">
+                                                    <input type="text" class="script-color__hex" value="<?php echo esc_attr(Agency_Template::client_color($agency_client)); ?>" maxlength="7" aria-label="<?php esc_attr_e('Hex colour', 'agency-client-portal'); ?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -185,7 +185,7 @@ $external_links = Agency_External_Link::get_by_block($block_id);
                                         class="script-editor"
                                         contenteditable="true"
                                         data-placeholder="<?php esc_attr_e('Enter the script content here...', 'agency-client-portal'); ?>"
-                                    ><?php echo wp_kses_post($_bv_script_content); ?></div>
+                                    ><?php echo wp_kses_post($agency_bv_script_content); ?></div>
                                     <div class="script-actions">
                                         <span class="script-count"></span>
                                         <button class="agency-btn agency-btn-primary" id="save-script-btn" type="button">
@@ -196,8 +196,8 @@ $external_links = Agency_External_Link::get_by_block($block_id);
                             <?php else: ?>
                                 <!-- Lecture seule (client) -->
                                 <div class="script-content-display">
-                                    <?php if ($_bv_script_content): ?>
-                                        <?php echo wp_kses_post($_bv_script_content); ?>
+                                    <?php if ($agency_bv_script_content): ?>
+                                        <?php echo wp_kses_post($agency_bv_script_content); ?>
                                     <?php else: ?>
                                         <p class="no-content"><?php esc_html_e('No script available yet.', 'agency-client-portal'); ?></p>
                                     <?php endif; ?>
@@ -206,9 +206,9 @@ $external_links = Agency_External_Link::get_by_block($block_id);
                         </section>
                     </div>
 
-                    <?php if ($can_comment): ?>
+                    <?php if ($agency_can_comment): ?>
                     <aside class="agency-bp-aside">
-                        <?php $cm_comments = $comments; include AGENCY_PLUGIN_DIR . 'templates/partials/block-comments.php'; ?>
+                        <?php $agency_cm_comments = $agency_comments; include AGENCY_PLUGIN_DIR . 'templates/partials/block-comments.php'; ?>
                     </aside>
                     <?php endif; ?>
                 </div>
@@ -220,7 +220,7 @@ $external_links = Agency_External_Link::get_by_block($block_id);
     <?php include AGENCY_PLUGIN_DIR . 'templates/partials/footer.php'; ?>
 </div>
 
-<?php if ($is_manager): ?>
+<?php if ($agency_is_manager): ?>
 <!-- Modal : Intégrer Google Docs/Sheets -->
 <div class="agency-modal" id="google-doc-modal">
     <div class="agency-modal-content">
@@ -245,7 +245,7 @@ $external_links = Agency_External_Link::get_by_block($block_id);
                 <?php esc_html_e('Cancel', 'agency-client-portal'); ?>
             </button>
             <button class="agency-btn agency-btn-primary" type="button" id="google-doc-modal-save"
-                    data-block-id="<?php echo esc_attr($block->id); ?>">
+                    data-block-id="<?php echo esc_attr($agency_block->id); ?>">
                 <?php esc_html_e('Embed', 'agency-client-portal'); ?>
             </button>
         </div>
@@ -393,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'X-WP-Nonce': '<?php echo esc_js(wp_create_nonce('wp_rest')); ?>'
             },
             body: JSON.stringify({
-                block_id: <?php echo intval($block->id); ?>,
+                block_id: <?php echo intval($agency_block->id); ?>,
                 emoji: emoji,
                 text: text,
                 url: url
@@ -693,7 +693,7 @@ document.addEventListener('DOMContentLoaded', function() {
         saveScriptBtn.addEventListener('click', function() {
             saveScriptBtn.disabled = true;
 
-            fetch('<?php echo esc_url(rest_url('agency/v1/blocks/' . intval($block->id))); ?>', {
+            fetch('<?php echo esc_url(rest_url('agency/v1/blocks/' . intval($agency_block->id))); ?>', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -717,7 +717,7 @@ document.addEventListener('DOMContentLoaded', function() {
         descriptionEl.addEventListener('input', function() {
             clearTimeout(descTimer);
             descTimer = setTimeout(function() {
-                fetch('<?php echo esc_url(rest_url('agency/v1/blocks/' . intval($block->id))); ?>', {
+                fetch('<?php echo esc_url(rest_url('agency/v1/blocks/' . intval($agency_block->id))); ?>', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': '<?php echo esc_js(wp_create_nonce('wp_rest')); ?>' },
                     body: JSON.stringify({ content: descriptionEl.innerHTML })
@@ -747,7 +747,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 <?php wp_print_inline_script_tag(ob_get_clean()); ?>
 
-<?php if ($is_manager): ?>
+<?php if ($agency_is_manager): ?>
 <?php ob_start(); ?>
 (function() {
     var integrateBtn   = document.getElementById('integrate-google-doc-btn');

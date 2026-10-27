@@ -12,14 +12,14 @@
  */
 if (!defined('ABSPATH')) { exit; }
 
-$cm_asset_id = isset($cm_asset_id) ? (int) $cm_asset_id : 0;
-$cm_total    = count($cm_comments);
-$cm_threads  = Agency_Comment::nest($cm_comments);
+$agency_cm_asset_id = isset($agency_cm_asset_id) ? (int) $agency_cm_asset_id : 0;
+$agency_cm_total    = count($agency_cm_comments);
+$agency_cm_threads  = Agency_Comment::nest($agency_cm_comments);
 
 /**
  * Affiche un commentaire (et ses réponses pour une racine).
  */
-$cm_render = function ($comment, $is_reply = false) use (&$cm_render, $block, $is_manager, $cm_asset_id) {
+$agency_cm_render = function ($comment, $is_reply = false) use (&$agency_cm_render, $agency_block, $agency_is_manager, $agency_cm_asset_id) {
     $name     = isset($comment->user->display_name) ? $comment->user->display_name : __('Client', 'agency-client-portal');
     $is_staff = !empty($comment->user_id) && user_can((int) $comment->user_id, 'manage_agency_projects');
     ?>
@@ -29,7 +29,7 @@ $cm_render = function ($comment, $is_reply = false) use (&$cm_render, $block, $i
             <div class="agency-cm__meta">
                 <span class="agency-cm__author comment-author"><?php echo esc_html($name); ?></span>
                 <span class="agency-cm__time comment-date"><?php echo esc_html(Agency_Template::time_ago($comment->created_at)); ?></span>
-                <?php if ($is_manager): ?>
+                <?php if ($agency_is_manager): ?>
                 <div class="agency-dropdown agency-cm__menu">
                     <button type="button" class="agency-btn-icon agency-btn-icon--sm" data-agency-dropdown aria-haspopup="true" aria-expanded="false" aria-label="<?php esc_attr_e('More actions', 'agency-client-portal'); ?>">
                         <?php Agency_Icons::render_ui('more', 16); ?>
@@ -51,12 +51,12 @@ $cm_render = function ($comment, $is_reply = false) use (&$cm_render, $block, $i
             </div>
             <?php if (!empty($comment->replies)): ?>
             <div class="agency-cm__replies">
-                <?php foreach ($comment->replies as $reply) { $cm_render($reply, true); } ?>
+                <?php foreach ($comment->replies as $reply) { $agency_cm_render($reply, true); } ?>
             </div>
             <?php endif; ?>
             <form class="agency-cm__reply-form" hidden
-                  data-block-id="<?php echo esc_attr($block->id); ?>"
-                  data-asset-id="<?php echo esc_attr($cm_asset_id); ?>"
+                  data-block-id="<?php echo esc_attr($agency_block->id); ?>"
+                  data-asset-id="<?php echo esc_attr($agency_cm_asset_id); ?>"
                   data-parent-id="<?php echo esc_attr($comment->id); ?>">
                 <textarea rows="2" required placeholder="<?php esc_attr_e('Your reply...', 'agency-client-portal'); ?>"></textarea>
                 <div class="agency-cm__reply-actions">
@@ -70,25 +70,25 @@ $cm_render = function ($comment, $is_reply = false) use (&$cm_render, $block, $i
     <?php
 };
 ?>
-<section class="agency-cm block-comments<?php echo $cm_asset_id ? ' agency-cm--asset' : ''; ?>">
+<section class="agency-cm block-comments<?php echo $agency_cm_asset_id ? ' agency-cm--asset' : ''; ?>">
     <header class="agency-cm__head">
-        <h3 class="agency-cm__title"><?php esc_html_e('Comments', 'agency-client-portal'); ?> <span class="agency-count"><?php echo intval($cm_total); ?></span></h3>
+        <h3 class="agency-cm__title"><?php esc_html_e('Comments', 'agency-client-portal'); ?> <span class="agency-count"><?php echo intval($agency_cm_total); ?></span></h3>
     </header>
 
-    <div class="agency-cm__list <?php echo $cm_asset_id ? 'asset-comments-list' : 'comments-list'; ?>"<?php echo $cm_asset_id ? ' data-asset-id="' . esc_attr($cm_asset_id) . '"' : ' id="comments-list"'; ?>>
-        <?php if (empty($cm_threads)): ?>
+    <div class="agency-cm__list <?php echo $agency_cm_asset_id ? 'asset-comments-list' : 'comments-list'; ?>"<?php echo $agency_cm_asset_id ? ' data-asset-id="' . esc_attr($agency_cm_asset_id) . '"' : ' id="comments-list"'; ?>>
+        <?php if (empty($agency_cm_threads)): ?>
             <div class="agency-cm__empty no-comments">
                 <?php Agency_Icons::render('comment', 20); ?>
                 <span><?php esc_html_e('No comments yet.', 'agency-client-portal'); ?></span>
             </div>
         <?php else: ?>
-            <?php foreach ($cm_threads as $thread) { $cm_render($thread); } ?>
+            <?php foreach ($agency_cm_threads as $agency_thread) { $agency_cm_render($agency_thread); } ?>
         <?php endif; ?>
     </div>
 
-    <?php if ($cm_asset_id): ?>
+    <?php if ($agency_cm_asset_id): ?>
     <div class="agency-cm__composer asset-comment-form">
-        <form class="new-asset-comment-form" data-asset-id="<?php echo esc_attr($cm_asset_id); ?>">
+        <form class="new-asset-comment-form" data-asset-id="<?php echo esc_attr($agency_cm_asset_id); ?>">
             <textarea class="asset-comment-input" rows="3" placeholder="<?php esc_attr_e('Add a comment…', 'agency-client-portal'); ?>" required></textarea>
             <div class="agency-cm__composer-foot">
                 <button type="submit" class="agency-btn agency-btn-sm agency-btn-primary"><?php esc_html_e('Send', 'agency-client-portal'); ?></button>

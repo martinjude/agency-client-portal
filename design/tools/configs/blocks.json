@@ -1,0 +1,50 @@
+{
+ "skip": [
+  "#wpadminbar",
+  "#agency-manager-sidebar",
+  "#agency-sidebar-toggle",
+  ".agency-sidebar-toggle"
+ ],
+ "pages": [
+  [
+   "10",
+   "https://agency.local/client/lumen/project/lancement-aurora/",
+   true
+  ],
+  [
+   "11",
+   "https://agency.local/client/lumen/project/lancement-aurora/block/212/",
+   true
+  ],
+  [
+   "12",
+   "https://agency.local/client/lumen/project/lancement-aurora/block/213/",
+   true
+  ],
+  [
+   "13",
+   "https://agency.local/client/lumen/project/lancement-aurora/block/214/",
+   true
+  ],
+  [
+   "14",
+   "https://agency.local/client/lumen/project/lancement-aurora/block/215/",
+   true
+  ],
+  [
+   "15",
+   "https://agency.local/client/lumen/project/lancement-aurora/block/217/",
+   true
+  ],
+  [
+   "16",
+   "https://agency.local/client/lumen/project/lancement-aurora/block/218/",
+   true
+  ],
+  [
+   "17",
+   "https://agency.local/client/lumen/project/lancement-aurora/block/219/",
+   true
+  ]
+ ]
+}

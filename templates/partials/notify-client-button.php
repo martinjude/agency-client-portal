@@ -12,20 +12,20 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (empty($block) || empty($client) || empty($project)) {
+if (empty($agency_block) || empty($agency_client) || empty($agency_project)) {
     return;
 }
 
 ?>
     <button type="button"
             class="agency-btn agency-btn-outline notify-client-btn"
-            data-block-id="<?php echo esc_attr($block->id); ?>"
-            data-client-id="<?php echo esc_attr($client->id); ?>"
-            data-client-slug="<?php echo esc_attr($client->slug); ?>"
-            data-project-id="<?php echo esc_attr($project->id); ?>"
-            data-project-slug="<?php echo esc_attr($project->slug); ?>"
-            data-project-email="<?php echo esc_attr($project->email ?? ''); ?>"
-            data-project-name="<?php echo esc_attr($project->name); ?>">
+            data-block-id="<?php echo esc_attr($agency_block->id); ?>"
+            data-client-id="<?php echo esc_attr($agency_client->id); ?>"
+            data-client-slug="<?php echo esc_attr($agency_client->slug); ?>"
+            data-project-id="<?php echo esc_attr($agency_project->id); ?>"
+            data-project-slug="<?php echo esc_attr($agency_project->slug); ?>"
+            data-project-email="<?php echo esc_attr($agency_project->email ?? ''); ?>"
+            data-project-name="<?php echo esc_attr($agency_project->name); ?>">
         <?php Agency_Icons::render('mail', 16); ?> <?php esc_html_e('Notify client', 'agency-client-portal'); ?>
     </button>
 
@@ -42,11 +42,11 @@ if (empty($GLOBALS['agency_notify_modal_rendered'])) :
                 <button class="agency-modal-close" type="button">&times;</button>
             </div>
             <div class="agency-modal-body">
-                <input type="hidden" id="notify-client-block-id" value="<?php echo esc_attr($block->id); ?>">
+                <input type="hidden" id="notify-client-block-id" value="<?php echo esc_attr($agency_block->id); ?>">
                 <div class="agency-form-group">
                     <label class="agency-form-label" for="notify-client-email"><?php esc_html_e('Client email', 'agency-client-portal'); ?></label>
                     <input type="email" id="notify-client-email" class="agency-form-input"
-                           value="<?php echo esc_attr($project->email ?? ''); ?>"
+                           value="<?php echo esc_attr($agency_project->email ?? ''); ?>"
                            placeholder="<?php esc_attr_e('client@example.com', 'agency-client-portal'); ?>" required>
                 </div>
                 <div class="agency-form-group">

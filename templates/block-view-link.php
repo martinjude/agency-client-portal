@@ -5,35 +5,35 @@ if (!defined('ABSPATH')) { exit; }
  * Block View: Lien
  * Opens a URL when the client clicks the block.
  */
-$client_slug  = get_query_var('agency_client');
-$project_slug = get_query_var('agency_project');
-$block_id     = get_query_var('agency_block');
+$agency_client_slug  = get_query_var('agency_client');
+$agency_project_slug = get_query_var('agency_project');
+$agency_block_id     = get_query_var('agency_block');
 
-$client  = Agency_Client::get_by_slug($client_slug);
-$project = $client ? Agency_Project::get_by_slug($client->id, $project_slug) : null;
-$block   = Agency_Block::get_by_id($block_id);
+$agency_client  = Agency_Client::get_by_slug($agency_client_slug);
+$agency_project = $agency_client ? Agency_Project::get_by_slug($agency_client->id, $agency_project_slug) : null;
+$agency_block   = Agency_Block::get_by_id($agency_block_id);
 
-if (!$client || !$project || !$block || $block->type !== 'link') {
+if (!$agency_client || !$agency_project || !$agency_block || $agency_block->type !== 'link') {
     wp_die(esc_html__('Content not found', 'agency-client-portal'), 404);
 }
 
 // Vérifier l'accès
-$token_authenticated = Agency_Security::can_access_client_by_token($client->id);
-$wp_authenticated    = is_user_logged_in() && agency()->security->user_can_access_client($client->id);
-if (!$token_authenticated && !$wp_authenticated) {
+$agency_token_authenticated = Agency_Security::can_access_client_by_token($agency_client->id);
+$agency_wp_authenticated    = is_user_logged_in() && agency()->security->user_can_access_client($agency_client->id);
+if (!$agency_token_authenticated && !$agency_wp_authenticated) {
     wp_die(esc_html__('Access denied', 'agency-client-portal'), 403);
 }
 
-$is_manager = current_user_can('manage_agency_projects');
-$comments   = Agency_Comment::get_by_block($block_id);
-$external_links = Agency_External_Link::get_by_block($block_id);
+$agency_is_manager = current_user_can('manage_agency_projects');
+$agency_comments   = Agency_Comment::get_by_block($agency_block_id);
+$agency_external_links = Agency_External_Link::get_by_block($agency_block_id);
 
-$settings          = !empty($block->settings) ? json_decode($block->settings, true) : array();
-$link_url          = !empty($settings['link_url']) ? $settings['link_url'] : '';
-$bg_image_url      = !empty($settings['background_image_url']) ? $settings['background_image_url'] : '';
-$subtitle          = !empty($settings['subtitle']) ? $settings['subtitle'] : '';
+$agency_settings          = !empty($agency_block->settings) ? json_decode($agency_block->settings, true) : array();
+$agency_link_url          = !empty($agency_settings['link_url']) ? $agency_settings['link_url'] : '';
+$agency_bg_image_url      = !empty($agency_settings['background_image_url']) ? $agency_settings['background_image_url'] : '';
+$agency_subtitle          = !empty($agency_settings['subtitle']) ? $agency_settings['subtitle'] : '';
 
-$back_url = home_url("/client/{$client->slug}/project/{$project->slug}");
+$agency_back_url = home_url("/client/{$agency_client->slug}/project/{$agency_project->slug}");
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -56,20 +56,20 @@ $back_url = home_url("/client/{$client->slug}/project/{$project->slug}");
     <main class="agency-main">
 
         <div class="agency-container">
-            <div class="agency-block-view agency-block-link" data-block-id="<?php echo esc_attr($block->id); ?>">
+            <div class="agency-block-view agency-block-link" data-block-id="<?php echo esc_attr($agency_block->id); ?>">
 
                 <?php include AGENCY_PLUGIN_DIR . 'templates/partials/block-head.php'; ?>
 
                 <div class="block-header-full agency-bv-bar">
-                    <?php if ($subtitle || $is_manager): ?>
-                    <p class="block-description<?php echo $is_manager ? ' agency-block-subtitle--editable' : ''; ?>"
-                       <?php if ($is_manager): ?>contenteditable="true" data-block-id="<?php echo esc_attr($block->id); ?>"<?php endif; ?>>
-                        <?php echo esc_html($subtitle); ?>
+                    <?php if ($agency_subtitle || $agency_is_manager): ?>
+                    <p class="block-description<?php echo $agency_is_manager ? ' agency-block-subtitle--editable' : ''; ?>"
+                       <?php if ($agency_is_manager): ?>contenteditable="true" data-block-id="<?php echo esc_attr($agency_block->id); ?>"<?php endif; ?>>
+                        <?php echo esc_html($agency_subtitle); ?>
                     </p>
                     <?php endif; ?>
-                    <?php if ($link_url): ?>
+                    <?php if ($agency_link_url): ?>
                     <div class="agency-actions">
-                        <a href="<?php echo esc_url($link_url); ?>" class="agency-btn" target="_blank" rel="noopener noreferrer">
+                        <a href="<?php echo esc_url($agency_link_url); ?>" class="agency-btn" target="_blank" rel="noopener noreferrer">
                             <?php Agency_Icons::render_ui('external', 16); ?> <?php esc_html_e('Open link', 'agency-client-portal'); ?>
                         </a>
                     </div>
@@ -79,7 +79,7 @@ $back_url = home_url("/client/{$client->slug}/project/{$project->slug}");
                 <div class="agency-bp-grid">
                     <div class="agency-bp-main">
 
-                        <?php if ($is_manager): ?>
+                        <?php if ($agency_is_manager): ?>
                         <!-- Manager : URL cible + image de fond -->
                         <section class="agency-bp-card agency-link-manager-panel">
                             <header class="agency-bp-card__head agency-bp-card__head--rule">
@@ -89,7 +89,7 @@ $back_url = home_url("/client/{$client->slug}/project/{$project->slug}");
                             <label class="agency-bp-label" for="link-block-url"><?php esc_html_e('Target URL', 'agency-client-portal'); ?></label>
                             <div class="agency-form-inline">
                                 <input type="url" id="link-block-url" class="agency-form-input"
-                                       value="<?php echo esc_attr($link_url); ?>"
+                                       value="<?php echo esc_attr($agency_link_url); ?>"
                                        placeholder="<?php esc_attr_e('https://...', 'agency-client-portal'); ?>">
                                 <button type="button" class="agency-btn agency-btn-primary" id="save-link-url-btn">
                                     <?php esc_html_e('Save', 'agency-client-portal'); ?>
@@ -104,12 +104,12 @@ $back_url = home_url("/client/{$client->slug}/project/{$project->slug}");
                                 <label class="agency-bp-label" for="link-block-bg"><?php esc_html_e('Background image (optional)', 'agency-client-portal'); ?></label>
                                 <div class="agency-form-inline">
                                     <input type="url" id="link-block-bg" class="agency-form-input"
-                                           value="<?php echo esc_attr($bg_image_url); ?>"
+                                           value="<?php echo esc_attr($agency_bg_image_url); ?>"
                                            placeholder="<?php esc_attr_e('Image URL', 'agency-client-portal'); ?>">
                                     <button type="button" class="agency-btn" id="link-bg-choose-btn">
                                         <?php Agency_Icons::render('image', 16); ?> <?php esc_html_e('Choose', 'agency-client-portal'); ?>
                                     </button>
-                                    <?php if ($bg_image_url): ?>
+                                    <?php if ($agency_bg_image_url): ?>
                                     <button type="button" class="agency-btn-icon agency-btn-icon--danger" id="link-bg-clear-btn" aria-label="<?php esc_attr_e('Remove', 'agency-client-portal'); ?>"><?php Agency_Icons::render_ui('x', 16); ?></button>
                                     <?php endif; ?>
                                 </div>
@@ -117,23 +117,23 @@ $back_url = home_url("/client/{$client->slug}/project/{$project->slug}");
                         </section>
                         <?php endif; ?>
 
-                        <?php if (!empty($block->content)): ?>
+                        <?php if (!empty($agency_block->content)): ?>
                         <div class="block-content-text">
-                            <?php echo wp_kses_post($block->content); ?>
+                            <?php echo wp_kses_post($agency_block->content); ?>
                         </div>
                         <?php endif; ?>
 
-                        <?php if (!$is_manager): ?>
+                        <?php if (!$agency_is_manager): ?>
                         <?php include AGENCY_PLUGIN_DIR . 'templates/partials/link-preview-card.php'; ?>
                         <?php endif; ?>
 
                     </div>
 
                     <aside class="agency-bp-aside">
-                        <?php if ($is_manager): ?>
+                        <?php if ($agency_is_manager): ?>
                         <?php include AGENCY_PLUGIN_DIR . 'templates/partials/link-preview-card.php'; ?>
                         <?php endif; ?>
-                        <?php $cm_comments = $comments; include AGENCY_PLUGIN_DIR . 'templates/partials/block-comments.php'; ?>
+                        <?php $agency_cm_comments = $agency_comments; include AGENCY_PLUGIN_DIR . 'templates/partials/block-comments.php'; ?>
                     </aside>
                 </div>
 
@@ -147,7 +147,7 @@ $back_url = home_url("/client/{$client->slug}/project/{$project->slug}");
 <?php ob_start(); ?>
 document.addEventListener('DOMContentLoaded', function() {
 
-    <?php if ($is_manager): ?>
+    <?php if ($agency_is_manager): ?>
 
     // Save link URL
     var saveLinkUrlBtn = document.getElementById('save-link-url-btn');
@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var bgUrl = document.getElementById('link-block-bg').value.trim();
             saveLinkUrlBtn.disabled = true;
             saveLinkUrlBtn.textContent = <?php echo wp_json_encode(__('Saving...', 'agency-client-portal')); ?>;
-            fetch(agencyData.rest_url + 'blocks/<?php echo intval($block->id); ?>', {
+            fetch(agencyData.rest_url + 'blocks/<?php echo intval($agency_block->id); ?>', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': agencyData.nonce },
                 body: JSON.stringify({ settings: { link_url: url, background_image_url: bgUrl } })
